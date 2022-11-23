@@ -2,6 +2,7 @@ package pro.sky.JD2AnimalShelterBot.service;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -24,6 +25,11 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot {
 
     /**
+     * Поле - обработчик команды /start
+     */
+    private final StartCommand startCommand;
+
+    /**
      * Поле - конфигурация: для работы методов по получению имерни бота и его токена
      */
     final BotConfiguration configuration;
@@ -31,11 +37,13 @@ public class TelegramBot extends TelegramLongPollingBot {
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
+     * @param startCommand - объект обработчика команды /start
      * @param configuration - конфигурация бота: имя и токен
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
      */
-    public TelegramBot(BotConfiguration configuration) {
+    public TelegramBot(@Lazy StartCommand startCommand, BotConfiguration configuration) {
+        this.startCommand = startCommand;
         this.configuration = configuration;
         setupTextMenu();
     }
@@ -103,7 +111,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 // оператор выбора будет дописан позже после получения полного набора команд
             switch (messageText) {
-                case "/start": new StartCommand(this).startCallBack(chatId,update);
+                case "/start": startCommand.startCallBack(chatId,update);
                     break;
                 default:
             }

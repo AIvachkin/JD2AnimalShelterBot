@@ -9,32 +9,39 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
 @Slf4j
-/*
- Класс обрабатывает комманду /start
- Бот приветствует нового пользователя, рассказывает о себе
+/**
+ * Класс обрабатывает комманду /start
+ * Бот приветствует нового пользователя, рассказывает о себе
  */
 public class StartCommand {
 
-    /*
-    Инжекция бота
+    /**
+     * Поле взамодействия с ботом
      */
     private final TelegramBot telegramBot;
-
+    /**
+     * Конструктор - создание нового объекта класса StartCommand для определенного бота
+     * @param telegramBot - объект взаимодействия с ботом
+     */
     public StartCommand(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
 
-    /*Приветствие*/
+    /**
+     * Приветствие
+     */
     private static final String GREETING = "\uD83D\uDE00 Привет ";
 
-    /*Приветственное сообщение*/
+    /**
+     * Приветственное сообщение
+     */
     private static final String WELCOME_MESSAGE = "\n\nЯ могу ответить на твои вопросы о том, что нужно знать и уметь, " +
             "чтобы забрать животное из приюта\n" +
             "Помогу разобраться как с бюрократическими, так и с бытовыми вопросами.\n" +
             "Выбери пункт меню ниже";
 
-    /*
-     *Метод обработки команды /start.
+    /**
+     * Метод обработки команды /start.
      * @param chatId  id текущего чата
      * @param update  объект сообщения
      */
@@ -42,8 +49,8 @@ public class StartCommand {
         startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
     }
 
-    /*
-     *Метод отправки приветственного сообщения.
+    /**
+     * Метод отправки приветственного сообщения.
      * @param chatId  id текущего чата
      * @param firstName  имя пользователя
      */
@@ -56,8 +63,9 @@ public class StartCommand {
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
     }
 
-    /*
-    Проверка отправки сообщения на ошибки
+    /**
+    * Метод проверки отправки сообщения на ошибки
+    * @param message  сообщение
      */
     public void executeMessage(SendMessage message){
         try{
