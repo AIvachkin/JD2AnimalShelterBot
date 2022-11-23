@@ -103,7 +103,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 // оператор выбора будет дописан позже после получения полного набора команд
             switch (messageText) {
-                case "/start":
+                case "/start": new StartCommand(this).startCallBack(chatId,update);
                     break;
                 default:
             }
