@@ -6,13 +6,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-
-@Service
-@Slf4j
 /**
  * Класс обрабатывает комманду /start
  * Бот приветствует нового пользователя, рассказывает о себе
  */
+@Service
+@Slf4j
 public class StartCommand {
 
     /**
