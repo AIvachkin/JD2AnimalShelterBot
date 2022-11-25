@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.User;
+
+import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
 @Service
@@ -43,8 +44,9 @@ public class UserService {
 
             User user = new User();
 
-            user.setFirstName(chat.getFirstName());
-            user.setLastName(chat.getLastName());
+            user.setChatId(chatId);
+            user.setFirstname(chat.getFirstName());
+            user.setLastname(chat.getLastName());
             user.setPhoneNumber(contact.getPhoneNumber());
 
             userRepository.save(user);
