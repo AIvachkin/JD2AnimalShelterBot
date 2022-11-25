@@ -18,12 +18,16 @@ public class StartCommand {
      * Поле взамодействия с ботом
      */
     private final TelegramBot telegramBot;
+    private final UserService userService;
     /**
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
+     *
      * @param telegramBot - объект взаимодействия с ботом
+     * @param userService
      */
-    public StartCommand(TelegramBot telegramBot) {
+    public StartCommand(TelegramBot telegramBot, UserService userService) {
         this.telegramBot = telegramBot;
+        this.userService = userService;
     }
 
     /**
@@ -45,6 +49,7 @@ public class StartCommand {
      * @param update  объект сообщения
      */
     public void startCallBack(long chatId, Update update){
+        userService.createUser(update.getMessage());
         startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
     }
 

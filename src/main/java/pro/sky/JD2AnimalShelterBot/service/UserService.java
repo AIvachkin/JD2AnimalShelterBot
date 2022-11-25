@@ -47,8 +47,6 @@ public class UserService {
             user.setChatId(chatId);
             user.setFirstname(chat.getFirstName());
             user.setLastname(chat.getLastName());
-            user.setPhoneNumber(contact.getPhoneNumber());
-
             userRepository.save(user);
 
         }

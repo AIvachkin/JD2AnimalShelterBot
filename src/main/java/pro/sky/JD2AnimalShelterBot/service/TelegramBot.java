@@ -18,10 +18,10 @@ import java.util.List;
 
 @Slf4j
 @Component
-/*
- Класс реалиует взаимодействие с Телеграмом
- Расширяет класс TelegramLongPollingBot, позволяющий боту самостоятельно проверять,
- пришло ли от пользователя что-то
+/**
+ * Класс реалиует взаимодействие с Телеграмом
+ * Расширяет класс TelegramLongPollingBot, позволяющий боту самостоятельно проверять,
+ * пришло ли от пользователя что-то
  */
 public class TelegramBot extends TelegramLongPollingBot {
 
