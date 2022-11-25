@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.configuration.BotConfiguration;
+import pro.sky.JD2AnimalShelterBot.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +31,14 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final StartCommand startCommand;
 
     /**
-     * Поле - конфигурация: для работы методов по получению имерни бота и его токена
+     * Поле - конфигурация: для работы методов по получению имени бота и его токена
      */
     final BotConfiguration configuration;
 
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
-     * @param startCommand - объект обработчика команды /start
+     * @param startCommand  - объект обработчика команды /start
      * @param configuration - конфигурация бота: имя и токен
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
@@ -97,6 +98,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      @param update - сообщение пользователя (содержит в т.ч. инфо о пользователе)
      */
     public void onUpdateReceived(Update update) {
+
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             /*
@@ -111,7 +113,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 // оператор выбора будет дописан позже после получения полного набора команд
             switch (messageText) {
-                case "/start": startCommand.startCallBack(chatId,update);
+                case "/start":
+                    startCommand.startCallBack(chatId, update);
                     break;
                 default:
             }
