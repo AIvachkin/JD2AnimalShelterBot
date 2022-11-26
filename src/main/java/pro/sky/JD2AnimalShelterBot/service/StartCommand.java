@@ -6,25 +6,28 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-
-@Service
-@Slf4j
 /**
  * Класс обрабатывает комманду /start
  * Бот приветствует нового пользователя, рассказывает о себе
  */
+@Service
+@Slf4j
 public class StartCommand {
 
     /**
      * Поле взамодействия с ботом
      */
     private final TelegramBot telegramBot;
+    private final UserService userService;
     /**
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
+     *
      * @param telegramBot - объект взаимодействия с ботом
+     * @param userService
      */
-    public StartCommand(TelegramBot telegramBot) {
+    public StartCommand(TelegramBot telegramBot, UserService userService) {
         this.telegramBot = telegramBot;
+        this.userService = userService;
     }
 
     /**
@@ -46,6 +49,7 @@ public class StartCommand {
      * @param update  объект сообщения
      */
     public void startCallBack(long chatId, Update update){
+        userService.createUser(update.getMessage());
         startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
     }
 
