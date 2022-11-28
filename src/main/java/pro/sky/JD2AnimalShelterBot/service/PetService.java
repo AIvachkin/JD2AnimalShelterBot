@@ -62,10 +62,19 @@ public class PetService {
         return petRepository.save(pet);
     }
 
+    /**
+     * Метод для получения всех животных из базы
+     * @return
+     */
     public List<Pet> getAllPets() {
         return (List<Pet>) petRepository.findAll();
     }
 
+    /**
+     * Метод для закрепления животного за попечителем в базе
+     * @param petId ИД животного
+     * @param chatId ИД попечителя
+     */
     public void assignPetToCaregiver(Long petId, Long chatId) {
         User user = userRepository.findById(chatId).orElseThrow();
         Pet pet = petRepository.findById(petId).orElseThrow();
@@ -73,6 +82,10 @@ public class PetService {
         petRepository.save(pet);
     }
 
+    /**
+     * Метод для открепления животного от попечителя в базе
+     * @param petId ИД животного
+     */
     public void detachPetFromCaregiver(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow();
         pet.setUser(null);
