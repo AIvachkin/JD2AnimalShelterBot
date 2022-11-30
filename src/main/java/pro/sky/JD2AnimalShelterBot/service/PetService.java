@@ -7,6 +7,7 @@ import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.repository.PetRepository;
 import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 /**
@@ -47,10 +48,12 @@ public class PetService {
      * Метод удаления домашнего питомца из БД
      * @param petId id домашнего питомца в БД
      */
-    public void delete(Long petId) {
+    public void delete(Long petId) throws NotFoundException {
         log.info("Was invoked method for delete pet by id");
         if (getById(petId) != null) {
             petRepository.deleteById(petId);
+        } else {
+            throw new NotFoundException();
         }
     }
 

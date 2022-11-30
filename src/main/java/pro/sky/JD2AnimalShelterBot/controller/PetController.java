@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
 import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.service.PetService;
+
+import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 /**
@@ -52,8 +54,12 @@ public class PetController {
      */
     @PutMapping()
     public ResponseEntity updatePet(@RequestBody Pet pet) {
-        Pet updatePet = petService.updatePet(pet);
-        return ResponseEntity.ok(updatePet);
+        if (pet != null) {
+            Pet updatePet = petService.updatePet(pet);
+            return ResponseEntity.ok(updatePet);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     /**
@@ -63,8 +69,13 @@ public class PetController {
      */
     @DeleteMapping("/{petId}")
     public ResponseEntity deletePet(@PathVariable Long petId) {
-        petService.delete(petId);
-        return ResponseEntity.ok().build();
+        try {
+            petService.delete(petId);
+            return ResponseEntity.ok().build();
+        }
+        catch (NotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /**
