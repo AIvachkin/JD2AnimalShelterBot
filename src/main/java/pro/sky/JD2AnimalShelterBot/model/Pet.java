@@ -21,7 +21,7 @@ public class Pet {
      * id домашнего питомца в БД
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long petId;
 
     /**
