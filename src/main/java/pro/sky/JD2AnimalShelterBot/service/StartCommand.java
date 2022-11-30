@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+
 /**
  * Класс обрабатывает комманду /start
  * Бот приветствует нового пользователя, рассказывает о себе
@@ -23,7 +24,7 @@ public class StartCommand {
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
      *
      * @param telegramBot - объект взаимодействия с ботом
-     * @param userService
+     * @param userService - объект для взаимодействия с командами сервиса
      */
     public StartCommand(TelegramBot telegramBot, UserService userService) {
         this.telegramBot = telegramBot;
@@ -38,10 +39,12 @@ public class StartCommand {
     /**
      * Приветственное сообщение
      */
-    private static final String WELCOME_MESSAGE = "\n\nЯ могу ответить на твои вопросы о том, что нужно знать и уметь, " +
-            "чтобы забрать животное из приюта\n" +
-            "Помогу разобраться как с бюрократическими, так и с бытовыми вопросами.\n" +
-            "Выбери пункт меню ниже";
+    private static final String WELCOME_MESSAGE = """
+
+            Я могу ответить на твои вопросы о том, что нужно знать и уметь, чтобы забрать животное из приюта
+            Помогу разобраться как с бюрократическими, так и с бытовыми вопросами.
+            Выбери пункт меню ниже
+            """;
 
     /**
      * Метод обработки команды /start.
