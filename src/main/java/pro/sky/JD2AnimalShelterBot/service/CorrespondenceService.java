@@ -1,17 +1,13 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Contact;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import pro.sky.JD2AnimalShelterBot.model.Correspondence;
-import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.repository.CorrespondenceRepository;
-import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 /**
@@ -24,12 +20,17 @@ public class CorrespondenceService {
      */
     private final CorrespondenceRepository correspondenceRepository;
 
+    /**
+     * Поле - для инжекции UserService
+     */
+    private final UserService userService;
 
     /**
      * Конструктор - создание нового объекта - репозитория - для работы с его методами для взаимодействия с БД
      */
-    public CorrespondenceService(CorrespondenceRepository correspondenceRepository) {
+    public CorrespondenceService(CorrespondenceRepository correspondenceRepository, UserService userService) {
         this.correspondenceRepository = correspondenceRepository;
+        this.userService = userService;
     }
 
 
@@ -66,6 +67,33 @@ public class CorrespondenceService {
         reply.setText(text);
         reply.setWhoSentIt("volunteer");
         correspondenceRepository.save(reply);
+    }
 
+    /**
+     * Метод для отправки сообщения пользователю
+     * @param chatId ИД пользователя
+     * @param text текст сообщения
+     */
+    public void sendMessage(long chatId, String text) throws NoSuchElementException {
+        userService.getUser(chatId);// проверка наличия такого chatId
+        Correspondence reply = new Correspondence();
+        reply.setAnswered(true);
+        reply.setChatId(chatId);
+        reply.setDateTime(LocalDateTime.now());
+        reply.setText(text);
+        reply.setWhoSentIt("volunteer");
+        correspondenceRepository.save(reply);
+    }
+
+    /**
+     * Метод, запрашивающий из БД всю переписку с конкретным пользователем.
+     */
+    public List<Correspondence> getAllCorrespondenceWithUser(long chatId) throws NotFoundException {
+        List<Correspondence> correspondences = correspondenceRepository.getAllCorrespondenceWithUser(chatId);
+        if(correspondences.size() > 0){
+            return correspondences;
+        } else{
+            throw new NotFoundException();
+        }
     }
 }

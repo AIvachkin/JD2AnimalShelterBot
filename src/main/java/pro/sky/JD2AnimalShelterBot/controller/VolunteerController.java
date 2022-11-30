@@ -9,6 +9,7 @@ import pro.sky.JD2AnimalShelterBot.service.UserService;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  *  Контроллер для работы с запросами волонтера
@@ -41,7 +42,6 @@ public class VolunteerController {
      * @return
      */
     @PostMapping("/messages/{messageId}/answer")
-    //public ResponseEntity replyToMessages(@RequestBody int messageId, @RequestBody String text) {
     public ResponseEntity replyToMessages(@PathVariable long messageId, @RequestBody String text) {
         try {
             correspondenceService.replyToMessages(messageId, text);
@@ -50,7 +50,36 @@ public class VolunteerController {
         catch (NotFoundException e){
             return ResponseEntity.notFound().build();
         }
+    }
 
+    /**
+     *Метод для отправки сообщения пользователю
+     * @return
+     */
+    @PostMapping("/messages/{chatId}/send")
+    public ResponseEntity sendMessage(@PathVariable long chatId, @RequestBody String text) {
+        try {
+            correspondenceService.sendMessage(chatId, text);
+            return ResponseEntity.ok().build();
+        }
+        catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     *Метод для получения всей переписки с пользователем
+     * @return
+     */
+    @PostMapping("/messages/{chatId}")
+    public ResponseEntity getAllCorrespondenceWithUser(@PathVariable long chatId) {
+        try {
+            List<Correspondence> correspondences = correspondenceService.getAllCorrespondenceWithUser(chatId);
+            return ResponseEntity.ok(correspondences);
+        }
+        catch (NotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

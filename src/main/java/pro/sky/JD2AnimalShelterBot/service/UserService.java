@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
+import javax.ws.rs.NotFoundException;
+
 @Service
 /**
  * Класс реализует логику по взаимодействию с объектами User
@@ -50,5 +52,14 @@ public class UserService {
             userRepository.save(user);
 
         }
+    }
+
+    /**
+     * Метод для полученеия сущности пользователя по ИД
+     * @param chatId ИД пользователя
+     * @return
+     */
+    public User getUser(long chatId) {
+        return userRepository.findById(chatId).orElseThrow();
     }
 }

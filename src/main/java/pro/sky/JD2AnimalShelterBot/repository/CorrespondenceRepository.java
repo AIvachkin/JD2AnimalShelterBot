@@ -18,4 +18,7 @@ public interface CorrespondenceRepository extends CrudRepository<Correspondence,
 
     @Query(value = "SELECT * from correspondence where message_id = ?1", nativeQuery = true)
     Correspondence getCorrespondenceByMessageId(long messageId);
+
+    @Query(value = "SELECT * from correspondence where chat_id = ?1", nativeQuery = true)
+    List<Correspondence> getAllCorrespondenceWithUser(long chatId);
 }
