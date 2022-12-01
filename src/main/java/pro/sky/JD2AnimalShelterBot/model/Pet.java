@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.*;
+import java.time.LocalDate;
 
 /**
  * Класс - сущность домашнего питомца
@@ -41,5 +42,15 @@ public class Pet {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    /**
+     * испытательный срок до
+     */
+    private LocalDate probationPeriodUpTo;
+
+    /**
+     * животное закреплено за попечителем по результатам испытательного срока
+     */
+    private boolean fixed;
 
 }
