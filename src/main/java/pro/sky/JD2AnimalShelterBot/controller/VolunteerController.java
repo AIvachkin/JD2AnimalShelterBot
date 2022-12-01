@@ -71,7 +71,7 @@ public class VolunteerController {
      *Метод для получения всей переписки с пользователем
      * @return
      */
-    @PostMapping("/messages/{chatId}")
+    @GetMapping("/messages/{chatId}")
     public ResponseEntity getAllCorrespondenceWithUser(@PathVariable long chatId) {
         try {
             List<Correspondence> correspondences = correspondenceService.getAllCorrespondenceWithUser(chatId);
