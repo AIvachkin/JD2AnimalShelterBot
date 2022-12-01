@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.configuration.BotConfiguration;
-import pro.sky.JD2AnimalShelterBot.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +28,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * Поле - обработчик команды /start
      */
     private final StartCommand startCommand;
+
 
     /**
      * Поле - конфигурация: для работы методов по получению имени бота и его токена
@@ -73,30 +73,30 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
 
-    @Override
-    /*
-     метод, предоставляющий имя бота
-     @return возвращает имя бота
+    /**
+     * метод, предоставляющий имя бота
+     *
+     * @return возвращает имя бота
      */
+    @Override
     public String getBotUsername() {
         return configuration.getBotName();
     }
 
+
     @Override
-    /*
-     метод, предоставляющий наш API key - token
-     @return возвращает токен бота
-     */
     public String getBotToken() {
         return configuration.getToken();
     }
 
-    @Override
-    /*
-     метод, определяющий, что должен делать бот, когда ему поступает тот или иной запрос
-     предварительно проверяет, что мы получили сообщение, и что это сообщение содержит текст
-     @param update - сообщение пользователя (содержит в т.ч. инфо о пользователе)
+
+    /**
+     * метод, определяющий, что должен делать бот, когда ему поступает тот или иной запрос
+     * предварительно проверяет, что мы получили сообщение, и что это сообщение содержит текст
+     *
+     * @param update - сообщение пользователя (содержит в т.ч. инфо о пользователе)
      */
+    @Override
     public void onUpdateReceived(Update update) {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
