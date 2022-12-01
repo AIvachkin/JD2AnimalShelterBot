@@ -1,16 +1,22 @@
 package pro.sky.JD2AnimalShelterBot.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
-import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.service.PetService;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 /**
- *  Контроллер для работы с сущностями животных
+ * Контроллер для работы с сущностями животных
  */
 @RestController
 @RequestMapping("/pet")
@@ -22,36 +28,60 @@ public class PetController {
         this.petService = petService;
     }
 
-    /**
-     *Метод для регистрации нового животного в базе
-     * @param pet
-     * @return
-     */
+
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Внесение нового животного в базу",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Pet.class)
+                    )
+            ), tags = "Pets"
+    )
     @PostMapping
     public ResponseEntity createPet(@RequestBody Pet pet) {
         Pet createdPet = petService.createPet(pet);
         return ResponseEntity.ok(createdPet);
     }
 
-    /**
-     * Метод получения животного по ИД
-     * @param petId
-     * @return
-     */
+
+    @Operation(
+            summary = "Поиск животного по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Найденное животное",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Pet.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если животное не найдено"
+                    )
+            }, tags = "Pets"
+    )
     @GetMapping("{petId}")
-    public ResponseEntity getPet(@PathVariable Long petId) {
+    public ResponseEntity getPet(@Parameter(description = "id питомца", required = true, example = "3")
+                                 @PathVariable Long petId) {
         Pet pet = petService.getById(petId);
-        if(pet == null) {
+        if (pet == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pet);
     }
 
-    /**
-     * Метод по редактированию сущности животного
-     * @param pet
-     * @return
-     */
+
+    @Operation(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Редактируемое животное",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Pet.class)
+                    )
+            ), tags = "Pets"
+    )
     @PutMapping()
     public ResponseEntity updatePet(@RequestBody Pet pet) {
         if (pet != null) {
@@ -62,50 +92,101 @@ public class PetController {
         }
     }
 
-    /**
-     * Метод по удалению животного из базы
-     * @param petId
-     * @return
-     */
+    @Operation(
+            summary = "Удаление животного по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Животное найдено и удалено",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Pet.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если животное не найдено"
+                    )
+            }, tags = "Pets"
+    )
     @DeleteMapping("/{petId}")
-    public ResponseEntity deletePet(@PathVariable Long petId) {
+    public ResponseEntity deletePet(@Parameter(description = "id питомца", required = true, example = "3")
+                                    @PathVariable Long petId) {
         try {
             petService.delete(petId);
             return ResponseEntity.ok().build();
-        }
-        catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    /**
-     * Метод для получения списка всех животных
-     * @return
-     */
+    @Operation(
+            summary = "Получение списка всех животных",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Список животных сформирован",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = Pet.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если животные не найдены"
+                    )
+            }, tags = "Pets"
+    )
     @GetMapping("/all")
     public List<Pet> getAllPets() {
         return petService.getAllPets();
     }
 
-    /**
-     * Метод для закрепления животного за попечителем
-     * @param petId идетификатор животного
-     * @param chatId идентификатор попечителя
-     * @return
-     */
+    @Operation(
+            summary = "Закрепление животного за попечителем",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Животное закреплено за попечителем",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если животное не найдено"
+                    )
+            }, tags = "Pets"
+    )
     @GetMapping("/assign")
-    public ResponseEntity assignPetToCaregiver(@RequestParam Long petId, @RequestParam Long chatId) {
+    public ResponseEntity assignPetToCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
+                                               @RequestParam Long petId,
+                                               @Parameter(description = "id чата пользователя", required = true, example = "123456789")
+                                               @RequestParam Long chatId) {
         petService.assignPetToCaregiver(petId, chatId);
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * Метод для открепления животного от попечителя
-     * @param petId идетификатор животного
-     * @return
-     */
+    @Operation(
+            summary = "Открепление животного от попечителя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Животное найдено по id и откреплено",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Pet.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если животное не найдено по id"
+                    )
+            }, tags = "Pets"
+    )
     @GetMapping("/detach")
-    public ResponseEntity detachPetFromCaregiver(@RequestParam Long petId) {
+    public ResponseEntity detachPetFromCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
+                                                 @RequestParam Long petId) {
         petService.detachPetFromCaregiver(petId);
         return ResponseEntity.ok().build();
     }
