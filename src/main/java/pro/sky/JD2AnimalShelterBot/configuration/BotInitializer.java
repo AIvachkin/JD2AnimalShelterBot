@@ -1,7 +1,6 @@
 package pro.sky.JD2AnimalShelterBot.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -21,8 +20,12 @@ public class BotInitializer {
     /**
      * Поле типа TelegramBot для подключения нашего приложения к telegram
      */
-    @Autowired
-    TelegramBot bot;
+
+    private final TelegramBot bot;
+
+    public BotInitializer(TelegramBot bot) {
+        this.bot = bot;
+    }
 
 
     /**
