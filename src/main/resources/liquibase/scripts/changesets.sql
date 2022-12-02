@@ -2,7 +2,7 @@
 
 -- changeset denis:1
 CREATE TABLE pet (
-    pet_id BIGINT,
+    pet_id BIGSERIAL,
     name VARCHAR,
     age INT,
     user_id BIGINT
@@ -30,7 +30,7 @@ ALTER TABLE pet ADD fixed BOOLEAN DEFAULT false,
 
 -- changeset alexander:2
 CREATE TABLE correspondence (
-   message_id BIGINT,
+   message_id BIGSERIAL,
    answered BOOLEAN DEFAULT false,
    chat_id BIGINT,
    date_time TIMESTAMP,
@@ -39,7 +39,7 @@ CREATE TABLE correspondence (
 );
 
 CREATE TABLE trustees_reports (
-    message_id BIGINT,
+    message_id BIGSERIAL,
     chat_id BIGINT,
     date_time TIMESTAMP,
     answered BOOLEAN DEFAULT false,
@@ -49,4 +49,7 @@ CREATE TABLE trustees_reports (
     viewed BOOLEAN DEFAULT false
 );
 
-DROP TABLE report
+DROP TABLE report;
+
+-- changeset alexander:3
+ALTER  TABLE  trustees_reports  DROP  COLUMN  answered;
