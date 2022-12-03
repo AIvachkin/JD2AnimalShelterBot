@@ -13,9 +13,10 @@ import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +27,6 @@ class CorrespondenceServiceTest {
 
     @Mock
     private UserService userService;
-
 
     @InjectMocks
     private CorrespondenceService out;
@@ -52,7 +52,7 @@ class CorrespondenceServiceTest {
     }
 
     @Test
-    void getMessagesById() {
+    void getMessagesByIdTest() {
         when(correspondenceRepository.getCorrespondenceByMessageId(3))
                 .thenReturn(message3);
         Correspondence actual = out.getMessagesById(3);
@@ -61,15 +61,26 @@ class CorrespondenceServiceTest {
     }
 
     @Test
-    void replyToMessages() {
+    void replyToMessagesTest() {
         assertThrows(NotFoundException.class, () -> out.replyToMessages(0L, "SomeString"));
     }
 
     @Test
-    void sendMessage() {
+    void sendMessageTest() {
+        when(userService.getUser(anyLong()))
+                .thenThrow(NoSuchElementException.class);
+        assertThrows(NoSuchElementException.class, () -> out.sendMessage(0L, "SomeString"));
     }
 
     @Test
     void getAllCorrespondenceWithUser() {
+        when(correspondenceRepository.getAllCorrespondenceWithUser(12345))
+                .thenReturn(unansweredMessages);
+        when(correspondenceRepository.getAllCorrespondenceWithUser(54321))
+                .thenThrow(NotFoundException.class);
+        List<Correspondence> actual = out.getAllCorrespondenceWithUser(12345);
+        List<Correspondence> expected = List.of(message1, message2, message3);
+        assertEquals(expected, actual);
+        assertThrows(NotFoundException.class, () -> out.getAllCorrespondenceWithUser(54321));
     }
 }
