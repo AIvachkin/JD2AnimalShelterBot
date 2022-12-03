@@ -34,7 +34,7 @@ public class UserService {
     /**
      * Метод, создающий объект User и сохраняющий его в БД
      */
-    public void createUser(Message message) {
+    public User createUser(Message message) {
 
         if (userRepository.findById(message.getChatId()).isEmpty()) {
 /**
@@ -42,20 +42,22 @@ public class UserService {
  */
             Long chatId = message.getChatId();
             Chat chat = message.getChat();
-            Contact contact = message.getContact();
 
             User user = new User();
 
             user.setChatId(chatId);
             user.setFirstname(chat.getFirstName());
             user.setLastname(chat.getLastName());
-            userRepository.save(user);
+            return userRepository.save(user);
+
 
         }
+        return null;
     }
 
     /**
      * Метод для полученеия сущности пользователя по ИД
+     *
      * @param chatId ИД пользователя
      * @return
      */
