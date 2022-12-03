@@ -51,6 +51,11 @@ class CorrespondenceServiceTest {
 
     @Test
     void getMessagesById() {
+        when(correspondenceRepository.getCorrespondenceByMessageId(3))
+                .thenReturn(message3);
+        Correspondence actual = out.getMessagesById(3);
+        Correspondence expected = message3;
+        assertEquals(expected, actual);
     }
 
     @Test
