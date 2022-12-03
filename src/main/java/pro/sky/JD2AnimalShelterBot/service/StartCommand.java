@@ -95,7 +95,6 @@ public class StartCommand {
         executeMessage(message);
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
 
-
     }
 
     /**

@@ -10,6 +10,8 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import javax.annotation.PostConstruct;
+
 @Slf4j
 @Component
 /**
@@ -33,7 +35,7 @@ public class BotInitializer {
      *
      * @throws TelegramApiException - исключение в случае прихода неизвестной для бота команды
      */
-    @EventListener({ContextRefreshedEvent.class})
+    @PostConstruct
     public void init() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
