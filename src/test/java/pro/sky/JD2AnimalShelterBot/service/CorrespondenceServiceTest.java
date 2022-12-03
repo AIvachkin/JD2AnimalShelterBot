@@ -10,10 +10,12 @@ import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.repository.CorrespondenceRepository;
 import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
+import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,10 +53,16 @@ class CorrespondenceServiceTest {
 
     @Test
     void getMessagesById() {
+        when(correspondenceRepository.getCorrespondenceByMessageId(3))
+                .thenReturn(message3);
+        Correspondence actual = out.getMessagesById(3);
+        Correspondence expected = message3;
+        assertEquals(expected, actual);
     }
 
     @Test
     void replyToMessages() {
+        assertThrows(NotFoundException.class, () -> out.replyToMessages(0L, "SomeString"));
     }
 
     @Test
