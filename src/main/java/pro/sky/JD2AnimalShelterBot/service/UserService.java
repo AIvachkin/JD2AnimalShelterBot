@@ -1,15 +1,12 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
-import javax.ws.rs.NotFoundException;
 
 @Service
 /**
@@ -34,7 +31,7 @@ public class UserService {
     /**
      * Метод, создающий объект User и сохраняющий его в БД
      */
-    public User createUser(Message message) {
+    public void createUser(Message message) {
 
         if (userRepository.findById(message.getChatId()).isEmpty()) {
 /**
@@ -48,18 +45,17 @@ public class UserService {
             user.setChatId(chatId);
             user.setFirstname(chat.getFirstName());
             user.setLastname(chat.getLastName());
-            return userRepository.save(user);
+            userRepository.save(user);
 
 
         }
-        return null;
     }
 
     /**
      * Метод для полученеия сущности пользователя по ИД
      *
      * @param chatId ИД пользователя
-     * @return
+     * @return - возвращает пользователя из БД
      */
     public User getUser(long chatId) {
         return userRepository.findById(chatId).orElseThrow();
