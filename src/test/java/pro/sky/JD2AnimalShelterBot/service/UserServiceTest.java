@@ -11,9 +11,12 @@ import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -50,5 +53,14 @@ class UserServiceTest {
 
     @Test
     void getUser() {
+        User userExpected = new User();
+        userExpected.setChatId(6666L);
+        userExpected.setFirstname("Maksim");
+        userExpected.setLastname("Petrov");
+
+        when(userRepository.findById(6666L)).thenReturn(Optional.of(userExpected));
+        User actual = userService.getUser(6666L);
+        assertEquals(userExpected, actual);
+
     }
 }
