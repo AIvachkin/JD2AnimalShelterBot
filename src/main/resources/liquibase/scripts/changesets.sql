@@ -2,14 +2,11 @@
 
 -- changeset denis:1
 CREATE TABLE pet (
-    pet_id BIGINT,
+    pet_id BIGSERIAL,
     name VARCHAR,
     age INT,
-    user_id BIGINT,
-    probation_period_up_to DATE,
-    fixed BOOLEAN
+    user_id BIGINT
 );
-
 CREATE TABLE user_data_table (
     chat_id BIGINT,
     firstname VARCHAR,
@@ -27,22 +24,32 @@ CREATE TABLE report (
     report VARCHAR
 );
 
--- changeset denis:2
+-- changeset alexander:1
+ALTER TABLE pet ADD fixed BOOLEAN DEFAULT false,
+                ADD probation_period_up_to DATE DEFAULT null;
+
+-- changeset alexander:2
 CREATE TABLE correspondence (
-    message_id BIGINT,
-    chat_id BIGINT,
-    date_time TIMESTAMP,
-    text TEXT,
-    answered BOOLEAN,
-    who_sent_it VARCHAR
+   message_id BIGSERIAL,
+   answered BOOLEAN DEFAULT false,
+   chat_id BIGINT,
+   date_time TIMESTAMP,
+   text TEXT,
+   who_sent_it VARCHAR
 );
--- changeset denis:3
+
 CREATE TABLE trustees_reports (
-    message_id BIGINT,
+    message_id BIGSERIAL,
     chat_id BIGINT,
-    pet_id BIGINT,
     date_time TIMESTAMP,
+    answered BOOLEAN DEFAULT false,
+    pet_id BIGINT,
     photo VARCHAR,
     text TEXT,
-    viewed BOOLEAN
+    viewed BOOLEAN DEFAULT false
 );
+
+DROP TABLE report;
+
+-- changeset alexander:3
+ALTER  TABLE  trustees_reports  DROP  COLUMN  answered;

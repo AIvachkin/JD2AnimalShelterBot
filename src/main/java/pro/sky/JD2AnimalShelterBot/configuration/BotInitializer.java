@@ -1,7 +1,6 @@
 package pro.sky.JD2AnimalShelterBot.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
+import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
@@ -21,8 +22,12 @@ public class BotInitializer {
     /**
      * Поле типа TelegramBot для подключения нашего приложения к telegram
      */
-    @Autowired
-    TelegramBot bot;
+
+    private final TelegramBot bot;
+
+    public BotInitializer(TelegramBot bot) {
+        this.bot = bot;
+    }
 
 
     /**
@@ -30,7 +35,7 @@ public class BotInitializer {
      *
      * @throws TelegramApiException - исключение в случае прихода неизвестной для бота команды
      */
-    @EventListener({ContextRefreshedEvent.class})
+    @PostConstruct
     public void init() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
