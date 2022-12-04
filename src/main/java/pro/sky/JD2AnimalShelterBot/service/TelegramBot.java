@@ -28,23 +28,36 @@ public class TelegramBot extends TelegramLongPollingBot {
      * Поле - обработчик команды /start
      */
     private final StartCommand startCommand;
+    private final ShelterInfo shelterInfo;
+    private final TakePet takePet;
 
 
     /**
      * Поле - конфигурация: для работы методов по получению имени бота и его токена
      */
     final BotConfiguration configuration;
+    /**
+     * Поле - с каким запросом пришел пользователь
+     */
+    private String buttonOn;
 
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
      * @param startCommand  - объект обработчика команды /start
+     * @param shelterInfo   - объект обработки команды /information
+     * @param takePet
      * @param configuration - конфигурация бота: имя и токен
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
      */
-    public TelegramBot(@Lazy StartCommand startCommand, BotConfiguration configuration) {
+    public TelegramBot(@Lazy StartCommand startCommand,
+                       @Lazy ShelterInfo shelterInfo,
+                       @Lazy TakePet takePet,
+                       BotConfiguration configuration) {
         this.startCommand = startCommand;
+        this.shelterInfo = shelterInfo;
+        this.takePet = takePet;
         this.configuration = configuration;
         setupTextMenu();
     }
@@ -113,10 +126,22 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 // оператор выбора будет дописан позже после получения полного набора команд
             switch (messageText) {
-                case "/start":
-                    startCommand.startCallBack(chatId, update);
+                case "/start": startCommand.startCallBack(chatId, update);
                     break;
-                default:
+                case "❓ Узнать информацию о приюте": {
+                    shelterInfo.prepareAndSendMessage(chatId, ShelterInfo.GREETING_INFO);
+                    buttonOn = "/information";
+                }
+                    break;
+                case "🐶️ Как взять собаку из приюта" : {
+                    takePet.prepareAndSendMessage(chatId, TakePet.GREETING_TAKE_PET);
+                    buttonOn = "/how_take_pet";
+                }
+                    break;
+                default: {
+                    if(buttonOn.equals("/information")) shelterInfo.commandProcessing(update,chatId,messageText);
+                    else takePet.commandProcessing(update,chatId,messageText);
+                }
             }
         }
     }

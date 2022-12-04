@@ -1,35 +1,22 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
 
-
-@Slf4j
-@Service
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке
  * к приему питомца в свою семью
  */
-public class TakePet implements ButtonCommand {
-
-    private final CallVolunteer callVolunteer;
-    private final StartCommand startCommand;
-    public final TelegramBot bot;
-
-    public TakePet(CallVolunteer callVolunteer, StartCommand startCommand, TelegramBot bot) {
-        this.callVolunteer = callVolunteer;
-        this.startCommand = startCommand;
-        this.bot = bot;
+@Slf4j
+@Service
+public class TakePet extends ButtonCommand {
+    protected TakePet(StartCommand startCommand) {
+        super(startCommand);
     }
-
-
     /**
      * Константа - приветственное сообщение для пользователя
      */
@@ -57,10 +44,7 @@ public class TakePet implements ButtonCommand {
             CommandForTakePet.SHIPPING.getName(),
             CommandForTakePet.RECOMM_FOR_PUPPY.getName(),
             CommandForTakePet.RECOMM_FOR_DOG.getName()
-
     );
-
-
     /**
      * Вложенный класс - перечисление команд, доступных пользователю,
      * желающему взять питомца
@@ -84,9 +68,7 @@ public class TakePet implements ButtonCommand {
          * Поле - описание перечисления
          */
         private final String desc;
-
     }
-
 
     /**
      * Константа - правила знакомства с собакой
@@ -302,55 +284,15 @@ public class TakePet implements ButtonCommand {
             питомец обязательно ответит вам радостным настроением и бесконечной преданностью.
             """;
 
-    /**
-     * Метод, обрабатывающий запрос пользователя,
-     * и предоставляющий интересующую информацию
-     */
     @Override
-    public void onButton(Update update) {
-        String messageText = update.getMessage().getText();
-        if (update.hasMessage() && update.getMessage().hasText()) {
-
-            commandProcessing(update, update.getMessage().getChatId(), messageText);
-        } else {
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId());
-            message.setText("Sorry, command was not recognized");
-            try {
-                bot.execute(message);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
-
-    /**
-     * Метод, предоставляющий справочную информацию
-     * в зависимости от поступившей команды
-     */
     public void commandProcessing(Update update, long chatId, String messageText) {
-
         switch (messageText) {
             case "/dating_rules" -> prepareAndSendMessage(chatId, DATING_RULES);
             case "/documents" -> prepareAndSendMessage(chatId, DOCUMENTS);
             case "/shipping" -> prepareAndSendMessage(chatId, SHIPPING);
             case "/recommendation_for_puppy" -> prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY);
             case "/recommendation_for_dog" -> prepareAndSendMessage(chatId, RECOMM_FOR_DOG);
-            default -> callVolunteer.onButton(update);
+            default -> CallVolunteer.callVolunteer();
         }
-
     }
-
-    /**
-     * Метод, формирующий ответное сообщение для отправки его пользователю
-     */
-    private void prepareAndSendMessage(long chatId, String textToSend) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(textToSend);
-        startCommand.executeMessage(message);
-    }
-
-
 }
