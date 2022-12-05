@@ -345,7 +345,7 @@ public class TakePet implements ButtonCommand {
     /**
      * Метод, формирующий ответное сообщение для отправки его пользователю
      */
-    private void prepareAndSendMessage(long chatId, String textToSend) {
+    public void prepareAndSendMessage(long chatId, String textToSend) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);

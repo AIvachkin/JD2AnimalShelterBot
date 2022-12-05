@@ -1,5 +1,6 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,13 +14,14 @@ import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
+    User userExpected = new User();
 
 
     @Mock
@@ -28,14 +30,16 @@ class UserServiceTest {
     @InjectMocks
     UserService userService;
 
-
-    @Test
-    void createUser() {
-
-        User userExpected = new User();
+    @BeforeEach
+    void initUser() {
         userExpected.setChatId(6666L);
         userExpected.setFirstname("Maksim");
         userExpected.setLastname("Petrov");
+    }
+
+
+    @Test
+    void createUser() {
 
         Chat chat = new Chat();
         Message message = new Message();
@@ -44,8 +48,6 @@ class UserServiceTest {
         chat.setId(6666L);
         message.setChat(chat);
 
-        when(userRepository.save(any())).thenReturn(userExpected);
-
         userService.createUser(message);
 
         verify(userRepository).save(userExpected);
@@ -53,10 +55,6 @@ class UserServiceTest {
 
     @Test
     void getUser() {
-        User userExpected = new User();
-        userExpected.setChatId(6666L);
-        userExpected.setFirstname("Maksim");
-        userExpected.setLastname("Petrov");
 
         when(userRepository.findById(6666L)).thenReturn(Optional.of(userExpected));
         User actual = userService.getUser(6666L);
