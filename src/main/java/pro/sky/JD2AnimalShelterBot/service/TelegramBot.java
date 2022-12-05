@@ -43,7 +43,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
      */
-    public TelegramBot(@Lazy StartCommand startCommand, BotConfiguration configuration) {
+    public TelegramBot(@Lazy StartCommand startCommand,  BotConfiguration configuration) {
         this.startCommand = startCommand;
         this.configuration = configuration;
         setupTextMenu();

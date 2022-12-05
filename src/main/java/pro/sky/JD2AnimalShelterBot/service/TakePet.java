@@ -7,8 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -69,11 +74,11 @@ public class TakePet implements ButtonCommand {
     @Getter
     @RequiredArgsConstructor
     public enum CommandForTakePet {
-        DATING_RULES_COMMAND("/dating_rules", "правила знакомства с собакой"),
-        DOCUMENTS_COMMAND("/documents", "список необходимых документов"),
-        SHIPPING("/shipping", "рекомендации по транспортировке животного"),
-        RECOMM_FOR_PUPPY("/recommendation_for_puppy", "рекомендации по обустройству дома для щенка"),
-        RECOMM_FOR_DOG("/recommendation_for_dog", "рекомендации по обустройству дома для взрослой собаки");
+        DATING_RULES_COMMAND("/dating_rules", "правила знакомства с собакой", ":dog:  правила знакомства с собакой"),
+        DOCUMENTS_COMMAND("/documents", "список необходимых документов", ":memo:  список необходимых документов"),
+        SHIPPING("/shipping", "рекомендации по транспортировке животного", ":minibus:  рекомендации по транспортировке животного"),
+        RECOMM_FOR_PUPPY("/recommendation_for_puppy", "рекомендации по обустройству дома для щенка", ":house_with_garden:  рекомендации по обустройству дома для щенка"),
+        RECOMM_FOR_DOG("/recommendation_for_dog", "рекомендации по обустройству дома для взрослой собаки", ":house_with_garden:  рекомендации по обустройству дома для взрослой собаки");
 
         /**
          * Поле - имя перечисления
@@ -84,6 +89,11 @@ public class TakePet implements ButtonCommand {
          * Поле - описание перечисления
          */
         private final String desc;
+
+        /**
+         * Поле - изображение перечисления
+         */
+        private final String label;
 
     }
 
@@ -301,6 +311,43 @@ public class TakePet implements ButtonCommand {
             отдыха, сна, порадуйте игрушкой, найдите время для совместных игр и прогулок, и ваш
             питомец обязательно ответит вам радостным настроением и бесконечной преданностью.
             """;
+
+    /**
+     * Метод для формирования клавиатуры
+     *
+     * @param chatId id текущего чата
+     */
+    public void takePetCommandReceived(long chatId) {
+
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        row.add(CommandForTakePet.DATING_RULES_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.DOCUMENTS_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.SHIPPING.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.RECOMM_FOR_PUPPY.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.RECOMM_FOR_DOG.getLabel());
+        keyboardRows.add(row);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setKeyboard(keyboardRows);
+        message.setReplyMarkup(keyboardMarkup);
+
+        startCommand.executeMessage(message);
+        log.info("Created a keyboard for the class TakePet for ID: " + chatId);
+
+    }
+
 
     /**
      * Метод, обрабатывающий запрос пользователя,
