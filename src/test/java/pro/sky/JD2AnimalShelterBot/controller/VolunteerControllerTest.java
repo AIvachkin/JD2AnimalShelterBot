@@ -41,7 +41,6 @@ class VolunteerControllerTest {
     void getUnansweredMessages() {
         Correspondence message1 = new Correspondence(12345L, 333L, LocalDateTime.now(), "Some text 1", false, "user");
         Correspondence message2 = new Correspondence(23456L, 444L, LocalDateTime.now(), "Some text 2", false, "user");
-
         when(correspondenceService.getUnansweredMessages())
                 .thenReturn(List.of(message1, message2));
         List<Correspondence> actual = out.getUnansweredMessages();
