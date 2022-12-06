@@ -29,7 +29,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private final StartCommand startCommand;
 
-
+    private final ShelterInfo shelterInfo;
     /**
      * Поле - конфигурация: для работы методов по получению имени бота и его токена
      */
@@ -39,12 +39,14 @@ public class TelegramBot extends TelegramLongPollingBot {
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
      * @param startCommand  - объект обработчика команды /start
+     * @param shelterInfo
      * @param configuration - конфигурация бота: имя и токен
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
      */
-    public TelegramBot(@Lazy StartCommand startCommand, BotConfiguration configuration) {
+    public TelegramBot(@Lazy StartCommand startCommand, @Lazy ShelterInfo shelterInfo, BotConfiguration configuration) {
         this.startCommand = startCommand;
+        this.shelterInfo = shelterInfo;
         this.configuration = configuration;
         setupTextMenu();
     }
@@ -115,6 +117,9 @@ public class TelegramBot extends TelegramLongPollingBot {
             switch (messageText) {
                 case "/start":
                     startCommand.startCallBack(chatId, update);
+                    break;
+                case "❓ Узнать информацию о приюте":
+                    shelterInfo.createMenuShelterInfo(chatId);
                     break;
                 default:
             }

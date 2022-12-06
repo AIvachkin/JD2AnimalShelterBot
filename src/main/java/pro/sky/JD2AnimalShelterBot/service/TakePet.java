@@ -4,10 +4,8 @@ package pro.sky.JD2AnimalShelterBot.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
 
 
@@ -20,13 +18,13 @@ import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
 public class TakePet implements ButtonCommand {
 
     private final CallVolunteer callVolunteer;
-    private final StartCommand startCommand;
     public final TelegramBot bot;
+    private final ExecuteMessage executeMessage;
 
-    public TakePet(CallVolunteer callVolunteer, StartCommand startCommand, TelegramBot bot) {
+    public TakePet(CallVolunteer callVolunteer, TelegramBot bot, ExecuteMessage executeMessage) {
         this.callVolunteer = callVolunteer;
-        this.startCommand = startCommand;
         this.bot = bot;
+        this.executeMessage = executeMessage;
     }
 
 
@@ -309,48 +307,31 @@ public class TakePet implements ButtonCommand {
     @Override
     public void onButton(Update update) {
         String messageText = update.getMessage().getText();
+        Long chartId = update.getMessage().getChatId();
         if (update.hasMessage() && update.getMessage().hasText()) {
-
-            commandProcessing(update, update.getMessage().getChatId(), messageText);
+//            commandProcessing(update, chartId, messageText);
         } else {
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId());
-            message.setText("Sorry, command was not recognized");
-            try {
-                bot.execute(message);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
+            executeMessage.prepareAndSendMessage(chartId,"Sorry, command was not recognized",null);
         }
 
     }
 
-    /**
-     * Метод, предоставляющий справочную информацию
-     * в зависимости от поступившей команды
-     */
-    public void commandProcessing(Update update, long chatId, String messageText) {
-
-        switch (messageText) {
-            case "/dating_rules" -> prepareAndSendMessage(chatId, DATING_RULES);
-            case "/documents" -> prepareAndSendMessage(chatId, DOCUMENTS);
-            case "/shipping" -> prepareAndSendMessage(chatId, SHIPPING);
-            case "/recommendation_for_puppy" -> prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY);
-            case "/recommendation_for_dog" -> prepareAndSendMessage(chatId, RECOMM_FOR_DOG);
-            default -> callVolunteer.onButton(update);
-        }
-
-    }
-
-    /**
-     * Метод, формирующий ответное сообщение для отправки его пользователю
-     */
-    private void prepareAndSendMessage(long chatId, String textToSend) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(textToSend);
-        startCommand.executeMessage(message);
-    }
+//    /**
+//     * Метод, предоставляющий справочную информацию
+//     * в зависимости от поступившей команды
+//     */
+//    public void commandProcessing(Update update, long chatId, String messageText) {
+//
+//        switch (messageText) {
+//            case "/dating_rules" -> prepareAndSendMessage(chatId, DATING_RULES);
+//            case "/documents" -> prepareAndSendMessage(chatId, DOCUMENTS);
+//            case "/shipping" -> prepareAndSendMessage(chatId, SHIPPING);
+//            case "/recommendation_for_puppy" -> prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY);
+//            case "/recommendation_for_dog" -> prepareAndSendMessage(chatId, RECOMM_FOR_DOG);
+//            default -> callVolunteer.onButton(update);
+//        }
+//
+//    }
 
 
 }

@@ -22,7 +22,7 @@ public class Correspondence {
      * id сообщения
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long messageId;
 
     /**
