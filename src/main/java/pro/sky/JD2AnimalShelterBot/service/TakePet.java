@@ -1,6 +1,5 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Service;
 import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
 
-
-@Slf4j
-@Service
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке
  * к приему питомца в свою семью
@@ -26,8 +22,6 @@ public class TakePet implements ButtonCommand {
         this.bot = bot;
         this.executeMessage = executeMessage;
     }
-
-
     /**
      * Константа - приветственное сообщение для пользователя
      */
@@ -55,10 +49,7 @@ public class TakePet implements ButtonCommand {
             CommandForTakePet.SHIPPING.getName(),
             CommandForTakePet.RECOMM_FOR_PUPPY.getName(),
             CommandForTakePet.RECOMM_FOR_DOG.getName()
-
     );
-
-
     /**
      * Вложенный класс - перечисление команд, доступных пользователю,
      * желающему взять питомца
@@ -82,9 +73,7 @@ public class TakePet implements ButtonCommand {
          * Поле - описание перечисления
          */
         private final String desc;
-
     }
-
 
     /**
      * Константа - правила знакомства с собакой
