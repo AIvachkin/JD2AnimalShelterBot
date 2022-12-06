@@ -30,6 +30,10 @@ public class CommunicationWithVolunteer {
         this.telegramBot = telegramBot;
     }
 
+    /**
+     * Метод возвращает пользователю сообщение после нажатия на кнопку "Позвать волонтера"
+     * @param update объект входящего сообщения от Телеграмм
+     */
     public void volunteerButtonHandler(Update update) {
         var chatId = update.getMessage().getChatId();
         userContext.setUserContext(chatId, "messageToVolunteer");

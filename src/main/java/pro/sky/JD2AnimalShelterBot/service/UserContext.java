@@ -14,7 +14,7 @@ public class UserContext {
     /**
      * Мапа для хранения контекста пользователей
      */
-    Map<Long, String> userContext = new HashMap<>();
+    private Map<Long, String> userContext = new HashMap<>();
 
     /**
      * Метод для сохранения контекста пользователя

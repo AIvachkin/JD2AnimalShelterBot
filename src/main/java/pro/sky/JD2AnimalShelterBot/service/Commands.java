@@ -24,6 +24,11 @@ public enum Commands {
     private final String desc;
     private final String label;
 
+    /**
+     * Метод парсит поступившую команду на предмет эквивалентности имени или лейблу одной из команд в enum
+     * @param command поступившая команда
+     * @return возвращает команду из enum
+     */
     public static Optional<Commands> parseCommand(String command) {
         if (StringUtil.isBlank(command)) {
             return Optional.empty();
