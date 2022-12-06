@@ -3,24 +3,20 @@ package pro.sky.JD2AnimalShelterBot.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Service;
-import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
 
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке
  * к приему питомца в свою семью
  */
-public class TakePet implements ButtonCommand {
+@Slf4j
+@Service
+public class TakePet {
 
-    private final CallVolunteer callVolunteer;
     public final TelegramBot bot;
-    private final ExecuteMessage executeMessage;
 
-    public TakePet(CallVolunteer callVolunteer, TelegramBot bot, ExecuteMessage executeMessage) {
-        this.callVolunteer = callVolunteer;
+    public TakePet(TelegramBot bot) {
         this.bot = bot;
-        this.executeMessage = executeMessage;
     }
     /**
      * Константа - приветственное сообщение для пользователя
@@ -288,39 +284,4 @@ public class TakePet implements ButtonCommand {
             отдыха, сна, порадуйте игрушкой, найдите время для совместных игр и прогулок, и ваш
             питомец обязательно ответит вам радостным настроением и бесконечной преданностью.
             """;
-
-    /**
-     * Метод, обрабатывающий запрос пользователя,
-     * и предоставляющий интересующую информацию
-     */
-    @Override
-    public void onButton(Update update) {
-        String messageText = update.getMessage().getText();
-        Long chartId = update.getMessage().getChatId();
-        if (update.hasMessage() && update.getMessage().hasText()) {
-//            commandProcessing(update, chartId, messageText);
-        } else {
-            executeMessage.prepareAndSendMessage(chartId,"Sorry, command was not recognized",null);
-        }
-
-    }
-
-//    /**
-//     * Метод, предоставляющий справочную информацию
-//     * в зависимости от поступившей команды
-//     */
-//    public void commandProcessing(Update update, long chatId, String messageText) {
-//
-//        switch (messageText) {
-//            case "/dating_rules" -> prepareAndSendMessage(chatId, DATING_RULES);
-//            case "/documents" -> prepareAndSendMessage(chatId, DOCUMENTS);
-//            case "/shipping" -> prepareAndSendMessage(chatId, SHIPPING);
-//            case "/recommendation_for_puppy" -> prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY);
-//            case "/recommendation_for_dog" -> prepareAndSendMessage(chatId, RECOMM_FOR_DOG);
-//            default -> callVolunteer.onButton(update);
-//        }
-//
-//    }
-
-
 }

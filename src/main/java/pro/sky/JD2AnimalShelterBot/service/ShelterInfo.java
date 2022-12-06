@@ -8,12 +8,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.ArrayList;
 import java.util.List;
-
-@Slf4j
-@Service
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о приюте
  */
+@Slf4j
+@Service
 public class ShelterInfo {
     private final ExecuteMessage executeMessage;
     protected ShelterInfo(ExecuteMessage executeMessage) {
