@@ -1,5 +1,6 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,17 +15,26 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static pro.sky.JD2AnimalShelterBot.service.TakePet.*;
 
 @ExtendWith(MockitoExtension.class)
 class TakePetTest {
 
+    SendMessage sendMessageTest = new SendMessage();
+
     @Mock
     StartCommand startCommand;
 
+
     @InjectMocks
     TakePet takePet;
+
+    @BeforeEach
+    void initParams() {
+        sendMessageTest.setChatId(6666L);
+    }
 
     public static Stream<Arguments> paramsForTest() {
         return Stream.of(
@@ -37,11 +47,9 @@ class TakePetTest {
     }
 
     @ParameterizedTest
-    @MethodSource ("paramsForTest")
+    @MethodSource("paramsForTest")
     public void commandProcessingTest(String textForMessageTest, String textForSendMessage) {
 
-        SendMessage sendMessageTest = new SendMessage();
-        sendMessageTest.setChatId(6666L);
         sendMessageTest.setText(textForSendMessage);
 
         Message messageTest = new Message();
@@ -57,11 +65,17 @@ class TakePetTest {
     @Test
     public void prepareAndSendMessageTest() {
 
-        SendMessage sendMessageTest = new SendMessage();
-        sendMessageTest.setChatId(6666L);
         sendMessageTest.setText(DATING_RULES);
 
         takePet.prepareAndSendMessage(6666L, DATING_RULES);
         verify(startCommand).executeMessage(sendMessageTest);
+    }
+
+
+    @Test
+    public void takePetCommandReceivedTest() {
+
+        takePet.takePetCommandReceived(6666L);
+        verify(startCommand).executeMessage(any(SendMessage.class));
     }
 }

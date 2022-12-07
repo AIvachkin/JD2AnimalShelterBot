@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 
+
 @Getter
 @RequiredArgsConstructor
 public enum Commands {
@@ -15,7 +16,7 @@ public enum Commands {
     INFORMATION_COMAND("/information", "Узнать информацию о приюте", "❓ Узнать информацию о приюте"),
     TAKE_PET_COMAND("/how_take_pet", "Как взять собаку из приюта", "\uD83D\uDC36️ Как взять собаку из приюта"),
     SEND_REPORT_COMAND("/send_pet_report", "Прислать отчет о питомце", "\uD83D\uDDD3 Прислать отчет о питомце"),
-    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера");
+    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера");
 
 
     private final String name;

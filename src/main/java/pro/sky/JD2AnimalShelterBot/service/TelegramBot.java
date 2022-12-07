@@ -29,6 +29,8 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private final StartCommand startCommand;
 
+    private final CommunicationWithVolunteer communicationWithVolunteer;
+
 
     /**
      * Поле - конфигурация: для работы методов по получению имени бота и его токена
@@ -43,9 +45,11 @@ public class TelegramBot extends TelegramLongPollingBot {
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
      */
-    public TelegramBot(@Lazy StartCommand startCommand,  BotConfiguration configuration) {
+    public TelegramBot(@Lazy StartCommand startCommand,
+                       BotConfiguration configuration, @Lazy CommunicationWithVolunteer communicationWithVolunteer) {
         this.startCommand = startCommand;
         this.configuration = configuration;
+        this.communicationWithVolunteer = communicationWithVolunteer;
         setupTextMenu();
     }
 
@@ -111,12 +115,19 @@ public class TelegramBot extends TelegramLongPollingBot {
              */
             long chatId = update.getMessage().getChatId();
 
+            //Commands.CALL_VOLUNTEER_COMAND.getLabel();
 // оператор выбора будет дописан позже после получения полного набора команд
             switch (messageText) {
                 case "/start":
                     startCommand.startCallBack(chatId, update);
                     break;
+
+                case "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера":
+                    communicationWithVolunteer.volunteerButtonHandler(update);
+                    break;
                 default:
+                    System.out.println("Неизвестная команда: " + messageText);
+                    break;
             }
         }
     }
