@@ -136,7 +136,7 @@ public class VolunteerController {
             }, tags = "Correspondence"
     )
     @PostMapping("/messages/{chatId}")
-    public ResponseEntity getAllCorrespondenceWithUser(@Parameter(description = "id чата пользователя", required = true, example = "1237864")
+    public ResponseEntity<List<Correspondence>> getAllCorrespondenceWithUser(@Parameter(description = "id чата пользователя", required = true, example = "1237864")
                                                        @PathVariable long chatId) {
         try {
             List<Correspondence> correspondences = correspondenceService.getAllCorrespondenceWithUser(chatId);
