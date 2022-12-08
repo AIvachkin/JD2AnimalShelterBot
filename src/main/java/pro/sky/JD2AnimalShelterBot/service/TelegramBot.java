@@ -29,8 +29,13 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private final StartCommand startCommand;
 
+
     private final ShelterInfo shelterInfo;
     private final TakePet takePet;
+    private final CommunicationWithVolunteer communicationWithVolunteer;
+
+
+
     /**
      * Поле - конфигурация: для работы методов по получению имени бота и его токена
      */
@@ -49,12 +54,15 @@ public class TelegramBot extends TelegramLongPollingBot {
     public TelegramBot(@Lazy StartCommand startCommand,
                        @Lazy ShelterInfo shelterInfo,
                        @Lazy TakePet takePet,
-                       BotConfiguration configuration) {
+                       BotConfiguration configuration, 
+                       @Lazy CommunicationWithVolunteer communicationWithVolunteer) {
+
         this.startCommand = startCommand;
         this.shelterInfo = shelterInfo;
         this.takePet = takePet;
         this.configuration = configuration;
-        setupTextMenu();
+        this.communicationWithVolunteer = communicationWithVolunteer;
+       // setupTextMenu();
     }
 
     /**
@@ -119,18 +127,26 @@ public class TelegramBot extends TelegramLongPollingBot {
              */
             long chatId = update.getMessage().getChatId();
 
+            //Commands.CALL_VOLUNTEER_COMAND.getLabel();
 // оператор выбора будет дописан позже после получения полного набора команд
             switch (messageText) {
                 case "/start":
                     startCommand.startCallBack(chatId, update);
                     break;
+
                 case "❓ Узнать информацию о приюте":
                     shelterInfo.createMenuShelterInfo(chatId);
                     break;
                 case "\uD83D\uDC36️ Как взять собаку из приюта":
                     takePet.takePetCommandReceived(chatId);
+
+                case "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера":
+                    communicationWithVolunteer.volunteerButtonHandler(update);
+
                     break;
                 default:
+                    System.out.println("Неизвестная команда: " + messageText);
+                    break;
             }
         }
     }

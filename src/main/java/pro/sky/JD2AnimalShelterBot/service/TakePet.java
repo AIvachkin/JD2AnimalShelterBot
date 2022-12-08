@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке
@@ -23,6 +27,7 @@ import java.util.List;
 @Slf4j
 @Service
 public class TakePet {
+
 
     public final TelegramBot bot;
     private final ExecuteMessage executeMessage;
@@ -316,6 +321,7 @@ public class TakePet {
             """;
 
 
+
     /**
      * Константа - рекомендации по обустройству дома для собаки с ограниченными возможностями
      */
@@ -425,6 +431,7 @@ public class TakePet {
             """;
 
 
+
     /**
      * Константа - причины отказа в усыновлении животного
      */
@@ -495,11 +502,13 @@ public class TakePet {
             """;
 
 
+
     /**
      * Метод для формирования клавиатуры
      *
      * @param chatId id текущего чата
      */
+
     public void takePetCommandReceived(long chatId) {
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();

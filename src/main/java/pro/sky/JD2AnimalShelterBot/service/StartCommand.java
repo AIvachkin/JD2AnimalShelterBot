@@ -67,7 +67,9 @@ public class StartCommand {
      */
     public void startCommandReceived(long chatId, String firstName) {
         String textToSend = GREETING + firstName + "! " + WELCOME_MESSAGE;
+
         //Добавление клавиатуры к собщению.
+
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -87,5 +89,6 @@ public class StartCommand {
 
        executeMessage.prepareAndSendMessage(chatId,textToSend,keyboardMarkup);
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
+
     }
 }
