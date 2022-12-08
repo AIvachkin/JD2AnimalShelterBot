@@ -56,12 +56,12 @@ class StartCommandTest {
 //
 //    }
 
-    @Test
-    void executeMessage() throws TelegramApiException {
-
-        sendMessageTest.setText("Test message");
-
-        startCommand.executeMessage(sendMessageTest);
-        verify(telegramBot).execute(sendMessageTest);
-    }
+//    @Test
+//    void executeMessage() throws TelegramApiException {
+//
+//        sendMessageTest.setText("Test message");
+//
+//        startCommand.executeMessage(sendMessageTest);
+//        verify(telegramBot).execute(sendMessageTest);
+//    }
 }
