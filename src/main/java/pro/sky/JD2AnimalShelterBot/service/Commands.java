@@ -16,7 +16,13 @@ public enum Commands {
     INFORMATION_COMAND("/information", "Узнать информацию о приюте", "❓ Узнать информацию о приюте"),
     TAKE_PET_COMAND("/how_take_pet", "Как взять собаку из приюта", "\uD83D\uDC36️ Как взять собаку из приюта"),
     SEND_REPORT_COMAND("/send_pet_report", "Прислать отчет о питомце", "\uD83D\uDDD3 Прислать отчет о питомце"),
-    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера");
+
+    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера"),
+    SHELTER_INFO("/shelter_info", "Информация о приюте", "❓ Информация о приюте"),
+    SCHEDULE_ADDRESS("/schedule_address", "Адрес и расписание приюта", "\uD83E\uDDED Адрес и расписание приютае"),
+    SAFETY_RULES("/safety_rules", "Правила поведения в приюте", "\uD83D\uDCC3 Правила поведения в приюте"),
+    CONTACT_DATA("/contact_data", "Оставить контактные данные", "\uD83D\uDCDE Оставить контактные данные"),
+    MAIN_MENU("/main_menu", "Вернуться в основное меню", "\uD83C\uDFE0 Основное меню");
 
 
     private final String name;

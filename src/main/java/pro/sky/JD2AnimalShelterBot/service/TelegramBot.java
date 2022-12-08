@@ -29,7 +29,11 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private final StartCommand startCommand;
 
+
+    private final ShelterInfo shelterInfo;
+    private final TakePet takePet;
     private final CommunicationWithVolunteer communicationWithVolunteer;
+
 
 
     /**
@@ -41,16 +45,24 @@ public class TelegramBot extends TelegramLongPollingBot {
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
      * @param startCommand  - объект обработчика команды /start
+     * @param shelterInfo
+     * @param takePet
      * @param configuration - конфигурация бота: имя и токен
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
      */
     public TelegramBot(@Lazy StartCommand startCommand,
-                       BotConfiguration configuration, @Lazy CommunicationWithVolunteer communicationWithVolunteer) {
+                       @Lazy ShelterInfo shelterInfo,
+                       @Lazy TakePet takePet,
+                       BotConfiguration configuration, 
+                       @Lazy CommunicationWithVolunteer communicationWithVolunteer) {
+
         this.startCommand = startCommand;
+        this.shelterInfo = shelterInfo;
+        this.takePet = takePet;
         this.configuration = configuration;
         this.communicationWithVolunteer = communicationWithVolunteer;
-        setupTextMenu();
+       // setupTextMenu();
     }
 
     /**
@@ -122,8 +134,15 @@ public class TelegramBot extends TelegramLongPollingBot {
                     startCommand.startCallBack(chatId, update);
                     break;
 
+                case "❓ Узнать информацию о приюте":
+                    shelterInfo.createMenuShelterInfo(chatId);
+                    break;
+                case "\uD83D\uDC36️ Как взять собаку из приюта":
+                    takePet.takePetCommandReceived(chatId);
+
                 case "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера":
                     communicationWithVolunteer.volunteerButtonHandler(update);
+
                     break;
                 default:
                     System.out.println("Неизвестная команда: " + messageText);

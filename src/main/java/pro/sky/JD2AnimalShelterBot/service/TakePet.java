@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +26,15 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class TakePet implements ButtonCommand {
+public class TakePet {
 
-    private final CallVolunteer callVolunteer;
-    private final StartCommand startCommand;
+
     public final TelegramBot bot;
+    private final ExecuteMessage executeMessage;
 
-    public TakePet(CallVolunteer callVolunteer, StartCommand startCommand, TelegramBot bot) {
-        this.callVolunteer = callVolunteer;
-        this.startCommand = startCommand;
+    public TakePet(TelegramBot bot, ExecuteMessage executeMessage) {
         this.bot = bot;
+        this.executeMessage = executeMessage;
     }
 
 
@@ -319,6 +321,7 @@ public class TakePet implements ButtonCommand {
             """;
 
 
+
     /**
      * Константа - рекомендации по обустройству дома для собаки с ограниченными возможностями
      */
@@ -428,6 +431,7 @@ public class TakePet implements ButtonCommand {
             """;
 
 
+
     /**
      * Константа - причины отказа в усыновлении животного
      */
@@ -498,15 +502,14 @@ public class TakePet implements ButtonCommand {
             """;
 
 
+
     /**
      * Метод для формирования клавиатуры
      *
      * @param chatId id текущего чата
      */
-    public void takePetCommandReceived(long chatId) {
 
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
+    public void takePetCommandReceived(long chatId) {
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
@@ -541,75 +544,61 @@ public class TakePet implements ButtonCommand {
 
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);
-        message.setReplyMarkup(keyboardMarkup);
 
-        startCommand.executeMessage(message);
+        executeMessage.prepareAndSendMessage(chatId,"Привет, выбери команду из меню \u2B07", keyboardMarkup);
+
         log.info("Created a keyboard for the class TakePet for ID: " + chatId);
 
     }
 
 
-    /**
-     * Метод, обрабатывающий запрос пользователя,
-     * и предоставляющий интересующую информацию
-     */
-    @Override
-    public void onButton(Update update) {
-        String messageText = update.getMessage().getText();
-        if (update.hasMessage() && update.getMessage().hasText()) {
+//    /**
+//     * Метод, обрабатывающий запрос пользователя,
+//     * и предоставляющий интересующую информацию
+//     */
+//    @Override
+//    public void onButton(Update update) {
+//        String messageText = update.getMessage().getText();
+//        if (update.hasMessage() && update.getMessage().hasText()) {
+//
+//            commandProcessing(update, update.getMessage().getChatId(), messageText);
+//        } else {
+//            SendMessage message = new SendMessage();
+//            message.setChatId(update.getMessage().getChatId());
+//            message.setText("Sorry, command was not recognized");
+//            try {
+//                bot.execute(message);
+//            } catch (TelegramApiException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//    }
 
-            commandProcessing(update, update.getMessage().getChatId(), messageText);
-        } else {
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId());
-            message.setText("Sorry, command was not recognized");
-            try {
-                bot.execute(message);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    }
-
-    /**
-     * Метод, предоставляющий справочную информацию
-     * в зависимости от поступившей команды
-     */
-    public void commandProcessing(Update update, long chatId, String messageText) {
-
-        switch (messageText) {
-            case "/dating_rules" -> prepareAndSendMessage(chatId, CommandForTakePet.DATING_RULES_COMMAND.getDesc());
-            case "/documents" -> prepareAndSendMessage(chatId, CommandForTakePet.DOCUMENTS_COMMAND.getDesc());
-            case "/shipping" -> prepareAndSendMessage(chatId, CommandForTakePet.SHIPPING_COMMAND.getDesc());
-            case "/recommendation_for_puppy" ->
-                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_PUPPY_COMMAND.getDesc());
-            case "/recommendation_for_dog" ->
-                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_COMMAND.getDesc());
-            case "/recommendation_for_dog_invalid" ->
-                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_INVALID_COMMAND.getDesc());
-            case "/initial_advice" ->
-                    prepareAndSendMessage(chatId, CommandForTakePet.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getDesc());
-            case "/recommeded_cynologist" ->
-                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMMENDED_CYNOLOGIST_COMMAND.getDesc());
-            case "/refusal" -> prepareAndSendMessage(chatId, CommandForTakePet.REASONS_FOR_REFUSAL_COMMAND.getDesc());
-            default -> callVolunteer.onButton(update);
-        }
-
-    }
-
-
-    /**
-     * Метод, формирующий ответное сообщение для отправки его пользователю
-     */
-    public void prepareAndSendMessage(long chatId, String textToSend) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(textToSend);
-        startCommand.executeMessage(message);
-    }
-
-
+//    /**
+//     * Метод, предоставляющий справочную информацию
+//     * в зависимости от поступившей команды
+//     */
+//    public void commandProcessing(Update update, long chatId, String messageText) {
+//
+//        switch (messageText) {
+//            case "/dating_rules" -> prepareAndSendMessage(chatId, CommandForTakePet.DATING_RULES_COMMAND.getDesc());
+//            case "/documents" -> prepareAndSendMessage(chatId, CommandForTakePet.DOCUMENTS_COMMAND.getDesc());
+//            case "/shipping" -> prepareAndSendMessage(chatId, CommandForTakePet.SHIPPING_COMMAND.getDesc());
+//            case "/recommendation_for_puppy" ->
+//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_PUPPY_COMMAND.getDesc());
+//            case "/recommendation_for_dog" ->
+//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_COMMAND.getDesc());
+//            case "/recommendation_for_dog_invalid" ->
+//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_INVALID_COMMAND.getDesc());
+//            case "/initial_advice" ->
+//                    prepareAndSendMessage(chatId, CommandForTakePet.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getDesc());
+//            case "/recommeded_cynologist" ->
+//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMMENDED_CYNOLOGIST_COMMAND.getDesc());
+//            case "/refusal" -> prepareAndSendMessage(chatId, CommandForTakePet.REASONS_FOR_REFUSAL_COMMAND.getDesc());
+//            default -> callVolunteer.onButton(update);
+//        }
+//    }
 }
 
 

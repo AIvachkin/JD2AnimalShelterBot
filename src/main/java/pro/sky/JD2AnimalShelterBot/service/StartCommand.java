@@ -2,15 +2,11 @@ package pro.sky.JD2AnimalShelterBot.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Класс обрабатывает комманду /start
@@ -25,15 +21,18 @@ public class StartCommand {
      */
     private final TelegramBot telegramBot;
     private final UserService userService;
+    private final ExecuteMessage executeMessage;
     /**
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
      *
-     * @param telegramBot - объект взаимодействия с ботом
-     * @param userService - объект для взаимодействия с командами сервиса
+     * @param telegramBot    - объект взаимодействия с ботом
+     * @param userService    - объект для взаимодействия с командами сервиса
+     * @param executeMessage
      */
-    public StartCommand(TelegramBot telegramBot, UserService userService) {
+    public StartCommand(TelegramBot telegramBot, UserService userService, ExecuteMessage executeMessage) {
         this.telegramBot = telegramBot;
         this.userService = userService;
+        this.executeMessage = executeMessage;
     }
 
     /**
@@ -52,7 +51,7 @@ public class StartCommand {
             """;
 
     /**
-     * Метод обработки команды /start.
+     * Метод обработки команды /start и добавления в БД пользователя
      * @param chatId  id текущего чата
      * @param update  объект сообщения
      */
@@ -68,11 +67,9 @@ public class StartCommand {
      */
     public void startCommandReceived(long chatId, String firstName) {
         String textToSend = GREETING + firstName + "! " + WELCOME_MESSAGE;
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(textToSend);
 
-        //Добавление клавиатуры к сообщению.
+        //Добавление клавиатуры к собщению.
+
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -89,24 +86,9 @@ public class StartCommand {
         keyboardRows.add(row);
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
-        message.setReplyMarkup(keyboardMarkup);//Добавление клавиатуры
-        //----------------------------------------
 
-        executeMessage(message);
+       executeMessage.prepareAndSendMessage(chatId,textToSend,keyboardMarkup);
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
 
-
-    }
-
-    /**
-    * Метод проверки отправки сообщения на ошибки
-    * @param message  сообщение
-     */
-    public void executeMessage(SendMessage message){
-        try{
-            telegramBot.execute(message);
-        } catch (TelegramApiException e){
-            log.error("Error occurred: " + e.getMessage());
-        }
     }
 }
