@@ -30,6 +30,7 @@ public class PetController {
 
 
     @Operation(
+            summary = "Внесение нового животного в базу",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Внесение нового животного в базу",
                     content = @Content(
@@ -74,6 +75,7 @@ public class PetController {
 
 
     @Operation(
+            summary = "Редактирование животного",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Редактируемое животное",
                     content = @Content(

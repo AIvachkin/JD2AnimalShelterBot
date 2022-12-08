@@ -72,7 +72,7 @@ public class StartCommand {
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
 
-        //Добавление клавиатуры к собщению.
+        //Добавление клавиатуры к сообщению.
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -94,6 +94,7 @@ public class StartCommand {
 
         executeMessage(message);
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
+
 
     }
 

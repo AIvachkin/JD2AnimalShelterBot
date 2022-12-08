@@ -53,3 +53,7 @@ DROP TABLE report;
 
 -- changeset alexander:3
 ALTER  TABLE  trustees_reports  DROP  COLUMN  answered;
+
+-- changeset andrew: 1
+DROP TABLE volunteer;
+

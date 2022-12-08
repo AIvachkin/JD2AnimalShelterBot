@@ -7,16 +7,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.interfaceForButton.ButtonCommand;
 
+import java.util.ArrayList;
+import java.util.List;
 
-@Slf4j
-@Service
+
+
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке
  * к приему питомца в свою семью
  */
+@Slf4j
+@Service
 public class TakePet implements ButtonCommand {
 
     private final CallVolunteer callVolunteer;
@@ -30,35 +36,36 @@ public class TakePet implements ButtonCommand {
     }
 
 
-    /**
-     * Константа - приветственное сообщение для пользователя
-     */
-    public static final String GREETING_TAKE_PET = """
-            Здесь Вы получите информацию о том, как подготовиться
-            ко встрече с новым членом семьи :dog:
-            Вам доступны следующие команды:
-                        
-            Команда %s выводит правила знакомства с собакой
-                        
-            Команда %s выводит список необходимых документов
-                        
-            Команда %s покажет рекомендации по транспортировке животного
-                        
-            Команда %s даст рекомендации по обустройству дома для щенка
-                        
-            Команда %s даст рекомендации по обустройству дома для взрослой собаки
-                        
-            Если ни одна команда не подойдет Вам, произойдет переадресация
-            на волонтера, который поможет Вам.
-                        
-            """.formatted(
-            CommandForTakePet.DATING_RULES_COMMAND.getName(),
-            CommandForTakePet.DOCUMENTS_COMMAND.getName(),
-            CommandForTakePet.SHIPPING.getName(),
-            CommandForTakePet.RECOMM_FOR_PUPPY.getName(),
-            CommandForTakePet.RECOMM_FOR_DOG.getName()
-
-    );
+//    /**
+//     * Константа - приветственное сообщение для пользователя
+//     * Вероятно, метод не будет использоваться - выведем кнопочное меню
+//     */
+//    public static final String GREETING_TAKE_PET = """
+//            Здесь Вы получите информацию о том, как подготовиться
+//            ко встрече с новым членом семьи :dog:
+//            Вам доступны следующие команды:
+//
+//            Команда %s выводит правила знакомства с собакой
+//
+//            Команда %s выводит список необходимых документов
+//
+//            Команда %s покажет рекомендации по транспортировке животного
+//
+//            Команда %s даст рекомендации по обустройству дома для щенка
+//
+//            Команда %s даст рекомендации по обустройству дома для взрослой собаки
+//
+//            Если ни одна команда не подойдет Вам, произойдет переадресация
+//            на волонтера, который поможет Вам.
+//
+//            """.formatted(
+//            CommandForTakePet.DATING_RULES_COMMAND.getName(),
+//            CommandForTakePet.DOCUMENTS_COMMAND.getName(),
+//            CommandForTakePet.SHIPPING.getName(),
+//            CommandForTakePet.RECOMM_FOR_PUPPY.getName(),
+//            CommandForTakePet.RECOMM_FOR_DOG.getName()
+//
+//    );
 
 
     /**
@@ -69,11 +76,15 @@ public class TakePet implements ButtonCommand {
     @Getter
     @RequiredArgsConstructor
     public enum CommandForTakePet {
-        DATING_RULES_COMMAND("/dating_rules", "правила знакомства с собакой"),
-        DOCUMENTS_COMMAND("/documents", "список необходимых документов"),
-        SHIPPING("/shipping", "рекомендации по транспортировке животного"),
-        RECOMM_FOR_PUPPY("/recommendation_for_puppy", "рекомендации по обустройству дома для щенка"),
-        RECOMM_FOR_DOG("/recommendation_for_dog", "рекомендации по обустройству дома для взрослой собаки");
+        DATING_RULES_COMMAND("/dating_rules", DATING_RULES, ":dog:  правила знакомства с собакой"),
+        DOCUMENTS_COMMAND("/documents", DOCUMENTS, ":memo:  список необходимых документов"),
+        SHIPPING_COMMAND("/shipping", SHIPPING, ":minibus:  рекомендации по транспортировке животного"),
+        RECOMM_FOR_PUPPY_COMMAND("/recommendation_for_puppy", RECOMM_FOR_PUPPY, ":house_with_garden:  рекомендации по обустройству дома для щенка"),
+        RECOMM_FOR_DOG_COMMAND("/recommendation_for_dog", RECOMM_FOR_DOG, ":house_with_garden:  рекомендации по обустройству дома для взрослой собаки"),
+        RECOMM_FOR_DOG_INVALID_COMMAND("/recommendation_for_dog_invalid", RECOMM_FOR_DOG_INVALID, ":house:  рекомендации по обустройству дома для собаки с ограниченными возможностями"),
+        CYNOLOGIST_INITIAL_ADVICE_COMMAND("/initial_advice", CYNOLOGIST_INITIAL_ADVICE, ":scroll:  советы кинолога по первичному общению с собакой"),
+        RECOMMENDED_CYNOLOGIST_COMMAND("/recommeded_cynologist", RECOMMENDED_CYNOLOGIST, ":medal:  лучшие кинологи"),
+        REASONS_FOR_REFUSAL_COMMAND("/refusal", REASONS_FOR_REFUSAL, ":x:  причины, по которым Вам могут отказать в усыновлении животного");
 
         /**
          * Поле - имя перечисления
@@ -84,6 +95,11 @@ public class TakePet implements ButtonCommand {
          * Поле - описание перечисления
          */
         private final String desc;
+
+        /**
+         * Поле - изображение перечисления
+         */
+        private final String label;
 
     }
 
@@ -302,6 +318,237 @@ public class TakePet implements ButtonCommand {
             питомец обязательно ответит вам радостным настроением и бесконечной преданностью.
             """;
 
+
+    /**
+     * Константа - рекомендации по обустройству дома для собаки с ограниченными возможностями
+     */
+    public static final String RECOMM_FOR_DOG_INVALID = """
+            К большому сожалению мы не знаем, как обустроить дом для собак с ограниченными
+            возможностями. Надеемся, что этот блок когда-то дополнится рекомендациями
+            опытных кинологов и других причастных к содержанию животных лиц.
+            """;
+
+    /**
+     * Константа - советы кинолога по первичному общению с собакой
+     */
+    public static final String CYNOLOGIST_INITIAL_ADVICE = """
+            Забирать нового друга лучше в утреннее время, чтобы у малыша было больше времени
+            освоиться и пообщаться с новыми владельцами. Хорошо, если период адаптации
+            придется на ваш отпуск или хотя бы на выходные.
+            Несмотря на то, что всех членов семьи переполняют эмоции не стоит сразу же начинать
+            играть со щенком, тискать его. Объясните детям, что малышу нужно привыкнуть к новой
+            обстановке.
+            Если в вашем доме есть другие животные, то стоит начать знакомство осторожно и
+            исключительно под присмотром, первое время не оставляйте питомцев наедине.
+            Опустите щенка на пол, дайте ему обойти, обнюхать и осмотреть новое жилище.
+            Если собака боится, сидит на одном месте, не стоит настаивать на изучении территории,
+            придет время и малыш сам решит все исследовать. Погладьте щенка, поговорите с ним,
+            предложите игрушку.
+            Когда малыш немного освоится, то покажите ему ключевые места. Покормите щенка из мисок,
+            дайте воды. После кормления отнесите на пеленку, высока вероятность, что собака захочет
+            в туалет. Затем можно познакомить питомца с лежанкой и игрушками.
+            Постарайтесь заранее решить будете ли вы разрешать собаке забираться на кровать,
+            диваны и кресла. Если да, то с первого дня познакомьте питомца с мягкой мебелью, но не
+            оставляйте его одного, малыш может упасть и ушибиться. Если ваш щенок миниатюрной породы,
+            чтобы в дальнейшем ему легче было забираться на кровать, можно установить специальные
+            ступеньки или лесенки.
+            Обратите внимание на важные моменты, которые уберегут вас от лишнего беспокойства:
+            ●     Первые месяцы жизни щенки очень много спят — это нормально. Не стоит будить собаку
+            и беспокоить лишний раз, это может негативно сказаться на психике. Если малыш много спит,
+            но в период бодрствования активен, играет, хорошо кушает и ходит в туалет, то поводов
+            для беспокойства нет.
+            ●     Переезд в новый дом, расставание с матерью, братьями и сестрами - стресс для щенка.
+            Чем младше собака, тем ей тяжелее. Наберитесь терпения, будьте тактичны. Не настаивайте на
+            играх и общении, резко не хватайте щенка, не носите на руках. Малышу нужно время для
+            адаптации, он сам покажет вам, когда захочет внимания.
+            ●     Не ругайте щенка и не наказывайте его. Собака не понимает криков, физическое насилие
+            недопустимо. Объясняйте все короткими командами: “Нет”, “Нельзя”, “Фу”. Если щенок грызет
+            обувь, то убирайте ее и переключайте внимание на игрушки, если заметили лужицу в
+            неположенном месте, то промокните ее пеленкой и дайте понюхать питомцу. Со временем собака
+            научится понимать вас с полуслова, но до этого нужно сохранять терпение и работать как над
+            собой, так и над питомцем.
+            ●     Следите за общим состоянием. При рвоте, жидком стуле, вялости, сниженном аппетите
+            следует проконсультироваться с ветеринарным врачом.
+            """;
+
+    /**
+     * Константа - рекомендации по проверенным кинологам
+     */
+    public static final String RECOMMENDED_CYNOLOGIST = """
+            Если Вам понадобится опытный кинолог, мы рекомендуем обратиться к следующим
+            специалистам:
+                        
+            - Светлана Чернобаева
+                        
+            О себе
+            Я работаю кинологом 6 лет, очень люблю собак. Особенность моей работы в том что,
+            я подхожу к каждому клиенту индивидуально. Я всегда стремлюсь получить результат
+            от своей работы, всегда готова к любым ситуациям и никогда не останавливаюсь на
+            достигнутом.
+                        
+            Образование
+            Центр служебного собаководства «ДОСААФ», инструктор-дрессировщик служебных собак
+                        
+            Опыт
+            Центр служебного собаководства «ДОСААФ», инструктор-дрессировщик
+                        
+            Ссылка на портфолио: https://profi.kz/veterinar/kinologia/srochno/?seamless=1&tabName=PROFILES&profileId=ChernobayevaSS&profileTabName=reviews
+             
+            ___________
+                     
+            - Эльвира Альмухамедова
+                        
+            О себе
+            Профессиональна Дрессировка собак
+            Оборудованный кинологический центр для собак любой породы и возраста
+            Сдача экзаменов, показ на выставках
+                        
+            Образование
+            Союз Киннологов Казахстана
+                        
+            Опыт
+            Кинологический центр «Алтын ит»
+                        
+            Ссылка на портфолио: https://profi.kz/veterinar/kinologia/srochno/?seamless=1&tabName=PROFILES&profileId=AlmukhamedovaEA&profileTabName=reviews
+                        
+            ___________
+                     
+            - Коровникова Анастасия
+                      
+            О себе
+            Имею огромный опыт с животными, в особенности с собаками. Всегда учитываю
+            пожелания клиента и выполняю поставленную задачу по максимуму. Также
+            занимаюсь передержкой собак
+                        
+            Опыт
+            Кинологический центр «Алтын ит»
+                        
+            Ссылка на портфолио: https://profi.kz/veterinar/kinologia/srochno/?seamless=1&tabName=PROFILES&profileId=AnastasiyaKY3&profileTabName=reviews
+                        
+            """;
+
+
+    /**
+     * Константа - причины отказа в усыновлении животного
+     */
+    public static final String REASONS_FOR_REFUSAL = """
+            Существует пять причин, по которым чаще всего отказывают желающим
+            «усыновить» домашнего любимца:
+                        
+            1. Большое количество животных дома
+            В конце 2018 года в Российской Федерации был принят закон «Об
+            ответственном обращении с животными». В нем установлено ограничение
+            на количество питомцев, содержащихся в одном домовладении. При этом
+            точное число не названо — в каждом случае вопрос решается индивидуально,
+            исходя из материальных возможностей и жилищных условий человека.
+            Важно, чтобы хозяин обеспечивал правильное кормление и своевременное
+            медицинское обслуживание всем своим животным. Также, согласно
+            санитарно-эпидемиологическим правилам, запрещено скопление большого числа
+            птиц и млекопитающих на небольшой территории — это повышает риск
+            возникновения инфекционных болезней.
+                        
+            2. Нестабильные отношения в семье
+            Любые перемены — это стресс для животного. Кошки и собаки привыкают к людям,
+            скучают после вынужденной разлуки с хозяевами и даже отказываются от еды.
+            Если семейная пара планирует развод, не стоит брать питомца, чтобы потом
+            не обрекать его на страдания.
+                        
+            3. Наличие маленьких детей
+            Семьям, где есть дети до 5 лет, сложно взять животное из приюта сразу по двум
+            причинам. Во-первых, есть риск, что собака или кошка будет проявлять агрессию
+            по отношению к маленькому человеку. Во-вторых, дети сами часто провоцируют
+            конфликт, дергая зверька за хвост и уши или бросая в него тяжелые предметы.
+            Происходит это по недосмотру и с молчаливого попустительства взрослых людей,
+            но в итоге виноватым оказывается животное. Если ребенок получит царапины или
+            укусы, родители, вместо того, чтобы искать контакт с питомцем и воспитывать
+            своего отпрыска, предпочтут избавиться от хвостатого «источника опасности».
+                        
+            4. Съемное жилье
+            Не все домовладельцы разрешают арендаторам заводить животных. Отчасти это
+            связано с опасениями, что кот или собака испортят мебель, обои и деревянные
+            части интерьера. Кроме того, в комнатах остается неприятный запах меток и
+            шерсти, устранение которого потребует дополнительных трат. Если хозяин жилья
+            обнаружит обман со стороны квартиранта, то, скорее всего, заявит о желании
+            немедленно расторгнуть договор. После этого и люди, и их питомец окажутся на
+            улице. А поскольку найти съемную жилплощадь, где будут рады присутствию
+            мурлыкающего или лающего создания, не так уж просто, судьба животного будет
+            незавидной: оно снова станет ничейным и бездомным.
+                        
+            5. Животное в подарок или для работы
+            Присутствие животного в доме накладывает на его владельцев ряд обязательств
+            (в том числе и финансовых), связанных с кормлением, лечением, правильным
+            содержанием. По этой причине приобретение питомца не должно быть спонтанным;
+            прежде чем решиться на такой шаг, человек должен все обдумать и рассчитать.
+            Получая котенка или щенка в подарок, новый владелец лишен такой возможности.
+            Даже если поначалу он рад появлению мягкого пушистого комочка, то по прошествии
+            нескольких дней, столкнувшись с тем, что животное требует много внимания и не
+            всегда послушно, может изменить свое мнение и попросту избавиться от такой
+            «обузы». Хорошо, если зверька вернут обратно в приют или отдадут в добрые руки,
+            но, как показывает практика, ненужных питомцев попросту выставляют за дверь.
+            То же самое происходит, если животное не оправдало возлагаемых на него надежд:
+            кот отказался ловить мышей, а собака не поняла, что ее задача — охрана двора.
+            Единственная выгода, которую получает человек, заводя питомца, — это радость
+            общения, но некоторые хозяева считают иначе и не хотят содержать «дармоедов».
+            Такие животные снова пополняют ряды бездомных. Все причины для отказа сводятся
+            к желанию сделать так, чтобы животное, которое уже успело вкусить прелести
+            уличной жизни, не оказалась выброшенным снова. Поэтому вряд ли стоит обижаться
+            на работников приюта, если они не позволили вам забрать домой понравившегося
+            питомца.
+
+            """;
+
+
+    /**
+     * Метод для формирования клавиатуры
+     *
+     * @param chatId id текущего чата
+     */
+    public void takePetCommandReceived(long chatId) {
+
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+
+        KeyboardRow row = new KeyboardRow();
+        row.add(CommandForTakePet.DATING_RULES_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.DOCUMENTS_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.SHIPPING_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.RECOMM_FOR_PUPPY_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.RECOMM_FOR_DOG_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.RECOMM_FOR_DOG_INVALID_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.RECOMMENDED_CYNOLOGIST_COMMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(CommandForTakePet.REASONS_FOR_REFUSAL_COMMAND.getLabel());
+        keyboardRows.add(row);
+
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setKeyboard(keyboardRows);
+        message.setReplyMarkup(keyboardMarkup);
+
+        startCommand.executeMessage(message);
+        log.info("Created a keyboard for the class TakePet for ID: " + chatId);
+
+    }
+
+
     /**
      * Метод, обрабатывающий запрос пользователя,
      * и предоставляющий интересующую информацию
@@ -332,20 +579,30 @@ public class TakePet implements ButtonCommand {
     public void commandProcessing(Update update, long chatId, String messageText) {
 
         switch (messageText) {
-            case "/dating_rules" -> prepareAndSendMessage(chatId, DATING_RULES);
-            case "/documents" -> prepareAndSendMessage(chatId, DOCUMENTS);
-            case "/shipping" -> prepareAndSendMessage(chatId, SHIPPING);
-            case "/recommendation_for_puppy" -> prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY);
-            case "/recommendation_for_dog" -> prepareAndSendMessage(chatId, RECOMM_FOR_DOG);
+            case "/dating_rules" -> prepareAndSendMessage(chatId, CommandForTakePet.DATING_RULES_COMMAND.getDesc());
+            case "/documents" -> prepareAndSendMessage(chatId, CommandForTakePet.DOCUMENTS_COMMAND.getDesc());
+            case "/shipping" -> prepareAndSendMessage(chatId, CommandForTakePet.SHIPPING_COMMAND.getDesc());
+            case "/recommendation_for_puppy" ->
+                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_PUPPY_COMMAND.getDesc());
+            case "/recommendation_for_dog" ->
+                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_COMMAND.getDesc());
+            case "/recommendation_for_dog_invalid" ->
+                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_INVALID_COMMAND.getDesc());
+            case "/initial_advice" ->
+                    prepareAndSendMessage(chatId, CommandForTakePet.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getDesc());
+            case "/recommeded_cynologist" ->
+                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMMENDED_CYNOLOGIST_COMMAND.getDesc());
+            case "/refusal" -> prepareAndSendMessage(chatId, CommandForTakePet.REASONS_FOR_REFUSAL_COMMAND.getDesc());
             default -> callVolunteer.onButton(update);
         }
 
     }
 
+
     /**
      * Метод, формирующий ответное сообщение для отправки его пользователю
      */
-    private void prepareAndSendMessage(long chatId, String textToSend) {
+    public void prepareAndSendMessage(long chatId, String textToSend) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
@@ -354,3 +611,5 @@ public class TakePet implements ButtonCommand {
 
 
 }
+
+

@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.repository.CorrespondenceRepository;
-import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
 
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
@@ -31,10 +30,10 @@ class CorrespondenceServiceTest {
     @InjectMocks
     private CorrespondenceService out;
 
-    private Correspondence message1 = new Correspondence(1L, 12345L, LocalDateTime.now(), "Текст1", false, "user");
-    private Correspondence message2 = new Correspondence(2L, 12345L, LocalDateTime.now(), "Текст2", false, "user");
-    private Correspondence message3 = new Correspondence(3L, 12345L, LocalDateTime.now(), "Текст3", false, "user");
-    private List<Correspondence> unansweredMessages = List.of(message1, message2, message3);
+    private final Correspondence message1 = new Correspondence(1L, 12345L, LocalDateTime.now(), "Текст1", false, "user");
+    private final Correspondence message2 = new Correspondence(2L, 12345L, LocalDateTime.now(), "Текст2", false, "user");
+    private final Correspondence message3 = new Correspondence(3L, 12345L, LocalDateTime.now(), "Текст3", false, "user");
+    private final List<Correspondence> unansweredMessages = List.of(message1, message2, message3);
 
 
     @BeforeEach

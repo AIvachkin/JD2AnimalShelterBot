@@ -29,7 +29,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private final StartCommand startCommand;
 
-    private CommunicationWithVolunteer communicationWithVolunteer;
+    private final CommunicationWithVolunteer communicationWithVolunteer;
 
 
     /**

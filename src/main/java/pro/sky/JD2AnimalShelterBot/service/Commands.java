@@ -2,7 +2,6 @@ package pro.sky.JD2AnimalShelterBot.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import pro.sky.JD2AnimalShelterBot.util.StringUtil;
 
 import java.util.Optional;
