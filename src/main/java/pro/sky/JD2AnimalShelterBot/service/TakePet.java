@@ -4,21 +4,12 @@ package pro.sky.JD2AnimalShelterBot.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-
 
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке
@@ -38,36 +29,6 @@ public class TakePet {
     }
 
 
-//    /**
-//     * Константа - приветственное сообщение для пользователя
-//     * Вероятно, метод не будет использоваться - выведем кнопочное меню
-//     */
-//    public static final String GREETING_TAKE_PET = """
-//            Здесь Вы получите информацию о том, как подготовиться
-//            ко встрече с новым членом семьи :dog:
-//            Вам доступны следующие команды:
-//
-//            Команда %s выводит правила знакомства с собакой
-//
-//            Команда %s выводит список необходимых документов
-//
-//            Команда %s покажет рекомендации по транспортировке животного
-//
-//            Команда %s даст рекомендации по обустройству дома для щенка
-//
-//            Команда %s даст рекомендации по обустройству дома для взрослой собаки
-//
-//            Если ни одна команда не подойдет Вам, произойдет переадресация
-//            на волонтера, который поможет Вам.
-//
-//            """.formatted(
-//            CommandForTakePet.DATING_RULES_COMMAND.getName(),
-//            CommandForTakePet.DOCUMENTS_COMMAND.getName(),
-//            CommandForTakePet.SHIPPING.getName(),
-//            CommandForTakePet.RECOMM_FOR_PUPPY.getName(),
-//            CommandForTakePet.RECOMM_FOR_DOG.getName()
-//
-//    );
 
 
     /**
@@ -78,15 +39,15 @@ public class TakePet {
     @Getter
     @RequiredArgsConstructor
     public enum CommandForTakePet {
-        DATING_RULES_COMMAND("/dating_rules", DATING_RULES, ":dog:  правила знакомства с собакой"),
-        DOCUMENTS_COMMAND("/documents", DOCUMENTS, ":memo:  список необходимых документов"),
-        SHIPPING_COMMAND("/shipping", SHIPPING, ":minibus:  рекомендации по транспортировке животного"),
-        RECOMM_FOR_PUPPY_COMMAND("/recommendation_for_puppy", RECOMM_FOR_PUPPY, ":house_with_garden:  рекомендации по обустройству дома для щенка"),
-        RECOMM_FOR_DOG_COMMAND("/recommendation_for_dog", RECOMM_FOR_DOG, ":house_with_garden:  рекомендации по обустройству дома для взрослой собаки"),
-        RECOMM_FOR_DOG_INVALID_COMMAND("/recommendation_for_dog_invalid", RECOMM_FOR_DOG_INVALID, ":house:  рекомендации по обустройству дома для собаки с ограниченными возможностями"),
-        CYNOLOGIST_INITIAL_ADVICE_COMMAND("/initial_advice", CYNOLOGIST_INITIAL_ADVICE, ":scroll:  советы кинолога по первичному общению с собакой"),
-        RECOMMENDED_CYNOLOGIST_COMMAND("/recommeded_cynologist", RECOMMENDED_CYNOLOGIST, ":medal:  лучшие кинологи"),
-        REASONS_FOR_REFUSAL_COMMAND("/refusal", REASONS_FOR_REFUSAL, ":x:  причины, по которым Вам могут отказать в усыновлении животного");
+        DATING_RULES_COMMAND("/dating_rules", DATING_RULES, "\uD83D\uDC36  правила знакомства с собакой"),
+        DOCUMENTS_COMMAND("/documents", DOCUMENTS, "\uD83D\uDCDC  список необходимых документов"),
+        SHIPPING_COMMAND("/shipping", SHIPPING, "\uD83D\uDEFB  рекомендации по транспортировке животного"),
+        RECOMM_FOR_PUPPY_COMMAND("/recommendation_for_puppy", RECOMM_FOR_PUPPY, "\uD83C\uDFE1  рекомендации по обустройству дома для щенка"),
+        RECOMM_FOR_DOG_COMMAND("/recommendation_for_dog", RECOMM_FOR_DOG, "\uD83C\uDFE1  рекомендации по обустройству дома для взрослой собаки"),
+        RECOMM_FOR_DOG_INVALID_COMMAND("/recommendation_for_dog_invalid", RECOMM_FOR_DOG_INVALID, "\uD83C\uDFE1  рекомендации по обустройству дома для собаки с ограниченными возможностями"),
+        CYNOLOGIST_INITIAL_ADVICE_COMMAND("/initial_advice", CYNOLOGIST_INITIAL_ADVICE, "\uD83D\uDCC3  советы кинолога по первичному общению с собакой"),
+        RECOMMENDED_CYNOLOGIST_COMMAND("/recommeded_cynologist", RECOMMENDED_CYNOLOGIST, "\uD83C\uDFC5  лучшие кинологи"),
+        REASONS_FOR_REFUSAL_COMMAND("/refusal", REASONS_FOR_REFUSAL, "\uD83D\uDEC7  причины, по которым Вам могут отказать в усыновлении животного");
 
         /**
          * Поле - имя перечисления
@@ -551,54 +512,6 @@ public class TakePet {
 
     }
 
-
-//    /**
-//     * Метод, обрабатывающий запрос пользователя,
-//     * и предоставляющий интересующую информацию
-//     */
-//    @Override
-//    public void onButton(Update update) {
-//        String messageText = update.getMessage().getText();
-//        if (update.hasMessage() && update.getMessage().hasText()) {
-//
-//            commandProcessing(update, update.getMessage().getChatId(), messageText);
-//        } else {
-//            SendMessage message = new SendMessage();
-//            message.setChatId(update.getMessage().getChatId());
-//            message.setText("Sorry, command was not recognized");
-//            try {
-//                bot.execute(message);
-//            } catch (TelegramApiException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//
-//    }
-
-//    /**
-//     * Метод, предоставляющий справочную информацию
-//     * в зависимости от поступившей команды
-//     */
-//    public void commandProcessing(Update update, long chatId, String messageText) {
-//
-//        switch (messageText) {
-//            case "/dating_rules" -> prepareAndSendMessage(chatId, CommandForTakePet.DATING_RULES_COMMAND.getDesc());
-//            case "/documents" -> prepareAndSendMessage(chatId, CommandForTakePet.DOCUMENTS_COMMAND.getDesc());
-//            case "/shipping" -> prepareAndSendMessage(chatId, CommandForTakePet.SHIPPING_COMMAND.getDesc());
-//            case "/recommendation_for_puppy" ->
-//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_PUPPY_COMMAND.getDesc());
-//            case "/recommendation_for_dog" ->
-//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_COMMAND.getDesc());
-//            case "/recommendation_for_dog_invalid" ->
-//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMM_FOR_DOG_INVALID_COMMAND.getDesc());
-//            case "/initial_advice" ->
-//                    prepareAndSendMessage(chatId, CommandForTakePet.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getDesc());
-//            case "/recommeded_cynologist" ->
-//                    prepareAndSendMessage(chatId, CommandForTakePet.RECOMMENDED_CYNOLOGIST_COMMAND.getDesc());
-//            case "/refusal" -> prepareAndSendMessage(chatId, CommandForTakePet.REASONS_FOR_REFUSAL_COMMAND.getDesc());
-//            default -> callVolunteer.onButton(update);
-//        }
-//    }
 }
 
 
