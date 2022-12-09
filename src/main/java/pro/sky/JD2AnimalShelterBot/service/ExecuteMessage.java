@@ -22,7 +22,7 @@ public class ExecuteMessage {
      * Метод проверки отправки сообщения на ошибки
      * @param message  сообщение
      */
-    private void executeMessage(SendMessage message){
+    public void executeMessage(SendMessage message){
         try{
             telegramBot.execute(message);
         } catch (TelegramApiException e){

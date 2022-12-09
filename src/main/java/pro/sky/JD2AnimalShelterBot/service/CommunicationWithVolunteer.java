@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pro.sky.JD2AnimalShelterBot.model.User;
 
 @Slf4j
 @Service
@@ -15,6 +17,8 @@ public class CommunicationWithVolunteer {
      */
     private final UserContext userContext;
     private final TelegramBot telegramBot;
+    private final CorrespondenceService correspondenceService;
+    private final UserService userService;
 
     /**
      * Сообщение для пользователя, запросившего связь с волонтером
@@ -25,9 +29,11 @@ public class CommunicationWithVolunteer {
             Волонтер свяжется с Вами в ближайшее время. 👇✍️
             """;
 
-    public CommunicationWithVolunteer(UserContext userContext, TelegramBot telegramBot) {
+    public CommunicationWithVolunteer(UserContext userContext, TelegramBot telegramBot, CorrespondenceService correspondenceService, UserService userService) {
         this.userContext = userContext;
         this.telegramBot = telegramBot;
+        this.correspondenceService = correspondenceService;
+        this.userService = userService;
     }
 
     /**
@@ -36,10 +42,17 @@ public class CommunicationWithVolunteer {
      */
     public void volunteerButtonHandler(Update update) {
         var chatId = update.getMessage().getChatId();
+
+        if(userService.getUserPhone(chatId) == null) {
+            userService.requestContactDetails(chatId);
+            return;
+        }
+
         userContext.setUserContext(chatId, "messageToVolunteer");
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(CALL_VOLUNTEER_MESSAGE);
+        message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());//Убираем клавиатуру
         executeMessage(message);
         log.info("A call volunteer message has been sent to the user " + update.getMessage().getChat().getFirstName() + ", Id: " + chatId);
 
@@ -57,4 +70,15 @@ public class CommunicationWithVolunteer {
         }
     }
 
+    /**
+     * Метод обрабатывает сообщения пользователя волонтеру
+     * @param update объект сообщения
+     *
+     */
+    public void volunteerTextHandler(Update update) {
+        var chatId = update.getMessage().getChatId();
+        var text = update.getMessage().getText();
+        userContext.setUserContext(chatId, null);
+        correspondenceService.sendMessageToVolunteer(chatId, text);
+    }
 }

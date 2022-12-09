@@ -27,6 +27,9 @@ class CorrespondenceServiceTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private ExecuteMessage executeMessage;
+
     @InjectMocks
     private CorrespondenceService out;
 
@@ -38,7 +41,7 @@ class CorrespondenceServiceTest {
 
     @BeforeEach
     public void initOut(){
-        out = new CorrespondenceService(correspondenceRepository, userService);
+        out = new CorrespondenceService(correspondenceRepository, userService, executeMessage);
     }
 
     @Test

@@ -29,6 +29,12 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private final StartCommand startCommand;
 
+    /**
+     * Иинъекция класса контекста пользователя
+     */
+    private final UserContext userContext;
+    private final UserService userService;
+
 
     private final ShelterInfo shelterInfo;
     private final TakePet takePet;
@@ -45,6 +51,8 @@ public class TelegramBot extends TelegramLongPollingBot {
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
      * @param startCommand  - объект обработчика команды /start
+     * @param userContext
+     * @param userService
      * @param shelterInfo
      * @param takePet
      * @param configuration - конфигурация бота: имя и токен
@@ -52,12 +60,16 @@ public class TelegramBot extends TelegramLongPollingBot {
      *                      listOfCommands - лист, содержащий команды меню
      */
     public TelegramBot(@Lazy StartCommand startCommand,
+                       UserContext userContext,
+                       @Lazy UserService userService,
                        @Lazy ShelterInfo shelterInfo,
                        @Lazy TakePet takePet,
-                       BotConfiguration configuration, 
+                       BotConfiguration configuration,
                        @Lazy CommunicationWithVolunteer communicationWithVolunteer) {
 
         this.startCommand = startCommand;
+        this.userContext = userContext;
+        this.userService = userService;
         this.shelterInfo = shelterInfo;
         this.takePet = takePet;
         this.configuration = configuration;
@@ -115,6 +127,13 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+        //Если пользователь прислал контакты
+        if(update.hasMessage() && update.getMessage().getContact() != null){
+            userService.setUserPhone(update.getMessage());
+            communicationWithVolunteer.volunteerButtonHandler(update);
+            return;
+        }
+
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             /*
@@ -126,6 +145,12 @@ public class TelegramBot extends TelegramLongPollingBot {
               Поле - идентификатор чата, в который бот отправит ответ
              */
             long chatId = update.getMessage().getChatId();
+
+            // Если пользователь пишет сообщение волонтеру
+            if(userContext.getUserContext(chatId) == "messageToVolunteer") {
+                communicationWithVolunteer.volunteerTextHandler(update);
+                return;
+            }
 
             //Commands.CALL_VOLUNTEER_COMAND.getLabel();
 // оператор выбора будет дописан позже после получения полного набора команд
@@ -140,7 +165,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "\uD83D\uDC36️ Как взять собаку из приюта":
                     takePet.takePetCommandReceived(chatId);
 
-                case "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера":
+                case "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера":
                     communicationWithVolunteer.volunteerButtonHandler(update);
 
                     break;

@@ -46,36 +46,36 @@ class TakePetTest {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("paramsForTest")
-    public void commandProcessingTest(String textForMessageTest, String textForSendMessage) {
-
-        sendMessageTest.setText(textForSendMessage);
-
-        Message messageTest = new Message();
-        messageTest.setText(textForMessageTest);
-        Update updateTest = new Update();
-        updateTest.setMessage(messageTest);
-
-        takePet.commandProcessing(updateTest, 6666L, textForMessageTest);
-        verify(startCommand).executeMessage(sendMessageTest);
-
-    }
-
-    @Test
-    public void prepareAndSendMessageTest() {
-
-        sendMessageTest.setText(DATING_RULES);
-
-        takePet.prepareAndSendMessage(6666L, DATING_RULES);
-        verify(startCommand).executeMessage(sendMessageTest);
-    }
-
-
-    @Test
-    public void takePetCommandReceivedTest() {
-
-        takePet.takePetCommandReceived(6666L);
-        verify(startCommand).executeMessage(any(SendMessage.class));
-    }
+//    @ParameterizedTest
+//    @MethodSource("paramsForTest")
+//    public void commandProcessingTest(String textForMessageTest, String textForSendMessage) {
+//
+//        sendMessageTest.setText(textForSendMessage);
+//
+//        Message messageTest = new Message();
+//        messageTest.setText(textForMessageTest);
+//        Update updateTest = new Update();
+//        updateTest.setMessage(messageTest);
+//
+//        takePet.commandProcessing(updateTest, 6666L, textForMessageTest);
+//        verify(startCommand).executeMessage(sendMessageTest);
+//
+//    }
+//
+//    @Test
+//    public void prepareAndSendMessageTest() {
+//
+//        sendMessageTest.setText(DATING_RULES);
+//
+//        takePet.prepareAndSendMessage(6666L, DATING_RULES);
+//        verify(startCommand).executeMessage(sendMessageTest);
+//    }
+//
+//
+//    @Test
+//    public void takePetCommandReceivedTest() {
+//
+//        takePet.takePetCommandReceived(6666L);
+//        verify(startCommand).executeMessage(any(SendMessage.class));
+//    }
 }
