@@ -34,35 +34,30 @@ class TakePetTest {
         ReplyKeyboardMarkup keyboardMarkupTest = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRowsTest = new ArrayList<>();
 
-        KeyboardRow row = new KeyboardRow();
-        row.add("\uD83D\uDC36  правила знакомства с собакой");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83D\uDCDC  список необходимых документов");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83D\uDEFB  рекомендации по транспортировке животного");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83C\uDFE1  рекомендации по обустройству дома для щенка");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83C\uDFE1  рекомендации по обустройству дома для взрослой собаки");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83C\uDFE1  рекомендации по обустройству дома для собаки с ограниченными возможностями");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83D\uDCC3  советы кинолога по первичному общению с собакой");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83C\uDFC5  лучшие кинологи");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83D\uDEC7  причины, по которым Вам могут отказать в усыновлении животного");
-        keyboardRowsTest.add(row);
 
-        keyboardMarkupTest.setResizeKeyboard(true);
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("\uD83D\uDC36  Правила знакомства с собакой");
+        row1.add("\uD83D\uDCDC  Список необходимых документов");
+        keyboardRowsTest.add(row1);
+
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add("\uD83C\uDFE1  Дом для щенка");
+        row3.add("\uD83C\uDFE1  Дом для взрослой собаки");
+        row3.add("\uD83C\uDFE1  Дом для собаки-инвалида");
+        keyboardRowsTest.add(row3);
+
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add("\uD83D\uDCC3  Советы кинолога");
+        row4.add("\uD83C\uDFC5  Лучшие кинологи");
+        row4.add("\uD83D\uDEFB  Транспортировка животного");
+        keyboardRowsTest.add(row4);
+
+        KeyboardRow row5 = new KeyboardRow();
+        row5.add("\uD83D\uDEC7  Почему Вам могут отказать?");
+        row5.add("\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера");
+        keyboardRowsTest.add(row5);
+
+                keyboardMarkupTest.setResizeKeyboard(true);
         keyboardMarkupTest.setKeyboard(keyboardRowsTest);
 
         takePet.takePetCommandReceived(6666L);
