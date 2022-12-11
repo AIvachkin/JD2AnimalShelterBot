@@ -164,10 +164,9 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
                 case "\uD83D\uDC36️ Как взять собаку из приюта":
                     takePet.takePetCommandReceived(chatId);
-
+                    break;
                 case "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера":
                     communicationWithVolunteer.volunteerButtonHandler(update);
-
                     break;
                 default:
                     System.out.println("Неизвестная команда: " + messageText);
