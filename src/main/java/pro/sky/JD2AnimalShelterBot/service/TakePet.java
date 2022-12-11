@@ -27,44 +27,6 @@ public class TakePet {
     }
 
 
-
-
-//    /**
-//     * Вложенный класс - перечисление команд, доступных пользователю,
-//     * желающему взять питомца
-//     * desc - пока не используется
-//     */
-//    @Getter
-//    @RequiredArgsConstructor
-//    public enum CommandForTakePet {
-//        DATING_RULES_COMMAND("/dating_rules", DATING_RULES, "\uD83D\uDC36  правила знакомства с собакой"),
-//        DOCUMENTS_COMMAND("/documents", DOCUMENTS, "\uD83D\uDCDC  список необходимых документов"),
-//        SHIPPING_COMMAND("/shipping", SHIPPING, "\uD83D\uDEFB  рекомендации по транспортировке животного"),
-//        RECOMM_FOR_PUPPY_COMMAND("/recommendation_for_puppy", RECOMM_FOR_PUPPY, "\uD83C\uDFE1  рекомендации по обустройству дома для щенка"),
-//        RECOMM_FOR_DOG_COMMAND("/recommendation_for_dog", RECOMM_FOR_DOG, "\uD83C\uDFE1  рекомендации по обустройству дома для взрослой собаки"),
-//        RECOMM_FOR_DOG_INVALID_COMMAND("/recommendation_for_dog_invalid", RECOMM_FOR_DOG_INVALID, "\uD83C\uDFE1  рекомендации по обустройству дома для собаки с ограниченными возможностями"),
-//        CYNOLOGIST_INITIAL_ADVICE_COMMAND("/initial_advice", CYNOLOGIST_INITIAL_ADVICE, "\uD83D\uDCC3  советы кинолога по первичному общению с собакой"),
-//        RECOMMENDED_CYNOLOGIST_COMMAND("/recommeded_cynologist", RECOMMENDED_CYNOLOGIST, "\uD83C\uDFC5  лучшие кинологи"),
-//        REASONS_FOR_REFUSAL_COMMAND("/refusal", REASONS_FOR_REFUSAL, "\uD83D\uDEC7  причины, по которым Вам могут отказать в усыновлении животного");
-//
-//        /**
-//         * Поле - имя перечисления
-//         */
-//        private final String name;
-//
-//        /**
-//         * Поле - описание перечисления
-//         */
-//        private final String desc;
-//
-//        /**
-//         * Поле - изображение перечисления
-//         */
-//        private final String label;
-//
-//    }
-
-
     /**
      * Константа - правила знакомства с собакой
      */
@@ -209,9 +171,10 @@ public class TakePet {
             """;
 
     /**
-     * Константа - рекомендации по обустройству дома для взрослой собаки
+     * Константа - рекомендации по обустройству дома для взрослой собаки (разбита на 2 части,
+     * т.к. сообщение слишком длинное - выдает ошибку
      */
-    public static final String RECOMM_FOR_DOG = """
+    public static final String RECOMM_FOR_DOG_1 = """
             Собака становится членом семьи, поэтому вам стоит серьезно позаботиться о
             ее собственном уголке. Вашему четвероногому другу обязательно нужно свое
             место, где он сможет отдохнуть, подремать или просто побыть в одиночестве.
@@ -235,6 +198,9 @@ public class TakePet {
             питомец мог видеть все (ну или почти все), что происходит в доме. Он же
             член семьи. Собаки — стайные животные, им важно видеть и слышать, что
             происходит в их стае, то есть вашей семье.
+            """;
+
+    public static final String RECOMM_FOR_DOG_2 = """
             Очень плохая идея — устроить место в коридоре. Проходящие по коридору
             будут все время беспокоить пса, подталкивать его, задевать. А звуки за
             входной дверью — откровенно раздражать, ведь в любой собаке (даже в
@@ -279,6 +245,7 @@ public class TakePet {
             питомец обязательно ответит вам радостным настроением и бесконечной преданностью.
             """;
 
+    public static final String RECOMM_FOR_DOG = RECOMM_FOR_DOG_1 + RECOMM_FOR_DOG_2;
 
 
     /**
@@ -390,7 +357,6 @@ public class TakePet {
             """;
 
 
-
     /**
      * Константа - причины отказа в усыновлении животного
      */
@@ -461,7 +427,6 @@ public class TakePet {
             """;
 
 
-
     /**
      * Метод для формирования клавиатуры
      *
@@ -469,6 +434,43 @@ public class TakePet {
      */
     public void takePetCommandReceived(long chatId) {
 
+//        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+//        List<KeyboardRow> keyboardRows = new ArrayList<>();
+//
+//        KeyboardRow row1 = new KeyboardRow();
+//        row1.add(Commands.DATING_RULES_COMMAND.getLabel());
+//        row1.add(Commands.DOCUMENTS_COMMAND.getLabel());
+//        keyboardRows.add(row1);
+//
+//        KeyboardRow row3 = new KeyboardRow();
+//        row3.add(Commands.RECOMM_FOR_PUPPY_COMMAND.getLabel());
+//        row3.add(Commands.RECOMM_FOR_DOG_COMMAND.getLabel());
+//        row3.add(Commands.RECOMM_FOR_DOG_INVALID_COMMAND.getLabel());
+//        keyboardRows.add(row3);
+//
+//        KeyboardRow row4 = new KeyboardRow();
+//        row4.add(Commands.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getLabel());
+//        row4.add(Commands.RECOMMENDED_CYNOLOGIST_COMMAND.getLabel());
+//        row4.add(Commands.SHIPPING_COMMAND.getLabel());
+//        keyboardRows.add(row4);
+//
+//        KeyboardRow row5 = new KeyboardRow();
+//        row5.add(Commands.REASONS_FOR_REFUSAL_COMMAND.getLabel());
+//        row5.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
+//        keyboardRows.add(row5);
+//
+//        keyboardMarkup.setResizeKeyboard(true);
+//        keyboardMarkup.setKeyboard(keyboardRows);
+
+        ReplyKeyboardMarkup keyboardMarkup = createMenuTakePet();
+
+        executeMessage.prepareAndSendMessage(chatId, "Привет, выбери команду из меню \u2B07", keyboardMarkup);
+
+        log.info("Created a keyboard for the class TakePet for ID: " + chatId);
+
+    }
+
+    public ReplyKeyboardMarkup createMenuTakePet() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
 
@@ -497,9 +499,7 @@ public class TakePet {
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);
 
-        executeMessage.prepareAndSendMessage(chatId,"Привет, выбери команду из меню \u2B07", keyboardMarkup);
-
-        log.info("Created a keyboard for the class TakePet for ID: " + chatId);
+        return keyboardMarkup;
 
     }
 
