@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +23,13 @@ public class StartCommand {
     private final TelegramBot telegramBot;
     private final UserService userService;
     private final ExecuteMessage executeMessage;
+
     /**
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
      *
      * @param telegramBot    - объект взаимодействия с ботом
      * @param userService    - объект для взаимодействия с командами сервиса
-     * @param executeMessage
+     * @param executeMessage - объект для взаимодействия с классом по отправке сообщений/ответов
      */
     public StartCommand(TelegramBot telegramBot, UserService userService, ExecuteMessage executeMessage) {
         this.telegramBot = telegramBot;
@@ -52,24 +54,20 @@ public class StartCommand {
 
     /**
      * Метод обработки команды /start и добавления в БД пользователя
-     * @param chatId  id текущего чата
-     * @param update  объект сообщения
+     *
+     * @param chatId id текущего чата
+     * @param update объект сообщения
      */
-    public void startCallBack(long chatId, Update update){
+    public void startCallBack(long chatId, Update update) {
         userService.createUser(update.getMessage());
         startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
     }
 
+
     /**
-     * Метод отправки приветственного сообщения.
-     * @param chatId  id текущего чата
-     * @param firstName  имя пользователя
-     */
-    public void startCommandReceived(long chatId, String firstName) {
-        String textToSend = GREETING + firstName + "! " + WELCOME_MESSAGE;
-
-        //Добавление клавиатуры к собщению.
-
+     * Метод для создания клавиатуры стартового меню
+     * */
+    public ReplyKeyboardMarkup createMenuStartCommand() {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -87,8 +85,50 @@ public class StartCommand {
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
 
-       executeMessage.prepareAndSendMessage(chatId,textToSend,keyboardMarkup);
+        return keyboardMarkup;
+    }
+
+    /**
+     * Метод отправки приветственного сообщения.
+     *
+     * @param chatId    id текущего чата
+     * @param firstName имя пользователя
+     */
+    public void startCommandReceived(long chatId, String firstName) {
+        String textToSend = GREETING + firstName + "! " + WELCOME_MESSAGE;
+
+        //Добавление клавиатуры к сообщению.
+
+//        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+//        List<KeyboardRow> keyboardRows = new ArrayList<>();
+//        KeyboardRow row = new KeyboardRow();
+//        row.add(Commands.INFORMATION_COMAND.getLabel());
+//        keyboardRows.add(row);
+//        row = new KeyboardRow();
+//        row.add(Commands.TAKE_PET_COMAND.getLabel());
+//        keyboardRows.add(row);
+//        row = new KeyboardRow();
+//        row.add(Commands.SEND_REPORT_COMAND.getLabel());
+//        keyboardRows.add(row);
+//        row = new KeyboardRow();
+//        row.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
+//        keyboardRows.add(row);
+//        keyboardMarkup.setResizeKeyboard(true);
+//        keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
+
+        ReplyKeyboardMarkup keyboardMarkup = createMenuStartCommand();
+
+        executeMessage.prepareAndSendMessage(chatId, textToSend, keyboardMarkup);
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
 
+    }
+
+    /**
+     * Метод, возвращающий пользователя в стартовое меню
+     * */
+    public void returnToMainMenu(long chatId) {
+
+        ReplyKeyboardMarkup keyboardMarkup = createMenuStartCommand();
+        executeMessage.prepareAndSendMessage(chatId, "Возврат в основное меню выполнен", keyboardMarkup);
     }
 }

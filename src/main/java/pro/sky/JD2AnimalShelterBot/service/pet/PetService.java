@@ -1,4 +1,4 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.service.pet;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -67,7 +67,7 @@ public class PetService {
 
     /**
      * Метод для получения всех животных из базы
-     * @return
+     * @return - возвращает список всех животных
      */
     public List<Pet> getAllPets() {
         return (List<Pet>) petRepository.findAll();
