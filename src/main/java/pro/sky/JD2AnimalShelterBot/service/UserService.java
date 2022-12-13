@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -47,13 +48,13 @@ public class UserService {
     /**
      * Метод, создающий объект User и сохраняющий его в БД
      */
-    public void createUser(Message message) {
-
-        if (userRepository.findById(message.getChatId()).isEmpty()) {
+    public void createUser(long chatId, Update update) {
+        if (userRepository.findById(chatId).isEmpty()) {
 /**
  * Временные переменные для получения данных для создания объекта типа User
  */
-            Long chatId = message.getChatId();
+            Message message = update.getCallbackQuery().getMessage();
+
             Chat chat = message.getChat();
 
             User user = new User();
@@ -65,6 +66,8 @@ public class UserService {
 
         }
     }
+
+
 
     /**
      * Метод для полученеия сущности пользователя по ИД

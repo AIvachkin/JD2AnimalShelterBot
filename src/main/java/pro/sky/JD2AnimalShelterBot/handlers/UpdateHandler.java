@@ -8,6 +8,8 @@ import pro.sky.JD2AnimalShelterBot.service.*;
 
 import java.util.Objects;
 
+import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
+import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.TakePet.*;
 
 /**
@@ -61,6 +63,11 @@ public class UpdateHandler implements InputMessageHandler {
     @Override
     public void handle(Update update) {
 
+        //Если нажата inline кнопка
+        if (update.hasCallbackQuery()) {
+            this.processingOfButtons(update);
+        }
+
         String messageText = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
 
@@ -71,8 +78,14 @@ public class UpdateHandler implements InputMessageHandler {
             return;
         }
 
+        // Если не выбраны кошки или собаки
+        if(userContext.getUserContext(chatId) == null || (!userContext.getUserContext(chatId).contains("dog")
+                                                      && !userContext.getUserContext(chatId).contains("cat"))) {
+            startCommand.choosingTypeOfPet(chatId);
+            return;
+        }
+
         // Если пользователь пишет сообщение волонтеру
-        //if(Objects.equals(userContext.getUserContext(chatId), "messageToVolunteer")) {
         if(userContext.getUserContext(chatId) != null && userContext.getUserContext(chatId).contains("messageToVolunteer")) {
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
@@ -136,6 +149,21 @@ public class UpdateHandler implements InputMessageHandler {
                 System.out.println("Неизвестная команда: " + messageText);
                 break;
         }
+    }
 
+    private void processingOfButtons(Update update) {
+
+        String callBackData = update.getCallbackQuery().getData();
+        long messageId = update.getCallbackQuery().getMessage().getMessageId();
+        long chatId = update.getCallbackQuery().getMessage().getChatId();
+        if (callBackData.equals(DOG_BUTTON)) {
+            userContext.setUserContext(chatId, "dog");
+            userContext.deleteUserContext(chatId, "cat");
+        }
+        if (callBackData.equals(CAT_BUTTON)) {
+            userContext.setUserContext(chatId, "cat");
+            userContext.deleteUserContext(chatId, "dog");
+        }
+        startCommand.startCallBack(chatId, update);
     }
 }

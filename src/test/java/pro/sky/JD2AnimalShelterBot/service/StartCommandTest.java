@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -50,10 +51,15 @@ class StartCommandTest {
         chat.setId(6666L);
         message.setChat(chat);
         updateTest.setMessage(message);
+        CallbackQuery callbackQuery = new CallbackQuery();
+        callbackQuery.setMessage(message);
+        Update update = new Update();
+        update.setCallbackQuery(callbackQuery);
+        userService.createUser(6666L, update);
 
         startCommand.startCallBack(6666L, updateTest);
 
-        verify(userService).createUser(message);
+        verify(userService).createUser(6666L, update);
 
 //        не получается сделать проверку вызова метода startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
 //        соответственно, и проверка корректности передачи chatid не работает
