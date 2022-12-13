@@ -29,12 +29,6 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private final StartCommand startCommand;
 
-    /**
-     * Иинъекция класса контекста пользователя
-     */
-    private final UserContext userContext;
-    private final UserService userService;
-
 
     private final ShelterInfo shelterInfo;
     private final TakePet takePet;
@@ -48,33 +42,22 @@ public class TelegramBot extends TelegramLongPollingBot {
     final BotConfiguration configuration;
 
     /**
+     * Поле - обработчик: для вызова метода по обработке входящих команд пользователя
+     */
+    final UpdateHandler updateHandler;
+
+    /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
-     * @param startCommand  - объект обработчика команды /start
-     * @param userContext
-     * @param userService
-     * @param shelterInfo
-     * @param takePet
      * @param configuration - конфигурация бота: имя и токен
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
+     * @param updateHandler - сущность для вызова метода обработчика
      */
-    public TelegramBot(@Lazy StartCommand startCommand,
-                       UserContext userContext,
-                       @Lazy UserService userService,
-                       @Lazy ShelterInfo shelterInfo,
-                       @Lazy TakePet takePet,
-                       BotConfiguration configuration,
-                       @Lazy CommunicationWithVolunteer communicationWithVolunteer) {
-
-        this.startCommand = startCommand;
-        this.userContext = userContext;
-        this.userService = userService;
-        this.shelterInfo = shelterInfo;
-        this.takePet = takePet;
+    public TelegramBot(BotConfiguration configuration, UpdateHandler updateHandler) {
         this.configuration = configuration;
-        this.communicationWithVolunteer = communicationWithVolunteer;
-       // setupTextMenu();
+        this.updateHandler = updateHandler;
+        // setupTextMenu();
     }
 
     /**
@@ -119,8 +102,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 
     /**
-     * метод, определяющий, что должен делать бот, когда ему поступает тот или иной запрос
-     * предварительно проверяет, что мы получили сообщение, и что это сообщение содержит текст
+     * метод проверяет, что мы получили сообщение, и что это сообщение содержит текст,
+     * после чего направляет сообщение в обработчик
      *
      * @param update - сообщение пользователя (содержит в т.ч. инфо о пользователе)
      */
@@ -135,43 +118,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
 
         if (update.hasMessage() && update.getMessage().hasText()) {
-
-            /*
-            Поле - текст из сообщения пользователя
-             */
-            String messageText = update.getMessage().getText();
-
-            /*
-              Поле - идентификатор чата, в который бот отправит ответ
-             */
-            long chatId = update.getMessage().getChatId();
-
-            // Если пользователь пишет сообщение волонтеру
-            if(userContext.getUserContext(chatId) == "messageToVolunteer") {
-                communicationWithVolunteer.volunteerTextHandler(update);
-                return;
-            }
-
-            //Commands.CALL_VOLUNTEER_COMAND.getLabel();
-// оператор выбора будет дописан позже после получения полного набора команд
-            switch (messageText) {
-                case "/start":
-                    startCommand.startCallBack(chatId, update);
-                    break;
-
-                case "❓ Узнать информацию о приюте":
-                    shelterInfo.createMenuShelterInfo(chatId);
-                    break;
-                case "\uD83D\uDC36️ Как взять собаку из приюта":
-                    takePet.takePetCommandReceived(chatId);
-                    break;
-                case "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера":
-                    communicationWithVolunteer.volunteerButtonHandler(update);
-                    break;
-                default:
-                    System.out.println("Неизвестная команда: " + messageText);
-                    break;
-            }
+            log.info("New message from User: {}, chatId: {}, with text: {}",
+                    update.getMessage().getFrom().getUserName(), update.getMessage().getChatId(),
+                    update.getMessage().getText());
+            updateHandler.handle(update);
         }
     }
 }
