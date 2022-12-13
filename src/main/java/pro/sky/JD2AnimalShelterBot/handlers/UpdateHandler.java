@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import pro.sky.JD2AnimalShelterBot.service.*;
 
+import java.util.Objects;
+
 import static pro.sky.JD2AnimalShelterBot.service.TakePet.*;
 
 /**
@@ -70,7 +72,8 @@ public class UpdateHandler implements InputMessageHandler {
         }
 
         // Если пользователь пишет сообщение волонтеру
-        if(userContext.getUserContext(chatId) == "messageToVolunteer") {
+        //if(Objects.equals(userContext.getUserContext(chatId), "messageToVolunteer")) {
+        if(userContext.getUserContext(chatId) != null && userContext.getUserContext(chatId).contains("messageToVolunteer")) {
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }

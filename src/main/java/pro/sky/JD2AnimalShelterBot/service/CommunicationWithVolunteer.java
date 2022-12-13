@@ -41,7 +41,6 @@ public class CommunicationWithVolunteer {
      * @param update объект входящего сообщения от Телеграмм
      */
     public void volunteerButtonHandler(Update update) {
-        System.out.println("000000000000000000000");
         var chatId = update.getMessage().getChatId();
 
         if(userService.getUserPhone(chatId) == null) {

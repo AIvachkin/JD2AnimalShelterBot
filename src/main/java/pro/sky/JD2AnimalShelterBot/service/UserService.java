@@ -33,7 +33,7 @@ public class UserService {
     private static final String WELCOME_MESSAGE = "Чтобы связаться с волонтером, пожалуйста, отправьте нам свои контакты." +
             "\n\nДля этого нажмите кнопку внизу и подтвердите передучу контактов.";
 
-    private static final String SHARE_PHONE_NUMBER = "Поделиться контактами";
+    private static final String SHARE_PHONE_NUMBER = "\uD83D\uDC49 Поделиться контактами \uD83D\uDC48";
 
     /**
      * Конструктор - создание нового объекта - репозитория - для работы с его методами для взаимодействия с БД
