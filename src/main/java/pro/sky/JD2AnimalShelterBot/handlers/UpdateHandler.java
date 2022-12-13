@@ -22,6 +22,8 @@ public class UpdateHandler implements InputMessageHandler {
     private final CommunicationWithVolunteer communicationWithVolunteer;
 
     private final ExecuteMessage executeMessage;
+    private final UserService userService;
+    private final UserContext userContext;
 
 
     /**
@@ -31,18 +33,24 @@ public class UpdateHandler implements InputMessageHandler {
      * @param shelterInfo    - объект "информация о приюте"
      * @param takePet        - объект "информация об усыновлении животного"
      * @param executeMessage - объект для работы с классом по отправке ответов пользователю
+     * @param userService
+     * @param userContext
      */
     public UpdateHandler(@Lazy StartCommand startCommand,
                          @Lazy ShelterInfo shelterInfo,
                          @Lazy TakePet takePet,
                          @Lazy CommunicationWithVolunteer communicationWithVolunteer,
-                         @Lazy ExecuteMessage executeMessage) {
+                         @Lazy ExecuteMessage executeMessage,
+                         UserService userService,
+                         UserContext userContext) {
 
         this.startCommand = startCommand;
         this.shelterInfo = shelterInfo;
         this.takePet = takePet;
         this.communicationWithVolunteer = communicationWithVolunteer;
         this.executeMessage = executeMessage;
+        this.userService = userService;
+        this.userContext = userContext;
     }
 
     /**
@@ -53,6 +61,19 @@ public class UpdateHandler implements InputMessageHandler {
 
         String messageText = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
+
+        //Если пользователь прислал контакты
+        if(update.hasMessage() && update.getMessage().getContact() != null){
+            userService.setUserPhone(update.getMessage());
+            communicationWithVolunteer.volunteerButtonHandler(update);
+            return;
+        }
+
+        // Если пользователь пишет сообщение волонтеру
+        if(userContext.getUserContext(chatId) == "messageToVolunteer") {
+            communicationWithVolunteer.volunteerTextHandler(update);
+            return;
+        }
 
         switch (messageText) {
             case "/start":
@@ -104,10 +125,10 @@ public class UpdateHandler implements InputMessageHandler {
                 executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takePet.createMenuTakePet());
                 break;
 
-            case "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера":
+            case "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера":
                 communicationWithVolunteer.volunteerButtonHandler(update);
-
                 break;
+
             default:
                 System.out.println("Неизвестная команда: " + messageText);
                 break;

@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.configuration.BotConfiguration;
+import pro.sky.JD2AnimalShelterBot.handlers.UpdateHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,26 +26,14 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot {
 
     /**
-     * Поле - обработчик команды /start
-     */
-    private final StartCommand startCommand;
-
-
-    private final ShelterInfo shelterInfo;
-    private final TakePet takePet;
-    private final CommunicationWithVolunteer communicationWithVolunteer;
-
-
-
-    /**
      * Поле - конфигурация: для работы методов по получению имени бота и его токена
      */
-    final BotConfiguration configuration;
+    private final BotConfiguration configuration;
 
     /**
      * Поле - обработчик: для вызова метода по обработке входящих команд пользователя
      */
-    final UpdateHandler updateHandler;
+    private final UpdateHandler updateHandler;
 
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
@@ -57,7 +46,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public TelegramBot(BotConfiguration configuration, UpdateHandler updateHandler) {
         this.configuration = configuration;
         this.updateHandler = updateHandler;
-        // setupTextMenu();
+        setupTextMenu();
     }
 
     /**
@@ -83,7 +72,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-
     /**
      * метод, предоставляющий имя бота
      *
@@ -94,12 +82,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         return configuration.getBotName();
     }
 
-
     @Override
     public String getBotToken() {
         return configuration.getToken();
     }
-
 
     /**
      * метод проверяет, что мы получили сообщение, и что это сообщение содержит текст,
@@ -109,19 +95,6 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-
-        //Если пользователь прислал контакты
-        if(update.hasMessage() && update.getMessage().getContact() != null){
-            userService.setUserPhone(update.getMessage());
-            communicationWithVolunteer.volunteerButtonHandler(update);
-            return;
-        }
-
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            log.info("New message from User: {}, chatId: {}, with text: {}",
-                    update.getMessage().getFrom().getUserName(), update.getMessage().getChatId(),
-                    update.getMessage().getText());
-            updateHandler.handle(update);
-        }
+        updateHandler.handle(update);
     }
 }
