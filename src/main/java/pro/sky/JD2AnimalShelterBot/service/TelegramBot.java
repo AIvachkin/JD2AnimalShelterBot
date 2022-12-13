@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.configuration.BotConfiguration;
+import pro.sky.JD2AnimalShelterBot.handlers.UpdateHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,44 +26,27 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot {
 
     /**
-     * Поле - обработчик команды /start
-     */
-    private final StartCommand startCommand;
-
-
-    private final ShelterInfo shelterInfo;
-    private final TakePet takePet;
-    private final CommunicationWithVolunteer communicationWithVolunteer;
-
-
-
-    /**
      * Поле - конфигурация: для работы методов по получению имени бота и его токена
      */
-    final BotConfiguration configuration;
+    private final BotConfiguration configuration;
+
+    /**
+     * Поле - обработчик: для вызова метода по обработке входящих команд пользователя
+     */
+    private final UpdateHandler updateHandler;
 
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
-     * @param startCommand  - объект обработчика команды /start
-     * @param shelterInfo
-     * @param takePet
      * @param configuration - конфигурация бота: имя и токен
      *                      дополнительно создается меню для бота
      *                      listOfCommands - лист, содержащий команды меню
+     * @param updateHandler - сущность для вызова метода обработчика
      */
-    public TelegramBot(@Lazy StartCommand startCommand,
-                       @Lazy ShelterInfo shelterInfo,
-                       @Lazy TakePet takePet,
-                       BotConfiguration configuration, 
-                       @Lazy CommunicationWithVolunteer communicationWithVolunteer) {
-
-        this.startCommand = startCommand;
-        this.shelterInfo = shelterInfo;
-        this.takePet = takePet;
+    public TelegramBot(BotConfiguration configuration, UpdateHandler updateHandler) {
         this.configuration = configuration;
-        this.communicationWithVolunteer = communicationWithVolunteer;
-       // setupTextMenu();
+        this.updateHandler = updateHandler;
+        setupTextMenu();
     }
 
     /**
@@ -88,7 +72,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-
     /**
      * метод, предоставляющий имя бота
      *
@@ -99,55 +82,19 @@ public class TelegramBot extends TelegramLongPollingBot {
         return configuration.getBotName();
     }
 
-
     @Override
     public String getBotToken() {
         return configuration.getToken();
     }
 
-
     /**
-     * метод, определяющий, что должен делать бот, когда ему поступает тот или иной запрос
-     * предварительно проверяет, что мы получили сообщение, и что это сообщение содержит текст
+     * метод проверяет, что мы получили сообщение, и что это сообщение содержит текст,
+     * после чего направляет сообщение в обработчик
      *
      * @param update - сообщение пользователя (содержит в т.ч. инфо о пользователе)
      */
     @Override
     public void onUpdateReceived(Update update) {
-
-        if (update.hasMessage() && update.getMessage().hasText()) {
-
-            /*
-            Поле - текст из сообщения пользователя
-             */
-            String messageText = update.getMessage().getText();
-
-            /*
-              Поле - идентификатор чата, в который бот отправит ответ
-             */
-            long chatId = update.getMessage().getChatId();
-
-            //Commands.CALL_VOLUNTEER_COMAND.getLabel();
-// оператор выбора будет дописан позже после получения полного набора команд
-            switch (messageText) {
-                case "/start":
-                    startCommand.startCallBack(chatId, update);
-                    break;
-
-                case "❓ Узнать информацию о приюте":
-                    shelterInfo.createMenuShelterInfo(chatId);
-                    break;
-                case "\uD83D\uDC36️ Как взять собаку из приюта":
-                    takePet.takePetCommandReceived(chatId);
-
-                case "\uD83D\uDC69\u200D\uD83C\uDF3E  Позвать волонтера":
-                    communicationWithVolunteer.volunteerButtonHandler(update);
-
-                    break;
-                default:
-                    System.out.println("Неизвестная команда: " + messageText);
-                    break;
-            }
-        }
+        updateHandler.handle(update);
     }
 }
