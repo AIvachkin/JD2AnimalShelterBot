@@ -91,7 +91,7 @@ public class CorrespondenceService {
      * @param text текст сообщения
      */
     public void sendMessage(long chatId, String text) throws NoSuchElementException {
-        userService.getUser(chatId);// проверка наличия такого chatId
+        userService.getDogUserById(chatId);// проверка наличия такого chatId
         Correspondence reply = new Correspondence();
         reply.setAnswered(true);
         reply.setChatId(chatId);

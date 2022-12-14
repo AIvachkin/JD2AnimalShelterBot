@@ -55,11 +55,11 @@ class StartCommandTest {
         callbackQuery.setMessage(message);
         Update update = new Update();
         update.setCallbackQuery(callbackQuery);
-        userService.createUser(6666L, update);
+        userService.createDogUser(6666L, update);
 
         startCommand.startCallBack(6666L, updateTest);
 
-        verify(userService).createUser(6666L, update);
+        verify(userService).createDogUser(6666L, update);
 
 //        не получается сделать проверку вызова метода startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
 //        соответственно, и проверка корректности передачи chatid не работает

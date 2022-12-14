@@ -42,7 +42,7 @@ public class Pet {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private DogUser dogUser;
 
     /**
      * испытательный срок до

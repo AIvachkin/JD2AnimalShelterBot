@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import pro.sky.JD2AnimalShelterBot.model.User;
 
 @Slf4j
 @Service
@@ -43,7 +42,7 @@ public class CommunicationWithVolunteer {
     public void volunteerButtonHandler(Update update) {
         var chatId = update.getMessage().getChatId();
 
-        if(userService.getUserPhone(chatId) == null) {
+        if(userService.getDogUserPhone(chatId) == null) {
             userService.requestContactDetails(chatId);
             return;
         }
@@ -78,7 +77,7 @@ public class CommunicationWithVolunteer {
     public void volunteerTextHandler(Update update) {
         var chatId = update.getMessage().getChatId();
         var text = update.getMessage().getText();
-        userContext.setUserContext(chatId, null);
+        userContext.deleteUserContext(chatId, "messageToVolunteer");
         correspondenceService.sendMessageToVolunteer(chatId, text);
     }
 }

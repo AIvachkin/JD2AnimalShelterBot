@@ -69,7 +69,7 @@ public class StartCommand {
      */
     public void startCallBack(long chatId, Update update){
 
-        userService.createUser(chatId, update);
+        userService.createDogUser(chatId, update);
         String firstname;
         if(update.getCallbackQuery() != null){
             firstname = update.getCallbackQuery().getMessage().getChat().getFirstName();

@@ -8,8 +8,6 @@ import pro.sky.JD2AnimalShelterBot.service.*;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeCat;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
 
-import java.util.Objects;
-
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.CAT_DATING_RULES;
@@ -85,7 +83,7 @@ public class UpdateHandler implements InputMessageHandler {
 
         //Если пользователь прислал контакты
         if (update.hasMessage() && update.getMessage().getContact() != null) {
-            userService.setUserPhone(update.getMessage());
+            userService.setDodUserPhone(update.getMessage());
             communicationWithVolunteer.volunteerButtonHandler(update);
             return;
         }
@@ -98,7 +96,7 @@ public class UpdateHandler implements InputMessageHandler {
         }
 
         // Если пользователь пишет сообщение волонтеру
-        if(userContext.getUserContext(chatId).equals("messageToVolunteer")) {
+        if(userContext.getUserContext(chatId).contains("messageToVolunteer")) {
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }
