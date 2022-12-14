@@ -14,10 +14,13 @@ import java.util.List;
 @Slf4j
 @Service
 public class ShelterInfo {
+    private final YMap yMap;
     private final ExecuteMessage executeMessage;
-    protected ShelterInfo(ExecuteMessage executeMessage) {
+    protected ShelterInfo(YMap yMap, ExecuteMessage executeMessage) {
+        this.yMap = yMap;
         this.executeMessage = executeMessage;
     }
+
     /**
      * Метод создания кнопочного меню
      */
@@ -43,6 +46,7 @@ public class ShelterInfo {
         executeMessage.prepareAndSendMessage(chatId,GREETING_INFO,keyboardMarkup);
 
         log.info("Keyboard ShelterInfo has been added to bot");
+
     }
 
     /**
@@ -74,9 +78,7 @@ public class ShelterInfo {
      */
     public static final String SCHEDULE_ADDRESS = """
            Наш адрес:
-           Улица Аккорган, 5в
-           Коктал ж/м, Сарыарка район, Астана
-           1 этаж
+           ул. Брусилова, 32Б
             
            Ежедневно с 11:00 до 18:00
            """;
