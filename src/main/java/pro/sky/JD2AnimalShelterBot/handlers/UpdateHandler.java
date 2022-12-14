@@ -108,8 +108,8 @@ public class UpdateHandler implements InputMessageHandler {
                 startCommand.startCallBack(chatId, update);
                 break;
 
-            case "❓ Узнать информацию о приюте":
-                shelterInfo.createMenuShelterInfo();
+            case INFORMATION_COMAND_LABEL:
+                shelterInfo.shelterInfoCommandReceived(chatId);
                 break;
 
             case TAKE_PET_COMAND_LABEL:
