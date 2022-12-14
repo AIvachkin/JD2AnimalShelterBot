@@ -9,19 +9,23 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
+import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.CALL_VOLUNTEER_COMAND_LABEL;
+import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.MAIN_MENU_LABEL;
 
 
 @ExtendWith(MockitoExtension.class)
-class TakePetTest {
+class TakeDogTest {
 
 
     @InjectMocks
-    TakePet takePet;
+    TakeDog takeDog;
 
     @Mock
     ExecuteMessage executeMessage;
@@ -36,31 +40,32 @@ class TakePetTest {
 
 
         KeyboardRow row1 = new KeyboardRow();
-        row1.add("\uD83D\uDC36  Правила знакомства с собакой");
-        row1.add("\uD83D\uDCDC  Список необходимых документов");
+        row1.add(DOG_DATING_RULES_COMMAND_LABEL);
+        row1.add(DOG_DOCUMENTS_COMMAND_LABEL);
         keyboardRowsTest.add(row1);
 
         KeyboardRow row3 = new KeyboardRow();
-        row3.add("\uD83C\uDFE1  Дом для щенка");
-        row3.add("\uD83C\uDFE1  Дом для взрослой собаки");
-        row3.add("\uD83C\uDFE1  Дом для собаки-инвалида");
+        row3.add(RECOMM_FOR_PUPPY_COMMAND_LABEL);
+        row3.add(RECOMM_FOR_DOG_COMMAND_LABEL);
+        row3.add(RECOMM_FOR_DOG_INVALID_COMMAND_LABEL);
         keyboardRowsTest.add(row3);
 
         KeyboardRow row4 = new KeyboardRow();
-        row4.add("\uD83D\uDCC3  Советы кинолога");
-        row4.add("\uD83C\uDFC5  Лучшие кинологи");
-        row4.add("\uD83D\uDEFB  Транспортировка животного");
+        row4.add(CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL);
+        row4.add(RECOMMENDED_CYNOLOGIST_COMMAND_LABEL);
+        row4.add(DOG_SHIPPING_COMMAND_LABEL);
         keyboardRowsTest.add(row4);
 
         KeyboardRow row5 = new KeyboardRow();
-        row5.add("\uD83D\uDEC7  Почему Вам могут отказать?");
-        row5.add("\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера");
+        row5.add(REASONS_FOR_REFUSAL_COMMAND_LABEL);
+        row5.add(CALL_VOLUNTEER_COMAND_LABEL);
+        row5.add(MAIN_MENU_LABEL);
         keyboardRowsTest.add(row5);
 
                 keyboardMarkupTest.setResizeKeyboard(true);
         keyboardMarkupTest.setKeyboard(keyboardRowsTest);
 
-        takePet.takePetCommandReceived(6666L);
+        takeDog.takePetCommandReceived(6666L);
         verify(executeMessage).prepareAndSendMessage(6666L, testString, keyboardMarkupTest);
     }
 }

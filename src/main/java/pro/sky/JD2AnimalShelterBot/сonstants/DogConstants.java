@@ -1,36 +1,15 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.сonstants;
 
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке
- * к приему питомца в свою семью
+ * Класс, содержащий константы для приюта собак
  */
-@Slf4j
-@Service
-public class TakePet {
-
-
-    public final TelegramBot bot;
-    private final ExecuteMessage executeMessage;
-
-    public TakePet(TelegramBot bot, ExecuteMessage executeMessage) {
-        this.bot = bot;
-        this.executeMessage = executeMessage;
-    }
-
+public class DogConstants {
 
     /**
      * Константа - правила знакомства с собакой
      */
-    public static final String DATING_RULES = """
+    public static final String DOG_DATING_RULES = """
             Процесс знакомства и общения с будущим подопечным
             необходимо начинать заранее. После того, как вы
             сделали выбор, начните навещать животное в приюте,
@@ -47,9 +26,9 @@ public class TakePet {
             """;
 
     /**
-     * Константа - список необходимых документов
+     * Константа - список необходимых документов, чтобы взять собаку
      */
-    public static final String DOCUMENTS = """
+    public static final String DOG_DOCUMENTS = """
             Чтобы взять животное из приюта, необходимы следующие
             документы:
                         
@@ -103,9 +82,9 @@ public class TakePet {
             """;
 
     /**
-     * Константа - рекомендации по транспортировке животного
+     * Константа - рекомендации по транспортировке собаки
      */
-    public static final String SHIPPING = """
+    public static final String DOG_SHIPPING = """
             Позвольте животному познакомиться с контейнером для перевозки
             и автомобилем, в котором пройдёт дорога домой. Заранее
             приучите собаку к наморднику - для этого, посещая приют,
@@ -200,6 +179,10 @@ public class TakePet {
             происходит в их стае, то есть вашей семье.
             """;
 
+    /**
+     * Константа - рекомендации по обустройству дома для взрослой собаки (разбита на 2 части,
+     * т.к. сообщение слишком длинное - выдает ошибку
+     */
     public static final String RECOMM_FOR_DOG_2 = """
             Очень плохая идея — устроить место в коридоре. Проходящие по коридору
             будут все время беспокоить пса, подталкивать его, задевать. А звуки за
@@ -245,6 +228,9 @@ public class TakePet {
             питомец обязательно ответит вам радостным настроением и бесконечной преданностью.
             """;
 
+    /**
+     * Константа - рекомендации по обустройству дома для взрослой собаки (склейка из 2х частей одного описания)
+     */
     public static final String RECOMM_FOR_DOG = RECOMM_FOR_DOG_1 + RECOMM_FOR_DOG_2;
 
 
@@ -333,7 +319,7 @@ public class TakePet {
             Сдача экзаменов, показ на выставках
                         
             Образование
-            Союз Киннологов Казахстана
+            Союз Кинологов Казахстана
                         
             Опыт
             Кинологический центр «Алтын ит»
@@ -426,83 +412,21 @@ public class TakePet {
 
             """;
 
+    public static final String DOG_DATING_RULES_COMMAND_LABEL = "\uD83D\uDC36  Правила знакомства с собакой";
 
-    /**
-     * Метод для формирования клавиатуры
-     *
-     * @param chatId id текущего чата
-     */
-    public void takePetCommandReceived(long chatId) {
+    public static final String DOG_DOCUMENTS_COMMAND_LABEL = "\uD83D\uDCDC  Список необходимых документов";
 
-//        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-//        List<KeyboardRow> keyboardRows = new ArrayList<>();
-//
-//        KeyboardRow row1 = new KeyboardRow();
-//        row1.add(Commands.DATING_RULES_COMMAND.getLabel());
-//        row1.add(Commands.DOCUMENTS_COMMAND.getLabel());
-//        keyboardRows.add(row1);
-//
-//        KeyboardRow row3 = new KeyboardRow();
-//        row3.add(Commands.RECOMM_FOR_PUPPY_COMMAND.getLabel());
-//        row3.add(Commands.RECOMM_FOR_DOG_COMMAND.getLabel());
-//        row3.add(Commands.RECOMM_FOR_DOG_INVALID_COMMAND.getLabel());
-//        keyboardRows.add(row3);
-//
-//        KeyboardRow row4 = new KeyboardRow();
-//        row4.add(Commands.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getLabel());
-//        row4.add(Commands.RECOMMENDED_CYNOLOGIST_COMMAND.getLabel());
-//        row4.add(Commands.SHIPPING_COMMAND.getLabel());
-//        keyboardRows.add(row4);
-//
-//        KeyboardRow row5 = new KeyboardRow();
-//        row5.add(Commands.REASONS_FOR_REFUSAL_COMMAND.getLabel());
-//        row5.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
-//        keyboardRows.add(row5);
-//
-//        keyboardMarkup.setResizeKeyboard(true);
-//        keyboardMarkup.setKeyboard(keyboardRows);
+    public static final String DOG_SHIPPING_COMMAND_LABEL = "\uD83D\uDEFB  Транспортировка собаки";
 
-        ReplyKeyboardMarkup keyboardMarkup = createMenuTakePet();
+    public static final String RECOMM_FOR_PUPPY_COMMAND_LABEL = "\uD83C\uDFE1  Дом для щенка";
 
-        executeMessage.prepareAndSendMessage(chatId, "Привет, выбери команду из меню \u2B07", keyboardMarkup);
+    public static final String RECOMM_FOR_DOG_COMMAND_LABEL = "\uD83C\uDFE1  Дом для взрослой собаки";
 
-        log.info("Created a keyboard for the class TakePet for ID: " + chatId);
+    public static final String RECOMM_FOR_DOG_INVALID_COMMAND_LABEL = "\uD83C\uDFE1  Дом для собаки-инвалида";
 
-    }
+    public static final String CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL = "\uD83D\uDCC3  Советы кинолога";
 
-    public ReplyKeyboardMarkup createMenuTakePet() {
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboardRows = new ArrayList<>();
+    public static final String RECOMMENDED_CYNOLOGIST_COMMAND_LABEL = "\uD83C\uDFC5  Лучшие кинологи";
 
-        KeyboardRow row1 = new KeyboardRow();
-        row1.add(Commands.DATING_RULES_COMMAND.getLabel());
-        row1.add(Commands.DOCUMENTS_COMMAND.getLabel());
-        keyboardRows.add(row1);
-
-        KeyboardRow row3 = new KeyboardRow();
-        row3.add(Commands.RECOMM_FOR_PUPPY_COMMAND.getLabel());
-        row3.add(Commands.RECOMM_FOR_DOG_COMMAND.getLabel());
-        row3.add(Commands.RECOMM_FOR_DOG_INVALID_COMMAND.getLabel());
-        keyboardRows.add(row3);
-
-        KeyboardRow row4 = new KeyboardRow();
-        row4.add(Commands.CYNOLOGIST_INITIAL_ADVICE_COMMAND.getLabel());
-        row4.add(Commands.RECOMMENDED_CYNOLOGIST_COMMAND.getLabel());
-        row4.add(Commands.SHIPPING_COMMAND.getLabel());
-        keyboardRows.add(row4);
-
-        KeyboardRow row5 = new KeyboardRow();
-        row5.add(Commands.REASONS_FOR_REFUSAL_COMMAND.getLabel());
-        row5.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
-        keyboardRows.add(row5);
-
-        keyboardMarkup.setResizeKeyboard(true);
-        keyboardMarkup.setKeyboard(keyboardRows);
-
-        return keyboardMarkup;
-
-    }
-
+    public static final String REASONS_FOR_REFUSAL_COMMAND_LABEL = "\uD83D\uDEC7  Почему Вам могут отказать?";
 }
-
-

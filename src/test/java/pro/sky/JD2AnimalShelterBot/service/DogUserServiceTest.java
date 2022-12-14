@@ -6,10 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import pro.sky.JD2AnimalShelterBot.model.User;
-import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import pro.sky.JD2AnimalShelterBot.model.DogUser;
+import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
 
 
 import java.util.Optional;
@@ -19,22 +21,22 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class DogUserServiceTest {
 
-    User userExpected = new User();
+    DogUser dogUserExpected = new DogUser();
 
 
     @Mock
-    UserRepository userRepository;
+    DogUserRepository dogUserRepository;
 
     @InjectMocks
     UserService userService;
 
     @BeforeEach
     void initUser() {
-        userExpected.setChatId(6666L);
-        userExpected.setFirstname("Maksim");
-        userExpected.setLastname("Petrov");
+        dogUserExpected.setChatId(6666L);
+        dogUserExpected.setFirstname("Maksim");
+        dogUserExpected.setLastname("Petrov");
     }
 
 
@@ -47,18 +49,21 @@ class UserServiceTest {
         chat.setLastName("Petrov");
         chat.setId(6666L);
         message.setChat(chat);
+        CallbackQuery callbackQuery = new CallbackQuery();
+        callbackQuery.setMessage(message);
+        Update update = new Update();
+        update.setCallbackQuery(callbackQuery);
+        userService.createDogUser(6666L, update);
 
-        userService.createUser(message);
-
-        verify(userRepository).save(userExpected);
+        verify(dogUserRepository).save(dogUserExpected);
     }
 
     @Test
     void getUser() {
 
-        when(userRepository.findById(6666L)).thenReturn(Optional.of(userExpected));
-        User actual = userService.getUser(6666L);
-        assertEquals(userExpected, actual);
+        when(dogUserRepository.findById(6666L)).thenReturn(Optional.of(dogUserExpected));
+        DogUser actual = userService.getDogUserById(6666L);
+        assertEquals(dogUserExpected, actual);
 
     }
 }

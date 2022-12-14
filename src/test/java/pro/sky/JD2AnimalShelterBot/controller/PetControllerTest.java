@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
-import pro.sky.JD2AnimalShelterBot.service.PetService;
+import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDate;
 import java.util.List;

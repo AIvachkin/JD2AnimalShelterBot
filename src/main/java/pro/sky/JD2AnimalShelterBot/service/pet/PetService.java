@@ -1,11 +1,11 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.service.pet;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
-import pro.sky.JD2AnimalShelterBot.model.User;
 import pro.sky.JD2AnimalShelterBot.repository.PetRepository;
-import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
+import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
@@ -17,10 +17,10 @@ import java.util.List;
 @Slf4j
 public class PetService {
     private final PetRepository petRepository;
-    private final UserRepository userRepository;
-    public PetService(PetRepository petRepository, UserRepository userRepository) {
+    private final DogUserRepository dogUserRepository;
+    public PetService(PetRepository petRepository, DogUserRepository dogUserRepository) {
         this.petRepository = petRepository;
-        this.userRepository = userRepository;
+        this.dogUserRepository = dogUserRepository;
     }
     /**
      * Метод получения домашнего питомца
@@ -67,7 +67,7 @@ public class PetService {
 
     /**
      * Метод для получения всех животных из базы
-     * @return
+     * @return - возвращает список всех животных
      */
     public List<Pet> getAllPets() {
         return (List<Pet>) petRepository.findAll();
@@ -79,9 +79,9 @@ public class PetService {
      * @param chatId ИД попечителя
      */
     public void assignPetToCaregiver(Long petId, Long chatId) {
-        User user = userRepository.findById(chatId).orElseThrow();
+        DogUser dogUser = dogUserRepository.findById(chatId).orElseThrow();
         Pet pet = petRepository.findById(petId).orElseThrow();
-        pet.setUser(user);
+        pet.setDogUser(dogUser);
         petRepository.save(pet);
     }
 
@@ -91,7 +91,7 @@ public class PetService {
      */
     public void detachPetFromCaregiver(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow();
-        pet.setUser(null);
+        pet.setDogUser(null);
         petRepository.save(pet);
     }
 }

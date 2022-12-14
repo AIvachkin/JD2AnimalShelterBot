@@ -3,7 +3,9 @@ package pro.sky.JD2AnimalShelterBot.service;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Класс хранит в себе контекст пользователя
@@ -14,7 +16,7 @@ public class UserContext {
     /**
      * Мапа для хранения контекста пользователей
      */
-    private Map<Long, String> userContext = new HashMap<>();
+    private final Map<Long, Set<String>> userContext = new HashMap<>();
 
     /**
      * Метод для сохранения контекста пользователя
@@ -22,7 +24,13 @@ public class UserContext {
      * @param context состояние пользователя
      */
     public void setUserContext(Long chatId, String context) {
-        userContext.put(chatId, context);
+        Set<String> contextSet = this.getUserContext(chatId);
+        if(contextSet == null){
+            contextSet = new HashSet<>();
+        }
+        contextSet.add(context);
+
+        userContext.put(chatId, contextSet);
     }
 
     /**
@@ -30,8 +38,14 @@ public class UserContext {
      * @param chatId ИД пользователя
      * @return возвращает контекст конкретного пользователя
      */
-    public String getUserContext(Long chatId) {
+    public Set<String> getUserContext(Long chatId) {
         return userContext.get(chatId);
     }
 
+
+
+    public void deleteUserContext(long chatId, String pet) {
+        Set<String> contextSet = this.getUserContext(chatId);
+        contextSet.remove(pet);
+    }
 }

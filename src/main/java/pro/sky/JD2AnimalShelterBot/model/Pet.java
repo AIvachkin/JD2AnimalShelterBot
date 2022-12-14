@@ -23,7 +23,8 @@ public class Pet {
      */
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long petId;
+    @Column(name = "pet_id")
+    private Long id;
 
     /**
      * имя домашнего питомца
@@ -41,7 +42,7 @@ public class Pet {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private DogUser dogUser;
 
     /**
      * испытательный срок до

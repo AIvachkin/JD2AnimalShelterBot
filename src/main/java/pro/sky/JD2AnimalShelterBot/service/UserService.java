@@ -6,11 +6,14 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import pro.sky.JD2AnimalShelterBot.model.User;
-import pro.sky.JD2AnimalShelterBot.repository.UserRepository;
+import pro.sky.JD2AnimalShelterBot.model.CatUser;
+import pro.sky.JD2AnimalShelterBot.model.DogUser;
+import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
+import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,62 +29,90 @@ public class UserService {
     /**
      * Поле - для инжекции в класс репозитория для возможности взаимодействия с БД
      */
-    private final UserRepository userRepository;
+    private final DogUserRepository dogUserRepository;
+    private final CatUserRepository catUserRepository;
 
     private final ExecuteMessage executeMessage;
 
     private static final String WELCOME_MESSAGE = "Чтобы связаться с волонтером, пожалуйста, отправьте нам свои контакты." +
             "\n\nДля этого нажмите кнопку внизу и подтвердите передучу контактов.";
 
-    private static final String SHARE_PHONE_NUMBER = "Поделиться контактами";
+    private static final String SHARE_PHONE_NUMBER = "\uD83D\uDC49 Поделиться контактами \uD83D\uDC48";
 
     /**
      * Конструктор - создание нового объекта - репозитория - для работы с его методами для взаимодействия с БД
      */
-    public UserService(UserRepository userRepository, ExecuteMessage executeMessage) {
-        this.userRepository = userRepository;
+    public UserService(DogUserRepository dogUserRepository, CatUserRepository catUserRepository, ExecuteMessage executeMessage) {
+        this.dogUserRepository = dogUserRepository;
+        this.catUserRepository = catUserRepository;
         this.executeMessage = executeMessage;
     }
 
 
     /**
-     * Метод, создающий объект User и сохраняющий его в БД
+     * Метод, создающий объект DogUser и сохраняющий его в БД
      */
-    public void createUser(Message message) {
-
-        if (userRepository.findById(message.getChatId()).isEmpty()) {
-/**
- * Временные переменные для получения данных для создания объекта типа User
- */
-            Long chatId = message.getChatId();
+    public void createDogUser(long chatId, Update update) {
+        if (dogUserRepository.findById(chatId).isEmpty()) {
+            Message message = update.getCallbackQuery().getMessage();
             Chat chat = message.getChat();
-
-            User user = new User();
-
-            user.setChatId(chatId);
-            user.setFirstname(chat.getFirstName());
-            user.setLastname(chat.getLastName());
-            userRepository.save(user);
-
+            DogUser dogUser = new DogUser();
+            dogUser.setChatId(chatId);
+            dogUser.setFirstname(chat.getFirstName());
+            dogUser.setLastname(chat.getLastName());
+            dogUserRepository.save(dogUser);
         }
     }
 
     /**
-     * Метод для полученеия сущности пользователя по ИД
+     * Метод, создающий объект CatUser и сохраняющий его в БД
+     */
+    public void createCatUser(long chatId, Update update) {
+        if (catUserRepository.findById(chatId).isEmpty()) {
+            Message message = update.getCallbackQuery().getMessage();
+            Chat chat = message.getChat();
+            CatUser catUser = new CatUser();
+            catUser.setChatId(chatId);
+            catUser.setFirstname(chat.getFirstName());
+            catUser.setLastname(chat.getLastName());
+            catUserRepository.save(catUser);
+        }
+    }
+
+    /**
+     * Метод для полученеия сущности пользователя приюта собак по ИД
      *
      * @param chatId ИД пользователя
      * @return - возвращает пользователя из БД
      */
-    public User getUser(long chatId) {
-        return userRepository.findById(chatId).orElseThrow();
+    public DogUser getDogUserById(long chatId) {
+        return dogUserRepository.findById(chatId).orElseThrow();
     }
 
     /**
-     * Метод получает из базы тедефон пользователя по ИД
+     * Метод для полученеия сущности пользователя приюта кошек по ИД
+     *
+     * @param chatId ИД пользователя
+     * @return - возвращает пользователя из БД
+     */
+    public CatUser getCatUserById(long chatId) {
+        return catUserRepository.findById(chatId).orElseThrow();
+    }
+
+    /**
+     * Метод получает из базы тедефон пользователя приюта собак по ИД
      * @param chatId ИД пользователя
      */
-    public String getUserPhone(long chatId) {
-        return userRepository.getUserPhoneById(chatId);
+    public String getDogUserPhone(long chatId) {
+        return dogUserRepository.getUserPhoneById(chatId);
+    }
+
+    /**
+     * Метод получает из базы тедефон пользователя приюта кошек по ИД
+     * @param chatId ИД пользователя
+     */
+    public String getCatUserPhone(long chatId) {
+        return catUserRepository.getUserPhoneById(chatId);
     }
 
     public void requestContactDetails(Long chatId) {
@@ -108,11 +139,26 @@ public class UserService {
         executeMessage.executeMessage(sendMessage);
     }
 
-    public void setUserPhone(Message msg) {
-        User user = userRepository.findById(msg.getChatId()).orElseThrow();
-        user.setPhoneNumber(msg.getContact().getPhoneNumber());
-        userRepository.save(user);
-        log.info("Users " +  msg.getChatId() + " saved");
-
+    /**
+     * Метод для записи в базу телефона пользователя приюта для собак
+     * @param msg объект сообщения
+     */
+    public void setDodUserPhone(Message msg) {
+        DogUser dogUser = dogUserRepository.findById(msg.getChatId()).orElseThrow();
+        dogUser.setPhoneNumber(msg.getContact().getPhoneNumber());
+        dogUserRepository.save(dogUser);
+        log.info("DogUsers " +  msg.getChatId() + " saved");
     }
+
+    /**
+     * Метод для записи в базу телефона пользователя приюта для кошек
+     * @param msg объект сообщения
+     */
+    public void setCatUserPhone(Message msg) {
+        CatUser catUser = catUserRepository.findById(msg.getChatId()).orElseThrow();
+        catUser.setPhoneNumber(msg.getContact().getPhoneNumber());
+        catUserRepository.save(catUser);
+        log.info("CatUsers " +  msg.getChatId() + " saved");
+    }
+
 }

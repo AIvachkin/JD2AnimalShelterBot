@@ -57,3 +57,13 @@ ALTER  TABLE  trustees_reports  DROP  COLUMN  answered;
 -- changeset andrew: 1
 DROP TABLE volunteer;
 
+-- changeset alexander:4
+ALTER TABLE user_data_table RENAME TO dog_user_data_table;
+
+-- changeset alexander:5
+CREATE TABLE cat_user_data_table (
+                                 chat_id BIGINT,
+                                 firstname VARCHAR,
+                                 lastname VARCHAR,
+                                 phone_number VARCHAR
+);

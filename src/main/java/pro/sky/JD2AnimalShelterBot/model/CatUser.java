@@ -1,25 +1,25 @@
 package pro.sky.JD2AnimalShelterBot.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
- * Класс задает сущность USER и сохраняет его в БД
+ * Класс задает сущность CATUSER и сохраняет его в БД
  */
-@Entity(name = "user_data_table")
+@Entity(name = "cat_user_data_table")
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class CatUser {
 
     /**
      * Переменная - идентификатор чата пользователя. Primary key
@@ -45,9 +45,7 @@ public class User {
     /**
      * Переменная - питомец, которого приютил пользователь
      */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "dogUser")
     private List<Pet> pets;
-
-
 
 }

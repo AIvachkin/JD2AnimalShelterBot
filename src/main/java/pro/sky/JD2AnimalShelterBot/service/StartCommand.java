@@ -2,8 +2,11 @@ package pro.sky.JD2AnimalShelterBot.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,14 +53,30 @@ public class StartCommand {
             Выбери пункт меню ниже
             """;
 
+    private static final String SHOOSING_PET_MESSAGE = """
+           Пожалуйста, выберите приют:
+           
+           """;
+
+    public static final String DOG_BUTTON = "Приют для собак";
+
+    public static final String CAT_BUTTON = "Приют для кошек";
+
     /**
      * Метод обработки команды /start и добавления в БД пользователя
      * @param chatId  id текущего чата
      * @param update  объект сообщения
      */
     public void startCallBack(long chatId, Update update){
-        userService.createUser(update.getMessage());
-        startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+
+        userService.createDogUser(chatId, update);
+        String firstname;
+        if(update.getCallbackQuery() != null){
+            firstname = update.getCallbackQuery().getMessage().getChat().getFirstName();
+        } else {
+            firstname = update.getMessage().getChat().getFirstName();
+        }
+        startCommandReceived(chatId, firstname);
     }
 
     /**
@@ -87,8 +106,68 @@ public class StartCommand {
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
 
-       executeMessage.prepareAndSendMessage(chatId,textToSend,keyboardMarkup);
+        executeMessage.prepareAndSendMessage(chatId,textToSend,keyboardMarkup);
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
 
+    }
+
+    public void choosingTypeOfPet(long chatId) {
+
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(SHOOSING_PET_MESSAGE);
+
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        var button = new InlineKeyboardButton();
+        button.setText(DOG_BUTTON);
+        button.setCallbackData(DOG_BUTTON);
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+        rowInline.add(button);
+        rowsInline.add(rowInline);
+        button = new InlineKeyboardButton();
+        button.setText(CAT_BUTTON);
+        button.setCallbackData(CAT_BUTTON);
+        rowInline = new ArrayList<>();
+        rowInline.add(button);
+        rowsInline.add(rowInline);
+
+        markupInline.setKeyboard(rowsInline);
+        message.setReplyMarkup(markupInline);
+        executeMessage.executeMessage(message);
+
+    }
+
+    /**
+     * Метод для создания клавиатуры стартового меню
+     * */
+    public ReplyKeyboardMarkup createMenuStartCommand() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        row.add(Commands.INFORMATION_COMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(Commands.TAKE_PET_COMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(Commands.SEND_REPORT_COMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
+        keyboardRows.add(row);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
+
+        return keyboardMarkup;
+    }
+
+    /**
+     * Метод, возвращающий пользователя в стартовое меню
+     * */
+    public void returnToMainMenu(long chatId) {
+
+        ReplyKeyboardMarkup keyboardMarkup = createMenuStartCommand();
+        executeMessage.prepareAndSendMessage(chatId, "Возврат в основное меню выполнен", keyboardMarkup);
     }
 }

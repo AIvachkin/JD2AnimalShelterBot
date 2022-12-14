@@ -1,6 +1,5 @@
 package pro.sky.JD2AnimalShelterBot.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,7 +22,8 @@ public class Correspondence {
      */
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long messageId;
+    @Column(name = "message_id")
+    private Long id;
 
     /**
      * ИД пользователя

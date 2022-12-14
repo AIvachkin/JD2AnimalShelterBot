@@ -23,7 +23,8 @@ public class TrusteesReports {
      */
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long messageId;
+    @Column(name = "message_id")
+    private Long id;
 
     /**
      * ИД пользователя
@@ -33,7 +34,9 @@ public class TrusteesReports {
     /**
      * ИД животного
      */
-    private Long petId;
+    @ManyToOne
+    @JoinColumn(name = "pet_id")
+    private Pet pet;
 
     /**
      * дата и время отчета

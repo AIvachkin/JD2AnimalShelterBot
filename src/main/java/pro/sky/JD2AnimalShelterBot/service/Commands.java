@@ -7,35 +7,47 @@ import pro.sky.JD2AnimalShelterBot.util.StringUtil;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static pro.sky.JD2AnimalShelterBot.service.TakePet.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
 
 
 @Getter
 @RequiredArgsConstructor
 public enum Commands {
-    START_COMAND("/start", "Регистрация пользователя", "Домой \uD83C\uDFE1"),
-    INFORMATION_COMAND("/information", "Узнать информацию о приюте", "❓ Узнать информацию о приюте"),
-    TAKE_PET_COMAND("/how_take_pet", "Как взять собаку из приюта", "\uD83D\uDC36️ Как взять собаку из приюта"),
-    SEND_REPORT_COMAND("/send_pet_report", "Прислать отчет о питомце", "\uD83D\uDDD3 Прислать отчет о питомце"),
+    START_COMAND("/start", "Регистрация пользователя", START_COMAND_LABEL),
+    INFORMATION_COMAND("/information", "Узнать информацию о приюте", INFORMATION_COMAND_LABEL),
+    TAKE_PET_COMAND("/how_take_pet", "Как взять собаку из приюта", TAKE_PET_COMAND_LABEL),
+    SEND_REPORT_COMAND("/send_pet_report", "Прислать отчет о питомце", SEND_REPORT_COMAND_LABEL),
 
-    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера"),
-    SHELTER_INFO("/shelter_info", "Информация о приюте", "❓ Информация о приюте"),
-    SCHEDULE_ADDRESS("/schedule_address", "Адрес и расписание приюта", "\uD83E\uDDED Адрес и расписание приюта"),
-    SAFETY_RULES("/safety_rules", "Правила поведения в приюте", "\uD83D\uDCC3 Правила поведения в приюте"),
-    CONTACT_DATA("/contact_data", "Оставить контактные данные", "\uD83D\uDCDE Оставить контактные данные"),
-    MAIN_MENU("/main_menu", "Вернуться в основное меню", "\uD83C\uDFE0 Основное меню"),
+    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", CALL_VOLUNTEER_COMAND_LABEL),
 
-    DATING_RULES_COMMAND("/dating_rules", DATING_RULES, "\uD83D\uDC36  Правила знакомства с собакой"),
-    DOCUMENTS_COMMAND("/documents", DOCUMENTS, "\uD83D\uDCDC  Список необходимых документов"),
-    SHIPPING_COMMAND("/shipping", SHIPPING, "\uD83D\uDEFB  Транспортировка животного"),
-    RECOMM_FOR_PUPPY_COMMAND("/recommendation_for_puppy", RECOMM_FOR_PUPPY, "\uD83C\uDFE1  Дом для щенка"),
-    RECOMM_FOR_DOG_COMMAND("/recommendation_for_dog", RECOMM_FOR_DOG, "\uD83C\uDFE1  Дом для взрослой собаки"),
-    RECOMM_FOR_DOG_INVALID_COMMAND("/recommendation_for_dog_invalid", RECOMM_FOR_DOG_INVALID, "\uD83C\uDFE1  Дом для собаки-инвалида"),
-    CYNOLOGIST_INITIAL_ADVICE_COMMAND("/initial_advice", CYNOLOGIST_INITIAL_ADVICE, "\uD83D\uDCC3  Советы кинолога"),
-    RECOMMENDED_CYNOLOGIST_COMMAND("/recommeded_cynologist", RECOMMENDED_CYNOLOGIST, "\uD83C\uDFC5  Лучшие кинологи"),
-    REASONS_FOR_REFUSAL_COMMAND("/refusal", REASONS_FOR_REFUSAL, "\uD83D\uDEC7  Почему Вам могут отказать?");
+    SHELTER_INFO_COMMAND("/shelter_info", SHELTER_INFO, SHELTER_INFO_COMMAND_LABEL),
+    SCHEDULE_ADDRESS_COMMAND("/schedule_address", SCHEDULE_ADDRESS, SCHEDULE_ADDRESS_COMMAND_LABEL),
+    SAFETY_RULES_COMMAND("/safety_rules", SAFETY_RULES, SAFETY_RULES_COMMAND_LABEL),
+    CONTACT_DATA_COMMAND("/contact_data", CONTACT_DATA, CONTACT_DATA_COMMAND_LABEL),
+    MAIN_MENU_COMMAND("/main_menu", MAIN_MENU, MAIN_MENU_LABEL),
 
+    DOG_DATING_RULES_COMMAND("/dating_rules", DOG_DATING_RULES, DOG_DATING_RULES_COMMAND_LABEL),
+    DOG_DOCUMENTS_COMMAND("/documents", DOG_DOCUMENTS, DOG_DOCUMENTS_COMMAND_LABEL),
+    DOG_SHIPPING_COMMAND("/shipping", DOG_SHIPPING, DOG_SHIPPING_COMMAND_LABEL),
+    RECOMM_FOR_PUPPY_COMMAND("/recommendation_for_puppy", RECOMM_FOR_PUPPY, RECOMM_FOR_PUPPY_COMMAND_LABEL),
+    RECOMM_FOR_DOG_COMMAND("/recommendation_for_dog", RECOMM_FOR_DOG, RECOMM_FOR_DOG_COMMAND_LABEL),
+    RECOMM_FOR_DOG_INVALID_COMMAND("/recommendation_for_dog_invalid", RECOMM_FOR_DOG_INVALID, RECOMM_FOR_DOG_INVALID_COMMAND_LABEL),
+    CYNOLOGIST_INITIAL_ADVICE_COMMAND("/initial_advice", CYNOLOGIST_INITIAL_ADVICE, CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL),
+    RECOMMENDED_CYNOLOGIST_COMMAND("/recommeded_cynologist", RECOMMENDED_CYNOLOGIST, RECOMMENDED_CYNOLOGIST_COMMAND_LABEL),
+    REASONS_FOR_REFUSAL_COMMAND("/refusal", REASONS_FOR_REFUSAL, REASONS_FOR_REFUSAL_COMMAND_LABEL),
 
+    CAT_DATING_RULES_COMMAND("/cat_dating_rules", CAT_DATING_RULES, CAT_DATING_RULES_COMMAND_LABEL),
+
+    CAT_DOCUMENTS_COMMAND("/cat_documents", CAT_DOCUMENTS, CAT_DOCUMENTS_LABEL),
+
+    CAT_SHIPPING_COMMAND("/cat_shipping", CAT_SHIPPING, CAT_SHIPPING_COMMAND_LABEL),
+
+    RECOMM_FOR_CAT_COMMAND("/recommendation_for_cat", RECOMM_FOR_CAT, RECOMM_FOR_CAT_COMMAND_LABEL),
+
+    RECOMM_FOR_CAT_INVALID_COMMAND("/recommendation_for_cat_invalid", RECOMM_FOR_CAT_INVALID, RECOMM_FOR_CAT_INVALID_COMMAND_LABEL);
 
 
     /**
@@ -55,6 +67,7 @@ public enum Commands {
 
     /**
      * Метод парсит поступившую команду на предмет эквивалентности имени или лейблу одной из команд в enum
+     *
      * @param command поступившая команда
      * @return возвращает команду из enum
      */

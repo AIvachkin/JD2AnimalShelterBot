@@ -69,7 +69,7 @@ class CorrespondenceServiceTest {
 
     @Test
     void sendMessageTest() {
-        when(userService.getUser(anyLong()))
+        when(userService.getDogUserById(anyLong()))
                 .thenThrow(NoSuchElementException.class);
         assertThrows(NoSuchElementException.class, () -> out.sendMessage(0L, "SomeString"));
     }

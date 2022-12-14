@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
 import pro.sky.JD2AnimalShelterBot.service.CorrespondenceService;
-import pro.sky.JD2AnimalShelterBot.service.PetService;
+import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 import pro.sky.JD2AnimalShelterBot.service.UserService;
 
 import javax.ws.rs.NotFoundException;
