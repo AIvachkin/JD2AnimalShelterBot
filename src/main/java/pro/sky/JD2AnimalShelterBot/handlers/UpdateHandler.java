@@ -10,8 +10,7 @@ import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
 
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
-import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.CAT_DATING_RULES;
-import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.CAT_DATING_RULES_COMMAND_LABEL;
+import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.*;
 import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
 import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
 import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
@@ -89,14 +88,14 @@ public class UpdateHandler implements InputMessageHandler {
         }
 
         // Если не выбраны кошки или собаки
-        if(userContext.getUserContext(chatId) == null || (!userContext.getUserContext(chatId).contains("dog")
-                                                      && !userContext.getUserContext(chatId).contains("cat"))) {
+        if (userContext.getUserContext(chatId) == null || (!userContext.getUserContext(chatId).contains("dog")
+                && !userContext.getUserContext(chatId).contains("cat"))) {
             startCommand.choosingTypeOfPet(chatId);
             return;
         }
 
         // Если пользователь пишет сообщение волонтеру
-        if(userContext.getUserContext(chatId).contains("messageToVolunteer")) {
+        if (userContext.getUserContext(chatId).contains("messageToVolunteer")) {
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }
@@ -114,18 +113,36 @@ public class UpdateHandler implements InputMessageHandler {
                 if (userContext.getUserContext(chatId).contains("dog")) {
                     takeDog.takePetCommandReceived(chatId);
                     break;
-                } else takeCat.takePetCommandReceived(chatId);
-
-            case DOG_DATING_RULES_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, DOG_DATING_RULES, takeDog.createMenuTakePet());
+                } else {
+                    takeCat.takePetCommandReceived(chatId);
+                }
                 break;
 
-            case DOG_DOCUMENTS_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, DOG_DOCUMENTS, takeDog.createMenuTakePet());
+            case DATING_RULES_COMMAND_LABEL:
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, DOG_DATING_RULES, takeDog.createMenuTakePet());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, CAT_DATING_RULES, takeCat.createMenuTakePet());
+                }
                 break;
 
-            case DOG_SHIPPING_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, DOG_SHIPPING, takeDog.createMenuTakePet());
+            case DOCUMENTS_COMMAND_LABEL:
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, DOG_DOCUMENTS, takeDog.createMenuTakePet());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, CAT_DOCUMENTS, takeCat.createMenuTakePet());
+                }
+                break;
+
+            case SHIPPING_COMMAND_LABEL:
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, DOG_SHIPPING, takeDog.createMenuTakePet());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, CAT_SHIPPING, takeCat.createMenuTakePet());
+                }
                 break;
 
             case RECOMM_FOR_PUPPY_COMMAND_LABEL:
@@ -137,8 +154,13 @@ public class UpdateHandler implements InputMessageHandler {
                 executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_2, takeDog.createMenuTakePet());
                 break;
 
-            case RECOMM_FOR_DOG_INVALID_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_INVALID, takeDog.createMenuTakePet());
+            case RECOMM_FOR_PET_INVALID_COMMAND_LABEL:
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_INVALID, takeDog.createMenuTakePet());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_CAT_INVALID, takeCat.createMenuTakePet());
+                }
                 break;
 
             case CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL:
@@ -150,11 +172,16 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
             case REASONS_FOR_REFUSAL_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeDog.createMenuTakePet());
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeDog.createMenuTakePet());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeCat.createMenuTakePet());
+                }
                 break;
 
-            case CAT_DATING_RULES_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, CAT_DATING_RULES, takeCat.createMenuTakePet());
+            case RECOMM_FOR_CAT_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_CAT, takeCat.createMenuTakePet());
                 break;
 
 
@@ -164,15 +191,30 @@ public class UpdateHandler implements InputMessageHandler {
 
 
             case SHELTER_INFO_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, SHELTER_INFO, shelterInfo.createMenuShelterInfo());
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, DOG_SHELTER_INFO, shelterInfo.createMenuShelterInfo());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, CAT_SHELTER_INFO, shelterInfo.createMenuShelterInfo());
+                }
                 break;
 
             case SCHEDULE_ADDRESS_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, DOG_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, CAT_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                }
                 break;
 
             case SAFETY_RULES_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, SAFETY_RULES, shelterInfo.createMenuShelterInfo());
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, DOG_SAFETY_RULES, shelterInfo.createMenuShelterInfo());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, CAT_SAFETY_RULES, shelterInfo.createMenuShelterInfo());
+                }
                 break;
 
             case CONTACT_DATA_COMMAND_LABEL:
@@ -190,6 +232,9 @@ public class UpdateHandler implements InputMessageHandler {
         }
     }
 
+    /**
+     * Метод, задающий контекст пользователю - cat или dog - в зависимости от выбора приюта
+     */
     private void processingOfButtons(Update update) {
 
         String callBackData = update.getCallbackQuery().getData();

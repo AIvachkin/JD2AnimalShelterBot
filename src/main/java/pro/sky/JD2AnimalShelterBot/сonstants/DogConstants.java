@@ -412,17 +412,17 @@ public class DogConstants {
 
             """;
 
-    public static final String DOG_DATING_RULES_COMMAND_LABEL = "\uD83D\uDC36  Правила знакомства с собакой";
+    public static final String DATING_RULES_COMMAND_LABEL = "\uD83D\uDC36 \uD83D\uDC31  Правила знакомства с питомцем";
 
-    public static final String DOG_DOCUMENTS_COMMAND_LABEL = "\uD83D\uDCDC  Список необходимых документов";
+    public static final String DOCUMENTS_COMMAND_LABEL = "\uD83D\uDCDC  Список необходимых документов";
 
-    public static final String DOG_SHIPPING_COMMAND_LABEL = "\uD83D\uDEFB  Транспортировка собаки";
+    public static final String SHIPPING_COMMAND_LABEL = "\uD83D\uDEFB  Транспортировка питомца";
 
     public static final String RECOMM_FOR_PUPPY_COMMAND_LABEL = "\uD83C\uDFE1  Дом для щенка";
 
     public static final String RECOMM_FOR_DOG_COMMAND_LABEL = "\uD83C\uDFE1  Дом для взрослой собаки";
 
-    public static final String RECOMM_FOR_DOG_INVALID_COMMAND_LABEL = "\uD83C\uDFE1  Дом для собаки-инвалида";
+    public static final String RECOMM_FOR_PET_INVALID_COMMAND_LABEL = "\uD83C\uDFE1  Дом для питомца-инвалида";
 
     public static final String CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL = "\uD83D\uDCC3  Советы кинолога";
 

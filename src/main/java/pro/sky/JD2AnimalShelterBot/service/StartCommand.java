@@ -30,7 +30,7 @@ public class StartCommand {
      *
      * @param telegramBot    - объект взаимодействия с ботом
      * @param userService    - объект для взаимодействия с командами сервиса
-     * @param executeMessage
+     * @param executeMessage - объект для взаимодействия с методами класса, отвечающего за отправку ответа пользователям
      */
     public StartCommand(TelegramBot telegramBot, UserService userService, ExecuteMessage executeMessage) {
         this.telegramBot = telegramBot;
@@ -111,6 +111,11 @@ public class StartCommand {
 
     }
 
+
+    /**
+     * Метод для создания кнопок для выбора типа приюта: собаки или кошки
+     * @param chatId  id текущего чата
+     */
     public void choosingTypeOfPet(long chatId) {
 
         SendMessage message = new SendMessage();
@@ -125,6 +130,7 @@ public class StartCommand {
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
         rowInline.add(button);
         rowsInline.add(rowInline);
+
         button = new InlineKeyboardButton();
         button.setText(CAT_BUTTON);
         button.setCallbackData(CAT_BUTTON);
