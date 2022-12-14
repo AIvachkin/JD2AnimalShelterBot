@@ -137,4 +137,13 @@ public class StartCommand {
         executeMessage.executeMessage(message);
 
     }
+
+    /**
+     * Метод, возвращающий пользователя в стартовое меню
+     * */
+    public void returnToMainMenu(long chatId) {
+
+        ReplyKeyboardMarkup keyboardMarkup = createMenuStartCommand();
+        executeMessage.prepareAndSendMessage(chatId, "Возврат в основное меню выполнен", keyboardMarkup);
+    }
 }
