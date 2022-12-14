@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import pro.sky.JD2AnimalShelterBot.service.*;
+import pro.sky.JD2AnimalShelterBot.service.pet.TakeCat;
+import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
 
 import java.util.Objects;
 
@@ -22,7 +24,9 @@ public class UpdateHandler implements InputMessageHandler {
 
     private final StartCommand startCommand;
     private final ShelterInfo shelterInfo;
-    private final TakePet takePet;
+    private final TakeDog takeDog;
+
+    private final TakeCat takeCat;
     private final CommunicationWithVolunteer communicationWithVolunteer;
 
     private final ExecuteMessage executeMessage;
@@ -35,14 +39,16 @@ public class UpdateHandler implements InputMessageHandler {
      *
      * @param startCommand   - объект обработчика команды /start
      * @param shelterInfo    - объект "информация о приюте"
-     * @param takePet        - объект "информация об усыновлении животного"
+     * @param takeDog        - объект "информация об усыновлении собаки"
+     * @param takeCat        - объект "информация об усыновлении кошки"
      * @param executeMessage - объект для работы с классом по отправке ответов пользователю
-     * @param userService
-     * @param userContext
+     * @param userService    - объект для работы с методами класса UserService
+     * @param userContext    - объект для определения контекста пользователя для корректного выбора меню
      */
     public UpdateHandler(@Lazy StartCommand startCommand,
                          @Lazy ShelterInfo shelterInfo,
-                         @Lazy TakePet takePet,
+                         @Lazy TakeDog takeDog,
+                         @Lazy TakeCat takeCat,
                          @Lazy CommunicationWithVolunteer communicationWithVolunteer,
                          @Lazy ExecuteMessage executeMessage,
                          UserService userService,
@@ -50,7 +56,8 @@ public class UpdateHandler implements InputMessageHandler {
 
         this.startCommand = startCommand;
         this.shelterInfo = shelterInfo;
-        this.takePet = takePet;
+        this.takeDog = takeDog;
+        this.takeCat = takeCat;
         this.communicationWithVolunteer = communicationWithVolunteer;
         this.executeMessage = executeMessage;
         this.userService = userService;
@@ -72,7 +79,7 @@ public class UpdateHandler implements InputMessageHandler {
         long chatId = update.getMessage().getChatId();
 
         //Если пользователь прислал контакты
-        if(update.hasMessage() && update.getMessage().getContact() != null){
+        if (update.hasMessage() && update.getMessage().getContact() != null) {
             userService.setUserPhone(update.getMessage());
             communicationWithVolunteer.volunteerButtonHandler(update);
             return;
@@ -86,7 +93,7 @@ public class UpdateHandler implements InputMessageHandler {
         }
 
         // Если пользователь пишет сообщение волонтеру
-        if(userContext.getUserContext(chatId) != null && userContext.getUserContext(chatId).contains("messageToVolunteer")) {
+        if(userContext.getUserContext(chatId) == "messageToVolunteer") {
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }
@@ -100,50 +107,79 @@ public class UpdateHandler implements InputMessageHandler {
                 shelterInfo.createMenuShelterInfo(chatId);
                 break;
 
-            case "\uD83D\uDC36️ Как взять собаку из приюта":
-                takePet.takePetCommandReceived(chatId);
+            case TAKE_PET_COMAND_LABEL:
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    takeDog.takePetCommandReceived(chatId);
+                    break;
+                } else takeCat.takePetCommandReceived(chatId);
+
+            case DOG_DATING_RULES_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, DOG_DATING_RULES, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83D\uDC36  Правила знакомства с собакой":
-                executeMessage.prepareAndSendMessage(chatId, DATING_RULES, takePet.createMenuTakePet());
+            case DOG_DOCUMENTS_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, DOG_DOCUMENTS, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83D\uDCDC  Список необходимых документов":
-                executeMessage.prepareAndSendMessage(chatId, DOCUMENTS, takePet.createMenuTakePet());
+            case DOG_SHIPPING_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, DOG_SHIPPING, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83D\uDEFB  Транспортировка животного":
-                executeMessage.prepareAndSendMessage(chatId, SHIPPING, takePet.createMenuTakePet());
+            case RECOMM_FOR_PUPPY_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83C\uDFE1  Дом для щенка":
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY, takePet.createMenuTakePet());
+            case RECOMM_FOR_DOG_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_1, takeDog.createMenuTakePet());
+                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_2, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83C\uDFE1  Дом для взрослой собаки":
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_1, takePet.createMenuTakePet());
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_2, takePet.createMenuTakePet());
+            case RECOMM_FOR_DOG_INVALID_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_INVALID, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83C\uDFE1  Дом для собаки-инвалида":
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_INVALID, takePet.createMenuTakePet());
+            case CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, CYNOLOGIST_INITIAL_ADVICE, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83D\uDCC3  Советы кинолога":
-                executeMessage.prepareAndSendMessage(chatId, CYNOLOGIST_INITIAL_ADVICE, takePet.createMenuTakePet());
+            case RECOMMENDED_CYNOLOGIST_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, RECOMMENDED_CYNOLOGIST, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83C\uDFC5  Лучшие кинологи":
-                executeMessage.prepareAndSendMessage(chatId, RECOMMENDED_CYNOLOGIST, takePet.createMenuTakePet());
+            case REASONS_FOR_REFUSAL_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeDog.createMenuTakePet());
                 break;
 
-            case "\uD83D\uDEC7  Почему Вам могут отказать?":
-                executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takePet.createMenuTakePet());
+            case CAT_DATING_RULES_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, CAT_DATING_RULES, takeCat.createMenuTakePet());
                 break;
 
-            case "\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера":
+
+            case CALL_VOLUNTEER_COMAND_LABEL:
                 communicationWithVolunteer.volunteerButtonHandler(update);
                 break;
+
+
+            case SHELTER_INFO_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, SHELTER_INFO, shelterInfo.createMenuShelterInfo());
+                break;
+
+            case SCHEDULE_ADDRESS_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                break;
+
+            case SAFETY_RULES_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, SAFETY_RULES, shelterInfo.createMenuShelterInfo());
+                break;
+
+            case CONTACT_DATA_COMMAND_LABEL:
+                executeMessage.prepareAndSendMessage(chatId, CONTACT_DATA, shelterInfo.createMenuShelterInfo());
+                break;
+
+            case MAIN_MENU_LABEL:
+                startCommand.returnToMainMenu(chatId);
+                break;
+
 
             default:
                 System.out.println("Неизвестная команда: " + messageText);

@@ -5,16 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.service.CorrespondenceService;
-import pro.sky.JD2AnimalShelterBot.service.PetService;
+import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 import pro.sky.JD2AnimalShelterBot.service.UserService;
 
 import javax.ws.rs.NotFoundException;
