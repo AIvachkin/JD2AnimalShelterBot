@@ -12,7 +12,11 @@ import java.util.Objects;
 
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
-import static pro.sky.JD2AnimalShelterBot.service.TakePet.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.CAT_DATING_RULES;
+import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.CAT_DATING_RULES_COMMAND_LABEL;
+import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
+import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
 
 /**
  * Класс для обработки входящих сообщений пользователя.
@@ -93,7 +97,7 @@ public class UpdateHandler implements InputMessageHandler {
         }
 
         // Если пользователь пишет сообщение волонтеру
-        if(userContext.getUserContext(chatId) == "messageToVolunteer") {
+        if(userContext.getUserContext(chatId).equals("messageToVolunteer")) {
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }
@@ -104,7 +108,7 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
             case "❓ Узнать информацию о приюте":
-                shelterInfo.createMenuShelterInfo(chatId);
+                shelterInfo.createMenuShelterInfo();
                 break;
 
             case TAKE_PET_COMAND_LABEL:
