@@ -23,7 +23,8 @@ public class Pet {
      */
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long petId;
+    @Column(name = "pet_id")
+    private Long id;
 
     /**
      * имя домашнего питомца

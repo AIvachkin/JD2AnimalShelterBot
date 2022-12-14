@@ -42,6 +42,8 @@ public class UserContext {
         return userContext.get(chatId);
     }
 
+
+
     public void deleteUserContext(long chatId, String pet) {
         Set<String> contextSet = this.getUserContext(chatId);
         contextSet.remove(pet);
