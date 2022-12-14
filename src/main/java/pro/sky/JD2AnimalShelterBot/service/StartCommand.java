@@ -139,6 +139,30 @@ public class StartCommand {
     }
 
     /**
+     * Метод для создания клавиатуры стартового меню
+     * */
+    public ReplyKeyboardMarkup createMenuStartCommand() {
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        row.add(Commands.INFORMATION_COMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(Commands.TAKE_PET_COMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(Commands.SEND_REPORT_COMAND.getLabel());
+        keyboardRows.add(row);
+        row = new KeyboardRow();
+        row.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
+        keyboardRows.add(row);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
+
+        return keyboardMarkup;
+    }
+
+    /**
      * Метод, возвращающий пользователя в стартовое меню
      * */
     public void returnToMainMenu(long chatId) {

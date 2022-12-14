@@ -77,6 +77,7 @@ public class UpdateHandler implements InputMessageHandler {
         //Если нажата inline кнопка
         if (update.hasCallbackQuery()) {
             this.processingOfButtons(update);
+            return;
         }
 
         String messageText = update.getMessage().getText();
