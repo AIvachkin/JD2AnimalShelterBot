@@ -38,13 +38,13 @@ public class UpdateHandler implements InputMessageHandler {
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
-     * @param startCommand   - объект обработчика команды /start
-     * @param shelterInfo    - объект "информация о приюте"
-     * @param takeDog        - объект "информация об усыновлении собаки"
-     * @param takeCat        - объект "информация об усыновлении кошки"
-     * @param executeMessage - объект для работы с классом по отправке ответов пользователю
-     * @param userService    - объект для работы с методами класса UserService
-     * @param userContext    - объект для определения контекста пользователя для корректного выбора меню
+     * @param startCommand      - объект обработчика команды /start
+     * @param shelterInfo       - объект "информация о приюте"
+     * @param takeDog           - объект "информация об усыновлении собаки"
+     * @param takeCat           - объект "информация об усыновлении кошки"
+     * @param executeMessage    - объект для работы с классом по отправке ответов пользователю
+     * @param userService       - объект для работы с методами класса UserService
+     * @param userContext       - объект для определения контекста пользователя для корректного выбора меню
      */
     public UpdateHandler(@Lazy StartCommand startCommand,
                          @Lazy ShelterInfo shelterInfo,
@@ -99,6 +99,7 @@ public class UpdateHandler implements InputMessageHandler {
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }
+
 
         switch (messageText) {
             case "/start":
@@ -217,9 +218,17 @@ public class UpdateHandler implements InputMessageHandler {
                 }
                 break;
 
+// в данном виде метод не сработал. Выдает NPE при обращении к userContext.getUserContext(chatId)
             case CONTACT_DATA_COMMAND_LABEL:
                 executeMessage.prepareAndSendMessage(chatId, CONTACT_DATA, shelterInfo.createMenuShelterInfo());
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    userService.createDogUser(chatId, update);
+                    break;
+                } else {
+                    userService.createCatUser(chatId, update);
+                }
                 break;
+
 
             case MAIN_MENU_LABEL:
                 startCommand.returnToMainMenu(chatId);

@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,12 @@ import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.GREETING_I
 @Slf4j
 @Service
 public class ShelterInfo {
+
+
     private final ExecuteMessage executeMessage;
-    protected ShelterInfo(ExecuteMessage executeMessage) {
+
+    protected ShelterInfo(ExecuteMessage executeMessage
+    ) {
         this.executeMessage = executeMessage;
     }
 
@@ -29,7 +34,7 @@ public class ShelterInfo {
      */
     public void shelterInfoCommandReceived(long chatId) {
         ReplyKeyboardMarkup keyboardMarkup = createMenuShelterInfo();
-        executeMessage.prepareAndSendMessage(chatId,GREETING_INFO,keyboardMarkup);
+        executeMessage.prepareAndSendMessage(chatId, GREETING_INFO, keyboardMarkup);
     }
 
     /**
@@ -61,30 +66,5 @@ public class ShelterInfo {
         return keyboardMarkup;
     }
 
-
-
-//
-//    /**
-//     * Константа - приветственное сообщение для пользователя
-//     */
-//    public static final String GREETING_INFO = """
-//            Здравствуйте, здесь Вы можете получить информацию о приюте: где он находится, как и когда работает,
-//            какие правила пропуска на территорию приюта, правила нахождения внутри и общения с питомцем.
-//            Выберите команду в меню \u2B07
-//            Если нужного вопроса нет в меню, позовите волонтера, который поможет Вам.
-//
-//            """;
-//
-//    /**
-//     * Метод отправки нужного сообщения
-//     */
-//    public void commandProcessing(Update update, long chatId, String messageText) {
-//        switch (messageText) {
-//            case "/shelter_info" -> prepareAndSendMessage(chatId, SHELTER_INFO);
-//            case "/schedule_address" -> prepareAndSendMessage(chatId, SCHEDULE_ADDRESS);
-//            case "/safety_rules" -> prepareAndSendMessage(chatId, SAFETY_RULES);
-//            case "/contact_data" -> prepareAndSendMessage(chatId, CONTACT_DATA);
-//            default -> CallVolunteer.callVolunteer();
-//        }
-//    }
 }
+
