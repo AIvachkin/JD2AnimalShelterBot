@@ -31,9 +31,7 @@ public class ShelterConstants {
      */
     public static final String SCHEDULE_ADDRESS = """
            Наш адрес:
-           Улица Аккорган, 5в
-           Коктал ж/м, Сарыарка район, Астана
-           1 этаж
+           ул. Брусилова, 32Б
             
            Ежедневно с 11:00 до 18:00
            """;
