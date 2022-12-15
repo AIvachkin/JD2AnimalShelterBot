@@ -60,31 +60,4 @@ public class ShelterInfo {
 
         return keyboardMarkup;
     }
-
-
-
-//
-//    /**
-//     * Константа - приветственное сообщение для пользователя
-//     */
-//    public static final String GREETING_INFO = """
-//            Здравствуйте, здесь Вы можете получить информацию о приюте: где он находится, как и когда работает,
-//            какие правила пропуска на территорию приюта, правила нахождения внутри и общения с питомцем.
-//            Выберите команду в меню \u2B07
-//            Если нужного вопроса нет в меню, позовите волонтера, который поможет Вам.
-//
-//            """;
-//
-//    /**
-//     * Метод отправки нужного сообщения
-//     */
-//    public void commandProcessing(Update update, long chatId, String messageText) {
-//        switch (messageText) {
-//            case "/shelter_info" -> prepareAndSendMessage(chatId, SHELTER_INFO);
-//            case "/schedule_address" -> prepareAndSendMessage(chatId, SCHEDULE_ADDRESS);
-//            case "/safety_rules" -> prepareAndSendMessage(chatId, SAFETY_RULES);
-//            case "/contact_data" -> prepareAndSendMessage(chatId, CONTACT_DATA);
-//            default -> CallVolunteer.callVolunteer();
-//        }
-//    }
 }

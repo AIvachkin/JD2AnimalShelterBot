@@ -68,7 +68,7 @@ public class ShelterConstants {
      * Константа - оставить контактные данные
      */
     public static final String CONTACT_DATA = """
-            Напишите Ваш телефон и с Вами обязательно свяжется наш волонтер
+            Оставьте Ваш телефон и с Вами обязательно свяжется наш волонтер
             """;
 
     public static final String SHELTER_INFO_COMMAND_LABEL = "❓ Информация о приюте";

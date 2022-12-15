@@ -176,7 +176,8 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
             case CONTACT_DATA_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, CONTACT_DATA, shelterInfo.createMenuShelterInfo());
+//                executeMessage.prepareAndSendMessage(chatId, CONTACT_DATA, shelterInfo.createMenuShelterInfo());
+                userService.requestContactDetails(chatId);
                 break;
 
             case MAIN_MENU_LABEL:
