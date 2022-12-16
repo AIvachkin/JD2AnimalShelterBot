@@ -34,6 +34,7 @@ public class UpdateHandler implements InputMessageHandler {
     private final ExecuteMessage executeMessage;
     private final UserService userService;
     private final UserContext userContext;
+    private final YMap yMap;
 
 
     /**
@@ -46,6 +47,7 @@ public class UpdateHandler implements InputMessageHandler {
      * @param executeMessage - объект для работы с классом по отправке ответов пользователю
      * @param userService    - объект для работы с методами класса UserService
      * @param userContext    - объект для определения контекста пользователя для корректного выбора меню
+     * @param yMap
      */
     public UpdateHandler(@Lazy StartCommand startCommand,
                          @Lazy ShelterInfo shelterInfo,
@@ -53,6 +55,7 @@ public class UpdateHandler implements InputMessageHandler {
                          @Lazy TakeCat takeCat,
                          @Lazy CommunicationWithVolunteer communicationWithVolunteer,
                          @Lazy ExecuteMessage executeMessage,
+                         @Lazy YMap yMap,
                          UserService userService,
                          UserContext userContext) {
 
@@ -64,6 +67,7 @@ public class UpdateHandler implements InputMessageHandler {
         this.executeMessage = executeMessage;
         this.userService = userService;
         this.userContext = userContext;
+        this.yMap = yMap;
     }
 
     /**
@@ -169,6 +173,7 @@ public class UpdateHandler implements InputMessageHandler {
 
             case SCHEDULE_ADDRESS_COMMAND_LABEL:
                 executeMessage.prepareAndSendMessage(chatId, SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                yMap.yMapInit(chatId);
                 break;
 
             case SAFETY_RULES_COMMAND_LABEL:
@@ -176,7 +181,8 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
             case CONTACT_DATA_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, CONTACT_DATA, shelterInfo.createMenuShelterInfo());
+//                executeMessage.prepareAndSendMessage(chatId, CONTACT_DATA, shelterInfo.createMenuShelterInfo());
+                userService.requestContactDetails(chatId);
                 break;
 
             case MAIN_MENU_LABEL:
