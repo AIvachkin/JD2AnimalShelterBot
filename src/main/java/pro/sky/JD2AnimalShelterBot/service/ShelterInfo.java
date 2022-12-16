@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +17,8 @@ import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.GREETING_I
 @Slf4j
 @Service
 public class ShelterInfo {
-
-
     private final ExecuteMessage executeMessage;
-
-    protected ShelterInfo(ExecuteMessage executeMessage
-    ) {
+    protected ShelterInfo(ExecuteMessage executeMessage) {
         this.executeMessage = executeMessage;
     }
 
@@ -65,6 +60,4 @@ public class ShelterInfo {
 
         return keyboardMarkup;
     }
-
 }
-
