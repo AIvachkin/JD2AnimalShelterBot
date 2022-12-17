@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -71,21 +70,27 @@ class StartCommandTest {
         String testString = GREETING + "Maksim! " + WELCOME_MESSAGE;
 
         ReplyKeyboardMarkup keyboardMarkupTest = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboardRowsTest = new ArrayList<>();
-        KeyboardRow row = new KeyboardRow();
-        row.add(INFORMATION_COMAND_LABEL);
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add(TAKE_PET_COMAND_LABEL);
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add(SEND_REPORT_COMAND_LABEL);
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add(CALL_VOLUNTEER_COMAND_LABEL);
-        keyboardRowsTest.add(row);
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(Commands.INFORMATION_COMMAND.getLabel());
+        row1.add(Commands.TAKE_PET_COMMAND.getLabel());
+        keyboardRows.add(row1);
+
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(Commands.SEND_REPORT_COMMAND.getLabel());
+        row2.add(Commands.CAR_PASS_COMMAND.getLabel());
+        keyboardRows.add(row2);
+
+
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(Commands.SAFETY_PRECAUTIONS_COMMAND.getLabel());
+        row3.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
+        keyboardRows.add(row3);
+
         keyboardMarkupTest.setResizeKeyboard(true);
-        keyboardMarkupTest.setKeyboard(keyboardRowsTest);
+        keyboardMarkupTest.setKeyboard(keyboardRows);
 
         startCommand.startCommandReceived(6666L, "Maksim");
         verify(executeMessage).prepareAndSendMessage(6666L, testString, keyboardMarkupTest);

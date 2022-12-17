@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.CALL_VOLUNTEER_COMAND_LABEL;
+import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.CALL_VOLUNTEER_COMMAND_LABEL;
 import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.MAIN_MENU_LABEL;
 
 
@@ -59,7 +59,7 @@ class TakeDogTest {
 
         KeyboardRow row5 = new KeyboardRow();
         row5.add(REASONS_FOR_REFUSAL_COMMAND_LABEL);
-        row5.add(CALL_VOLUNTEER_COMAND_LABEL);
+        row5.add(CALL_VOLUNTEER_COMMAND_LABEL);
         row5.add(MAIN_MENU_LABEL);
         keyboardRowsTest.add(row5);
 

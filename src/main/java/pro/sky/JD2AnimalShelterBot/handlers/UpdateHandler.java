@@ -110,11 +110,11 @@ public class UpdateHandler implements InputMessageHandler {
                 startCommand.startCallBack(chatId, update);
                 break;
 
-            case INFORMATION_COMAND_LABEL:
+            case INFORMATION_COMMAND_LABEL:
                 shelterInfo.shelterInfoCommandReceived(chatId);
                 break;
 
-            case TAKE_PET_COMAND_LABEL:
+            case TAKE_PET_COMMAND_LABEL:
                 if (userContext.getUserContext(chatId).contains("dog")) {
                     takeDog.takePetCommandReceived(chatId);
                     break;
@@ -122,6 +122,20 @@ public class UpdateHandler implements InputMessageHandler {
                     takeCat.takePetCommandReceived(chatId);
                 }
                 break;
+
+            case CAR_PASS_COMMAND_LABEL:
+                if (userContext.getUserContext(chatId).contains("dog")) {
+                    executeMessage.prepareAndSendMessage(chatId, DOG_CAR_PASS, startCommand.createMenuStartCommand());
+                    break;
+                } else {
+                    executeMessage.prepareAndSendMessage(chatId, CAT_CAR_PASS, startCommand.createMenuStartCommand());
+                }
+                break;
+
+            case SAFETY_PRECAUTIONS_LABEL:
+                    executeMessage.prepareAndSendMessage(chatId, SAFETY_PRECAUTIONS, startCommand.createMenuStartCommand());
+                break;
+
 
             case DATING_RULES_COMMAND_LABEL:
                 if (userContext.getUserContext(chatId).contains("dog")) {
@@ -190,7 +204,7 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
 
-            case CALL_VOLUNTEER_COMAND_LABEL:
+            case CALL_VOLUNTEER_COMMAND_LABEL:
                 communicationWithVolunteer.volunteerButtonHandler(update);
                 break;
 

@@ -41,7 +41,7 @@ class ShelterInfoTest {
         keyboardRows.add(row2);
 
         KeyboardRow row3 = new KeyboardRow();
-        row3.add(CALL_VOLUNTEER_COMAND_LABEL);
+        row3.add(CALL_VOLUNTEER_COMMAND_LABEL);
         row3.add(MAIN_MENU_LABEL);
         keyboardRows.add(row3);
 
