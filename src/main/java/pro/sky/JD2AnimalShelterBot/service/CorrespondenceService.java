@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Service
-@Slf4j
+
 /**
  * Класс реализует логику по взаимодействию с объектами Correspondence
  */
+@Service
+@Slf4j
 public class CorrespondenceService {
 
     /**
@@ -35,7 +36,7 @@ public class CorrespondenceService {
 
     private static final String TEXT_TO_SEND = """
 
-            Ваше сообщение отправлено волонтеру приюта. 
+            Ваше сообщение отправлено волонтеру приюта.
             Он ответит на Ваше сообщение или свяжется с Вами в ближайшее время.
             """;
 
@@ -133,13 +134,13 @@ public class CorrespondenceService {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add(Commands.INFORMATION_COMAND.getLabel());
+        row.add(Commands.INFORMATION_COMMAND.getLabel());
         keyboardRows.add(row);
         row = new KeyboardRow();
-        row.add(Commands.TAKE_PET_COMAND.getLabel());
+        row.add(Commands.TAKE_PET_COMMAND.getLabel());
         keyboardRows.add(row);
         row = new KeyboardRow();
-        row.add(Commands.SEND_REPORT_COMAND.getLabel());
+        row.add(Commands.SEND_REPORT_COMMAND.getLabel());
         keyboardRows.add(row);
         row = new KeyboardRow();
         row.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());

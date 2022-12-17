@@ -97,22 +97,7 @@ public class StartCommand {
 
         //Добавление клавиатуры к собщению.
 
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboardRows = new ArrayList<>();
-        KeyboardRow row = new KeyboardRow();
-        row.add(Commands.INFORMATION_COMAND.getLabel());
-        keyboardRows.add(row);
-        row = new KeyboardRow();
-        row.add(Commands.TAKE_PET_COMAND.getLabel());
-        keyboardRows.add(row);
-        row = new KeyboardRow();
-        row.add(Commands.SEND_REPORT_COMAND.getLabel());
-        keyboardRows.add(row);
-        row = new KeyboardRow();
-        row.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
-        keyboardRows.add(row);
-        keyboardMarkup.setResizeKeyboard(true);
-        keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
+        ReplyKeyboardMarkup keyboardMarkup = createMenuStartCommand();
 
         executeMessage.prepareAndSendMessage(chatId,textToSend,keyboardMarkup);
         log.info("A welcome message has been sent to the user " + firstName + ", Id: " + chatId);
@@ -156,20 +141,28 @@ public class StartCommand {
      * Метод для создания клавиатуры стартового меню
      * */
     public ReplyKeyboardMarkup createMenuStartCommand() {
+
+
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
-        KeyboardRow row = new KeyboardRow();
-        row.add(Commands.INFORMATION_COMAND.getLabel());
-        keyboardRows.add(row);
-        row = new KeyboardRow();
-        row.add(Commands.TAKE_PET_COMAND.getLabel());
-        keyboardRows.add(row);
-        row = new KeyboardRow();
-        row.add(Commands.SEND_REPORT_COMAND.getLabel());
-        keyboardRows.add(row);
-        row = new KeyboardRow();
-        row.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
-        keyboardRows.add(row);
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(Commands.INFORMATION_COMMAND.getLabel());
+        row1.add(Commands.TAKE_PET_COMMAND.getLabel());
+        keyboardRows.add(row1);
+
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(Commands.SEND_REPORT_COMMAND.getLabel());
+        row2.add(Commands.CAR_PASS_COMMAND.getLabel());
+        keyboardRows.add(row2);
+
+
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(Commands.SAFETY_PRECAUTIONS_COMMAND.getLabel());
+        row3.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
+        keyboardRows.add(row3);
+
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
 

@@ -16,12 +16,16 @@ import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
 @Getter
 @RequiredArgsConstructor
 public enum Commands {
-    START_COMAND("/start", "Регистрация пользователя", START_COMAND_LABEL),
-    INFORMATION_COMAND("/information", "Узнать информацию о приюте", INFORMATION_COMAND_LABEL),
-    TAKE_PET_COMAND("/how_take_pet", "Как взять питомца из приюта", TAKE_PET_COMAND_LABEL),
-    SEND_REPORT_COMAND("/send_pet_report", "Прислать отчет о питомце", SEND_REPORT_COMAND_LABEL),
+    START_COMMAND("/start", "Регистрация пользователя", START_COMMAND_LABEL),
+    INFORMATION_COMMAND("/information", "Узнать информацию о приюте", INFORMATION_COMMAND_LABEL),
+    TAKE_PET_COMMAND("/how_take_pet", "Как взять питомца из приюта", TAKE_PET_COMMAND_LABEL),
+    SEND_REPORT_COMMAND("/send_pet_report", "Прислать отчет о питомце", SEND_REPORT_COMMAND_LABEL),
 
-    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", CALL_VOLUNTEER_COMAND_LABEL),
+    CAR_PASS_COMMAND("/car_pass", DOG_CAR_PASS,CAR_PASS_COMMAND_LABEL),
+
+    SAFETY_PRECAUTIONS_COMMAND("/safety_precautions", SAFETY_PRECAUTIONS, SAFETY_PRECAUTIONS_LABEL),
+
+    CALL_VOLUNTEER_COMAND("/call_volunteer", "Позвать волонтера", CALL_VOLUNTEER_COMMAND_LABEL),
 
     SHELTER_INFO_COMMAND("/shelter_info", DOG_SHELTER_INFO, SHELTER_INFO_COMMAND_LABEL),
     SCHEDULE_ADDRESS_COMMAND("/schedule_address", DOG_SCHEDULE_ADDRESS, SCHEDULE_ADDRESS_COMMAND_LABEL),

@@ -18,7 +18,6 @@ import java.util.List;
 import static org.mockito.Mockito.verify;
 
 
-
 @ExtendWith(MockitoExtension.class)
 class StartCommandTest {
 
@@ -71,21 +70,27 @@ class StartCommandTest {
         String testString = GREETING + "Maksim! " + WELCOME_MESSAGE;
 
         ReplyKeyboardMarkup keyboardMarkupTest = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboardRowsTest = new ArrayList<>();
-        KeyboardRow row = new KeyboardRow();
-        row.add("❓ Узнать информацию о приюте");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83D\uDC36️ Как взять собаку из приюта");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83D\uDDD3 Прислать отчет о питомце");
-        keyboardRowsTest.add(row);
-        row = new KeyboardRow();
-        row.add("\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера");
-        keyboardRowsTest.add(row);
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(Commands.INFORMATION_COMMAND.getLabel());
+        row1.add(Commands.TAKE_PET_COMMAND.getLabel());
+        keyboardRows.add(row1);
+
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(Commands.SEND_REPORT_COMMAND.getLabel());
+        row2.add(Commands.CAR_PASS_COMMAND.getLabel());
+        keyboardRows.add(row2);
+
+
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(Commands.SAFETY_PRECAUTIONS_COMMAND.getLabel());
+        row3.add(Commands.CALL_VOLUNTEER_COMAND.getLabel());
+        keyboardRows.add(row3);
+
         keyboardMarkupTest.setResizeKeyboard(true);
-        keyboardMarkupTest.setKeyboard(keyboardRowsTest);
+        keyboardMarkupTest.setKeyboard(keyboardRows);
 
         startCommand.startCommandReceived(6666L, "Maksim");
         verify(executeMessage).prepareAndSendMessage(6666L, testString, keyboardMarkupTest);
