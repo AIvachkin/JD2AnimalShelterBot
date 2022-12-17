@@ -2,6 +2,8 @@ package pro.sky.JD2AnimalShelterBot.сonstants;
 
 public class MainMenuConstants {
 
+    public static final String START_COMAND = "/start";
+    public static final String CHOOSE_SHELTER = "/choose_a_shelter";
     public static final String START_COMAND_LABEL = "Домой \uD83C\uDFE1";
     public static final String INFORMATION_COMAND_LABEL = "❓ Узнать информацию о приюте";
 

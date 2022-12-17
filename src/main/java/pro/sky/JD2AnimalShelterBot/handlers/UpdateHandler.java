@@ -86,7 +86,11 @@ public class UpdateHandler implements InputMessageHandler {
 
         //Если пользователь прислал контакты
         if (update.hasMessage() && update.getMessage().getContact() != null) {
-            userService.setDodUserPhone(update.getMessage());
+            if (userContext.getUserContext(chatId).contains("dog")){
+                userService.setDodUserPhone(update.getMessage());
+            } else if (userContext.getUserContext(chatId).contains("cat")) {
+                userService.setCatUserPhone(update.getMessage());
+            }
             communicationWithVolunteer.volunteerButtonHandler(update);
             return;
         }
@@ -105,8 +109,12 @@ public class UpdateHandler implements InputMessageHandler {
         }
 
         switch (messageText) {
-            case "/start":
+            case START_COMAND:
                 startCommand.startCallBack(chatId, update);
+                break;
+
+            case CHOOSE_SHELTER:
+                startCommand.choosingTypeOfPet(chatId);
                 break;
 
             case INFORMATION_COMAND_LABEL:

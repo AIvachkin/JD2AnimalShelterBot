@@ -42,9 +42,10 @@ public class CommunicationWithVolunteer {
     public void volunteerButtonHandler(Update update) {
         var chatId = update.getMessage().getChatId();
 
-        if(userService.getDogUserPhone(chatId) == null) {
-            userService.requestContactDetails(chatId);
-            return;
+        if ((userService.getDogUserPhone(chatId) == null && userContext.getUserContext(chatId).contains("dog")) ||
+            (userService.getCatUserPhone(chatId) == null && userContext.getUserContext(chatId).contains("cat"))) {
+                userService.requestContactDetails(chatId);
+                return;
         }
 
         userContext.setUserContext(chatId, "messageToVolunteer");

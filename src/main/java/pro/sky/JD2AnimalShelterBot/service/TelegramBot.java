@@ -58,12 +58,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         List<BotCommand> listOfCommands = new ArrayList<>();
 
-        listOfCommands.add(new BotCommand("/start", "get a welcome message"));
-        listOfCommands.add(new BotCommand("/about", "brief information about the shelter"));
-        listOfCommands.add(new BotCommand("/location", "opening hours, address, directions"));
-        listOfCommands.add(new BotCommand("/rules", "safety measures at the shelter"));
-        listOfCommands.add(new BotCommand("/callback", "receiving and recording contact information"));
-        listOfCommands.add(new BotCommand("/other", "volunteer call"));
+        listOfCommands.add(new BotCommand("/start", "Главное меню"));
+        listOfCommands.add(new BotCommand("/choose_a_shelter", "Выбрать приют"));
 
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));

@@ -24,17 +24,20 @@ public class StartCommand {
      */
     private final TelegramBot telegramBot;
     private final UserService userService;
+    private final UserContext userContext;
     private final ExecuteMessage executeMessage;
     /**
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
      *
      * @param telegramBot    - объект взаимодействия с ботом
      * @param userService    - объект для взаимодействия с командами сервиса
+     * @param userContext    - объект для взаимодействия с контекстом юзера
      * @param executeMessage - объект для взаимодействия с методами класса, отвечающего за отправку ответа пользователям
      */
-    public StartCommand(TelegramBot telegramBot, UserService userService, ExecuteMessage executeMessage) {
+    public StartCommand(TelegramBot telegramBot, UserService userService, UserContext userContext, ExecuteMessage executeMessage) {
         this.telegramBot = telegramBot;
         this.userService = userService;
+        this.userContext = userContext;
         this.executeMessage = executeMessage;
     }
 
@@ -69,7 +72,12 @@ public class StartCommand {
      */
     public void startCallBack(long chatId, Update update){
 
-        userService.createDogUser(chatId, update);
+        if (userContext.getUserContext(chatId).contains("dog")){
+            userService.createDogUser(chatId, update);
+        } else if (userContext.getUserContext(chatId).contains("cat")) {
+            userService.createCatUser(chatId, update);
+        }
+
         String firstname;
         if(update.getCallbackQuery() != null){
             firstname = update.getCallbackQuery().getMessage().getChat().getFirstName();

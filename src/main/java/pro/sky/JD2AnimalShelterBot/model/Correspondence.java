@@ -51,4 +51,10 @@ public class Correspondence {
      */
     private String whoSentIt;
 
+    /**
+     * вид питомца
+     */
+    @Column(name = "type_of_pet")
+    private String typeOfPet;
+
 }

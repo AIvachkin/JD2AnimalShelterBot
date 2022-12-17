@@ -30,18 +30,21 @@ class CorrespondenceServiceTest {
     @Mock
     private ExecuteMessage executeMessage;
 
+    @Mock
+    private UserContext userContext;
+
     @InjectMocks
     private CorrespondenceService out;
 
-    private final Correspondence message1 = new Correspondence(1L, 12345L, LocalDateTime.now(), "Текст1", false, "user");
-    private final Correspondence message2 = new Correspondence(2L, 12345L, LocalDateTime.now(), "Текст2", false, "user");
-    private final Correspondence message3 = new Correspondence(3L, 12345L, LocalDateTime.now(), "Текст3", false, "user");
+    private final Correspondence message1 = new Correspondence(1L, 12345L, LocalDateTime.now(), "Текст1", false, "user", "dog");
+    private final Correspondence message2 = new Correspondence(2L, 12345L, LocalDateTime.now(), "Текст2", false, "user", "dog");
+    private final Correspondence message3 = new Correspondence(3L, 12345L, LocalDateTime.now(), "Текст3", false, "user", "dog");
     private final List<Correspondence> unansweredMessages = List.of(message1, message2, message3);
 
 
     @BeforeEach
     public void initOut(){
-        out = new CorrespondenceService(correspondenceRepository, userService, executeMessage);
+        out = new CorrespondenceService(correspondenceRepository, userService, executeMessage, userContext);
     }
 
     @Test

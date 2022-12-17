@@ -31,6 +31,7 @@ public class CorrespondenceService {
     private final UserService userService;
 
     private final ExecuteMessage executeMessage;
+    private final UserContext userContext;
 
     private static final String TEXT_TO_SEND = """
 
@@ -43,10 +44,11 @@ public class CorrespondenceService {
      */
     public CorrespondenceService(CorrespondenceRepository correspondenceRepository,
                                  UserService userService,
-                                 ExecuteMessage executeMessage) {
+                                 ExecuteMessage executeMessage, UserContext userContext) {
         this.correspondenceRepository = correspondenceRepository;
         this.userService = userService;
         this.executeMessage = executeMessage;
+        this.userContext = userContext;
     }
 
 
@@ -113,6 +115,11 @@ public class CorrespondenceService {
         reply.setDateTime(LocalDateTime.now());
         reply.setText(text);
         reply.setWhoSentIt("user");
+        if(userContext.getUserContext(chatId).contains("dog")){
+            reply.setTypeOfPet("dog");
+        } else if(userContext.getUserContext(chatId).contains("cat")) {
+            reply.setTypeOfPet("cat");
+        }
         correspondenceRepository.save(reply);
 
         //Добавление клавиатуры к собщению.

@@ -67,3 +67,6 @@ CREATE TABLE cat_user_data_table (
                                  lastname VARCHAR,
                                  phone_number VARCHAR
 );
+
+-- changeset alexander:6
+ALTER TABLE correspondence ADD type_of_pet VARCHAR;
