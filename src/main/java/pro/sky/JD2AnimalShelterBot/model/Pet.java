@@ -2,6 +2,7 @@ package pro.sky.JD2AnimalShelterBot.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -37,12 +38,22 @@ public class Pet {
     private Integer age;
 
     /**
-     * хозяин домашнего питомца
+     * Пользователь приюта для собак
      */
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @Nullable
+    @JoinColumn(name = "dog_user_id")
     private DogUser dogUser;
+
+    /**
+     * Пользователь приюта для кошек
+     */
+    @JsonIgnore
+    @ManyToOne
+    @Nullable
+    @JoinColumn(name = "cat_user_id")
+    private CatUser CatUser;
 
     /**
      * испытательный срок до

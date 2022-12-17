@@ -74,6 +74,17 @@ ALTER TABLE correspondence ADD type_of_pet VARCHAR;
 -- changeset alexander:7
 ALTER TABLE pet ADD type_of_pet VARCHAR;
 
+-- changeset alexander:8
+ALTER TABLE pet ADD cat_user_id BIGINT;
+ALTER TABLE pet RENAME COLUMN user_id  TO dog_user_id;
+
+-- changeset alexander:9
+ALTER TABLE pet ALTER COLUMN cat_user_id TYPE BIGINT;
+ALTER TABLE pet ALTER COLUMN probation_period_up_to SET DEFAULT null;
+ALTER TABLE pet ALTER COLUMN fixed SET DEFAULT false;
+
+
+
 -- changeset andrew: 2
 ALTER TABLE trustees_reports RENAME COLUMN photo TO photo_file_path;
 ALTER TABLE trustees_reports ADD photo_file_size BIGINT;
