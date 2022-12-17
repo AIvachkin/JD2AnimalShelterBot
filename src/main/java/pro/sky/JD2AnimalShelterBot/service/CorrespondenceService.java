@@ -84,7 +84,11 @@ public class CorrespondenceService {
         reply.setDateTime(LocalDateTime.now());
         reply.setText(text);
         reply.setWhoSentIt("volunteer");
+        reply.setTypeOfPet(message.getTypeOfPet());
         correspondenceRepository.save(reply);
+
+        String replyText = "Вы писали:\n" + message.getText() + "\nОтвет волонтера: \n" + text;
+        executeMessage.prepareAndSendMessage(message.getChatId(), replyText, null);
     }
 
     /**
@@ -101,6 +105,9 @@ public class CorrespondenceService {
         reply.setText(text);
         reply.setWhoSentIt("volunteer");
         correspondenceRepository.save(reply);
+
+        String replyText = "Сообщение от волонтера приюта: \n" + text;
+        executeMessage.prepareAndSendMessage(chatId, replyText, null);
     }
 
     /**

@@ -54,4 +54,10 @@ public class Pet {
      */
     private boolean fixed;
 
+    /**
+     * вид питомца
+     */
+    @Column(name = "type_of_pet")
+    private String typeOfPet;
+
 }

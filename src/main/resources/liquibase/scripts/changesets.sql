@@ -70,3 +70,6 @@ CREATE TABLE cat_user_data_table (
 
 -- changeset alexander:6
 ALTER TABLE correspondence ADD type_of_pet VARCHAR;
+
+-- changeset alexander:7
+ALTER TABLE pet ADD type_of_pet VARCHAR;

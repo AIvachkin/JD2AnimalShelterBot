@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.service.CorrespondenceService;
+import pro.sky.JD2AnimalShelterBot.service.TrusteesReportsService;
 import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 import pro.sky.JD2AnimalShelterBot.service.UserService;
 
@@ -36,15 +37,18 @@ class VolunteerControllerTest {
     @Mock
     private CorrespondenceService correspondenceService;
 
+    @Mock
+    private TrusteesReportsService trusteesReportsService;
+
     @BeforeEach
     public void initOut(){
-        out = new VolunteerController(petService, userService, correspondenceService);
+        out = new VolunteerController(petService, userService, correspondenceService, trusteesReportsService);
     }
 
     @Test
     void getUnansweredMessagesTest() {
-        Correspondence message1 = new Correspondence(12345L, 333L, LocalDateTime.now(), "Some text 1", false, "user");
-        Correspondence message2 = new Correspondence(23456L, 444L, LocalDateTime.now(), "Some text 2", false, "user");
+        Correspondence message1 = new Correspondence(12345L, 333L, LocalDateTime.now(), "Some text 1", false, "user", "dog");
+        Correspondence message2 = new Correspondence(23456L, 444L, LocalDateTime.now(), "Some text 2", false, "user", "dog");
         when(correspondenceService.getUnansweredMessages())
                 .thenReturn(List.of(message1, message2));
         List<Correspondence> actual = out.getUnansweredMessages();
@@ -79,8 +83,8 @@ class VolunteerControllerTest {
     @Test
     void getAllCorrespondenceWithUser() {
 
-        Correspondence message1 = new Correspondence(12345L, 4444L, LocalDateTime.now(), "Some text 1", false, "user");
-        Correspondence message2 = new Correspondence(23456L, 4444L, LocalDateTime.now(), "Some text 2", false, "user");
+        Correspondence message1 = new Correspondence(12345L, 4444L, LocalDateTime.now(), "Some text 1", false, "user", "dog");
+        Correspondence message2 = new Correspondence(23456L, 4444L, LocalDateTime.now(), "Some text 2", false, "user", "dog");
         when(correspondenceService.getAllCorrespondenceWithUser(4444L))
                 .thenReturn(List.of(message1, message2));
         ResponseEntity<List<Correspondence>> responseEntity200 = out.getAllCorrespondenceWithUser(4444L);

@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import pro.sky.JD2AnimalShelterBot.model.CatUser;
+import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
@@ -161,4 +162,19 @@ public class UserService {
         log.info("CatUsers " +  msg.getChatId() + " saved");
     }
 
+    /**
+     * Метод возвращает список пользователей приюта для собак
+     * @return
+     */
+    public List<DogUser> getAllDogUsers() {
+        return (List)dogUserRepository.findAll();
+    }
+
+    /**
+     * Метод возвращает список пользователей приюта для кошек
+     * @return
+     */
+    public List<CatUser> getAllCatUsers() {
+        return (List)catUserRepository.findAll();
+    }
 }
