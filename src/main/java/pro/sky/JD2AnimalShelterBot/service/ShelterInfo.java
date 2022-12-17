@@ -29,7 +29,7 @@ public class ShelterInfo {
      */
     public void shelterInfoCommandReceived(long chatId) {
         ReplyKeyboardMarkup keyboardMarkup = createMenuShelterInfo();
-        executeMessage.prepareAndSendMessage(chatId,GREETING_INFO,keyboardMarkup);
+        executeMessage.prepareAndSendMessage(chatId, GREETING_INFO, keyboardMarkup);
     }
 
     /**

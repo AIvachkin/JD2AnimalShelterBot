@@ -5,7 +5,7 @@ public class MainMenuConstants {
     public static final String START_COMAND_LABEL = "Домой \uD83C\uDFE1";
     public static final String INFORMATION_COMAND_LABEL = "❓ Узнать информацию о приюте";
 
-    public static final String TAKE_PET_COMAND_LABEL = "\uD83D\uDC36️ Как взять собаку из приюта";
+    public static final String TAKE_PET_COMAND_LABEL = "\uD83D\uDC36 \uD83D\uDC31️ Как взять питомца из приюта";
 
     public static final String SEND_REPORT_COMAND_LABEL = "\uD83D\uDDD3 Прислать отчет о питомце";
 

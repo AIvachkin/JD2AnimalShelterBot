@@ -40,20 +40,20 @@ class TakeDogTest {
 
 
         KeyboardRow row1 = new KeyboardRow();
-        row1.add(DOG_DATING_RULES_COMMAND_LABEL);
-        row1.add(DOG_DOCUMENTS_COMMAND_LABEL);
+        row1.add(DATING_RULES_COMMAND_LABEL);
+        row1.add(DOCUMENTS_COMMAND_LABEL);
         keyboardRowsTest.add(row1);
 
         KeyboardRow row3 = new KeyboardRow();
         row3.add(RECOMM_FOR_PUPPY_COMMAND_LABEL);
         row3.add(RECOMM_FOR_DOG_COMMAND_LABEL);
-        row3.add(RECOMM_FOR_DOG_INVALID_COMMAND_LABEL);
+        row3.add(RECOMM_FOR_PET_INVALID_COMMAND_LABEL);
         keyboardRowsTest.add(row3);
 
         KeyboardRow row4 = new KeyboardRow();
         row4.add(CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL);
         row4.add(RECOMMENDED_CYNOLOGIST_COMMAND_LABEL);
-        row4.add(DOG_SHIPPING_COMMAND_LABEL);
+        row4.add(SHIPPING_COMMAND_LABEL);
         keyboardRowsTest.add(row4);
 
         KeyboardRow row5 = new KeyboardRow();

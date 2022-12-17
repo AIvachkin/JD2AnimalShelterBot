@@ -22,8 +22,6 @@ public class CatConstants {
             чтобы она могла познакомиться с вами.
             """;
 
-    public static final String CAT_DATING_RULES_COMMAND_LABEL = "\uD83D\uDC31  Правила знакомства с кошкой";
-
 
     /**
      * Константа - список необходимых документов, чтобы взять кошку
@@ -34,7 +32,6 @@ public class CatConstants {
             и другая важная информация.
             """;
 
-    public static final String CAT_DOCUMENTS_LABEL = "\uD83D\uDCDC  Список необходимых документов";
 
     /**
      * Константа - рекомендации по транспортировке кошки
@@ -52,7 +49,6 @@ public class CatConstants {
             автомобилем или такси при транспортировке питомцев.
             """;
 
-    public static final String CAT_SHIPPING_COMMAND_LABEL = "\uD83D\uDEFB  Транспортировка животного";
 
     /**
      * Константа - рекомендации по обустройству дома для котенка
@@ -105,8 +101,6 @@ public class CatConstants {
             возможностями. Надеемся, что этот блок когда-то дополнится рекомендациями
             опытных фелинологов и других причастных к содержанию животных лиц.
             """;
-
-    public static final String RECOMM_FOR_CAT_INVALID_COMMAND_LABEL = "\uD83C\uDFE1  Дом для кошки-инвалида";
 
 
 }
