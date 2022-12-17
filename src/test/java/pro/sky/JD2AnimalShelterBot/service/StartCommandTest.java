@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
-
+import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -73,16 +73,16 @@ class StartCommandTest {
         ReplyKeyboardMarkup keyboardMarkupTest = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRowsTest = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
-        row.add("❓ Узнать информацию о приюте");
+        row.add(INFORMATION_COMAND_LABEL);
         keyboardRowsTest.add(row);
         row = new KeyboardRow();
-        row.add("\uD83D\uDC36️ Как взять собаку из приюта");
+        row.add(TAKE_PET_COMAND_LABEL);
         keyboardRowsTest.add(row);
         row = new KeyboardRow();
-        row.add("\uD83D\uDDD3 Прислать отчет о питомце");
+        row.add(SEND_REPORT_COMAND_LABEL);
         keyboardRowsTest.add(row);
         row = new KeyboardRow();
-        row.add("\uD83E\uDDD1\u200D\uD83C\uDF3E️ Позвать волонтера");
+        row.add(CALL_VOLUNTEER_COMAND_LABEL);
         keyboardRowsTest.add(row);
         keyboardMarkupTest.setResizeKeyboard(true);
         keyboardMarkupTest.setKeyboard(keyboardRowsTest);

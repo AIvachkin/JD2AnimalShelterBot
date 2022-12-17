@@ -36,6 +36,7 @@ public class ShelterInfo {
      * Метод создания кнопочного меню
      */
     public ReplyKeyboardMarkup createMenuShelterInfo() {
+
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row1 = new KeyboardRow();

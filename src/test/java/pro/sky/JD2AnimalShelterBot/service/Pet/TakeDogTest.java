@@ -1,4 +1,4 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.service.Pet;
 
 
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import pro.sky.JD2AnimalShelterBot.service.ExecuteMessage;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ class TakeDogTest {
         row5.add(MAIN_MENU_LABEL);
         keyboardRowsTest.add(row5);
 
-                keyboardMarkupTest.setResizeKeyboard(true);
+        keyboardMarkupTest.setResizeKeyboard(true);
         keyboardMarkupTest.setKeyboard(keyboardRowsTest);
 
         takeDog.takePetCommandReceived(6666L);

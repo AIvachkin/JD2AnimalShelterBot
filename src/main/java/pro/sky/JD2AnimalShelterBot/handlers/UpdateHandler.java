@@ -36,6 +36,7 @@ public class UpdateHandler implements InputMessageHandler {
     private final YMap yMap;
 
 
+
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
