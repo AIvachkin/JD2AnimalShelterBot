@@ -23,7 +23,7 @@ class PetControllerTest {
 
     @Mock
     private PetService petService;
-    private Pet pet = new Pet(1L, "name", 1, null, LocalDate.MAX, false);
+    private Pet pet = new Pet(1L, "name", 1, null, LocalDate.MAX, false, "dog");
 
     @BeforeEach
     public void initOut() {

@@ -4,10 +4,10 @@ public class MainMenuConstants {
 
     public static final String START_COMAND = "/start";
     public static final String CHOOSE_SHELTER = "/choose_a_shelter";
-    public static final String START_COMAND_LABEL = "Домой \uD83C\uDFE1";
-    public static final String INFORMATION_COMAND_LABEL = "❓ Узнать информацию о приюте";
+    public static final String START_COMMAND_LABEL = "Домой \uD83C\uDFE1";
+    public static final String INFORMATION_COMMAND_LABEL = "❓ Узнать информацию о приюте";
 
-    public static final String TAKE_PET_COMAND_LABEL = "\uD83D\uDC36 \uD83D\uDC31️ Как взять питомца из приюта";
+    public static final String TAKE_PET_COMMAND_LABEL = "\uD83D\uDC36 \uD83D\uDC31️ Как взять питомца из приюта";
     public static final String SEND_REPORT_COMMAND_LABEL = "\uD83D\uDDD3 Прислать отчет о питомце";
     public static final String CAR_PASS_COMMAND_LABEL = "\uD83D\uDD16 Получить пропуск для авто";
 

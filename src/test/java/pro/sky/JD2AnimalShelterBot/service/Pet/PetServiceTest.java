@@ -29,7 +29,7 @@ class PetServiceTest {
     @Mock
     private DogUserRepository userRepository;
 
-    private Pet pet = new Pet(1L, "name", 1, null, LocalDate.MAX, false);
+    private Pet pet = new Pet(1L, "name", 1, null, LocalDate.MAX, false, "dog");
     private DogUser user = new DogUser(1L, "firstname", "lastname", "phoneNumber", null);
 
     @Test
