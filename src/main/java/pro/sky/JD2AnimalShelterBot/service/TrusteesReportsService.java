@@ -12,12 +12,20 @@ import java.util.List;
 @Service
 public class TrusteesReportsService {
 
+    private static final String WORNING_TEXT = """
+            Предупреждение:
+            Дорогой усыновитель, мы заметили, что ты заполняешь отчет не так подробно, как необходимо. 
+            Пожалуйста, подойди ответственнее к этому занятию. 
+            В противном случае волонтеры приюта будут обязаны самолично проверять условия содержания животного.
+            """;
     private final TrusteesReportsRepository trusteesReportsRepository;
     private final PetRepository petRepository;
+    private final ExecuteMessage executeMessage;
 
-    public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository, PetRepository petRepository) {
+    public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository, PetRepository petRepository, ExecuteMessage executeMessage) {
         this.trusteesReportsRepository = trusteesReportsRepository;
         this.petRepository = petRepository;
+        this.executeMessage = executeMessage;
     }
 
     /**
@@ -29,8 +37,20 @@ public class TrusteesReportsService {
         return trusteesReportsRepository.findAllByPet(petId);
     }
 
+    /**
+     * Метод отправляет пользователю предупреждение
+     * @param petId ИД животного
+     */
     public void sendWarning(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);
-        //pet.getDogUser()
+        Long userId = null;
+        if(pet.getTypeOfPet().equals("dog")){
+            userId = pet.getDogUser().getChatId();
+        } else if(pet.getTypeOfPet().equals("cat")){
+            userId = pet.getCatUser().getChatId();
+        }
+        if(userId != null){
+            executeMessage.prepareAndSendMessage(userId, WORNING_TEXT, null);
+        }
     }
 }

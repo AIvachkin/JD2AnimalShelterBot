@@ -58,12 +58,12 @@ public class Pet {
     /**
      * испытательный срок до
      */
-    private LocalDate probationPeriodUpTo;
+    private LocalDate probationPeriodUpTo = null;
 
     /**
      * животное закреплено за попечителем по результатам испытательного срока
      */
-    private boolean fixed;
+    private boolean fixed = false;
 
     /**
      * вид питомца

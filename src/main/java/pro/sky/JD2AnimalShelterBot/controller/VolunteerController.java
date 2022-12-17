@@ -224,9 +224,9 @@ public class VolunteerController {
                             responseCode = "404",
                             description = "Если попечитель не найден по id"
                     )
-            }, tags = "Pets"
+            }, tags = "Volunteer"
     )
-    @GetMapping("/detach")
+    @GetMapping("/sendworning")
     public ResponseEntity sendWarning(@Parameter(description = "id питомца", required = true, example = "3")
                                                  @RequestParam Long petId) {
         try {
@@ -234,6 +234,8 @@ public class VolunteerController {
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

@@ -14,6 +14,7 @@ import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Контроллер для работы с сущностями животных
@@ -155,8 +156,8 @@ public class PetController {
                             )
                     ),
                     @ApiResponse(
-                            responseCode = "404",
-                            description = "Если животное не найдено"
+                            responseCode = "404 (400)",
+                            description = "Если животное или пользователь не найдены (животное уже закреплено)"
                     )
             }, tags = "Pets"
     )
@@ -164,9 +165,15 @@ public class PetController {
     public ResponseEntity assignPetToCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
                                                @RequestParam Long petId,
                                                @Parameter(description = "id чата пользователя", required = true, example = "123456789")
-                                               @RequestParam Long chatId) {
-        petService.assignPetToCaregiver(petId, chatId);
-        return ResponseEntity.ok().build();
+                                               @RequestParam Long userId) {
+        try {
+            petService.assignPetToCaregiver(petId, userId);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(
@@ -182,15 +189,19 @@ public class PetController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Если животное не найдено по id"
+                            description = "Если животное не найдено"
                     )
             }, tags = "Pets"
     )
     @GetMapping("/detach")
     public ResponseEntity detachPetFromCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
                                                  @RequestParam Long petId) {
-        petService.detachPetFromCaregiver(petId);
-        return ResponseEntity.ok().build();
+        try {
+            petService.detachPetFromCaregiver(petId);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

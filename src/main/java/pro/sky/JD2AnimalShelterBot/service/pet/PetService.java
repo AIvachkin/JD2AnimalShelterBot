@@ -2,13 +2,18 @@ package pro.sky.JD2AnimalShelterBot.service.pet;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pro.sky.JD2AnimalShelterBot.model.CatUser;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
+import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.PetRepository;
 import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
-
+import java.time.LocalDate;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.Objects;
+
+import static java.time.LocalDate.now;
 
 /**
  Класс для работы с БД домашних питомцев
@@ -18,9 +23,11 @@ import java.util.List;
 public class PetService {
     private final PetRepository petRepository;
     private final DogUserRepository dogUserRepository;
-    public PetService(PetRepository petRepository, DogUserRepository dogUserRepository) {
+    private final CatUserRepository catUserRepository;
+    public PetService(PetRepository petRepository, DogUserRepository dogUserRepository, CatUserRepository catUserRepository) {
         this.petRepository = petRepository;
         this.dogUserRepository = dogUserRepository;
+        this.catUserRepository = catUserRepository;
     }
     /**
      * Метод получения домашнего питомца
@@ -76,12 +83,21 @@ public class PetService {
     /**
      * Метод для закрепления животного за попечителем в базе
      * @param petId ИД животного
-     * @param chatId ИД попечителя
+     * @param userId ИД попечителя
      */
-    public void assignPetToCaregiver(Long petId, Long chatId) {
-        DogUser dogUser = dogUserRepository.findById(chatId).orElseThrow();
+    public void assignPetToCaregiver(Long petId, Long userId) {
         Pet pet = petRepository.findById(petId).orElseThrow();
-        pet.setDogUser(dogUser);
+        if(pet.getDogUser() != null || pet.getCatUser() != null){
+            throw new SecurityException();
+        }
+        if(Objects.equals(pet.getTypeOfPet(), "dog")){
+            DogUser dogUser = dogUserRepository.findById(userId).orElseThrow();
+            pet.setDogUser(dogUser);
+        } else  if(Objects.equals(pet.getTypeOfPet(), "cat")){
+            CatUser catUser = catUserRepository.findById(userId).orElseThrow();
+            pet.setCatUser(catUser);
+        }
+        pet.setProbationPeriodUpTo(LocalDate.now().plusDays(30));
         petRepository.save(pet);
     }
 
@@ -92,6 +108,8 @@ public class PetService {
     public void detachPetFromCaregiver(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow();
         pet.setDogUser(null);
+        pet.setCatUser(null);
+        pet.setProbationPeriodUpTo(null);
         petRepository.save(pet);
     }
 }
