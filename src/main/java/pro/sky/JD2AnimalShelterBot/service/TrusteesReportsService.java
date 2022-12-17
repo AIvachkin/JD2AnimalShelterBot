@@ -13,7 +13,8 @@ public class TrusteesReportsService {
     private final TrusteesReportsRepository trusteesReportsRepository;
     private final PetRepository petRepository;
 
-    public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository, PetRepository petRepository) {
+    public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository,
+                                  PetRepository petRepository) {
         this.trusteesReportsRepository = trusteesReportsRepository;
         this.petRepository = petRepository;
     }

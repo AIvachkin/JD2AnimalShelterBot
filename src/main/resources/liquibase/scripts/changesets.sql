@@ -73,3 +73,10 @@ ALTER TABLE correspondence ADD type_of_pet VARCHAR;
 
 -- changeset alexander:7
 ALTER TABLE pet ADD type_of_pet VARCHAR;
+
+-- changeset andrew: 2
+ALTER TABLE trustees_reports RENAME COLUMN photo TO photo_file_path;
+ALTER TABLE trustees_reports ADD photo_file_size BIGINT;
+ALTER TABLE trustees_reports ADD media_type VARCHAR;
+ALTER TABLE trustees_reports ADD preview BYTEA;
+

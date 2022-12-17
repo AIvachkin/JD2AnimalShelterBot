@@ -1,12 +1,13 @@
 package pro.sky.JD2AnimalShelterBot.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Класс - отчеты усыновителей
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 public class TrusteesReports {
 
     /**
@@ -34,7 +34,7 @@ public class TrusteesReports {
     /**
      * ИД животного
      */
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
@@ -44,9 +44,26 @@ public class TrusteesReports {
     private LocalDateTime dateTime;
 
     /**
-     * фото животного
+     * путь к фото животного на сервере
      */
-    private String photo;
+    private String photoFilePath;
+
+    /**
+     * размер файла - фото животного
+     */
+    private long photoFileSize;
+
+    /**
+     * тип файла - фото животного
+     */
+    private String mediaType;
+
+    /**
+     * превью фото животного, хранящегося в БД
+     */
+    private byte [] preview;
+
+
 
     /**
      * текст отчета
@@ -59,4 +76,18 @@ public class TrusteesReports {
      */
     private boolean viewed;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrusteesReports that = (TrusteesReports) o;
+        return photoFileSize == that.photoFileSize && Objects.equals(id, that.id) && Objects.equals(chatId, that.chatId) && Objects.equals(pet, that.pet) && Objects.equals(dateTime, that.dateTime) && Objects.equals(photoFilePath, that.photoFilePath) && Objects.equals(mediaType, that.mediaType) && Arrays.equals(preview, that.preview) && Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, chatId, pet, dateTime, photoFilePath, photoFileSize, mediaType, text);
+        result = 31 * result + Arrays.hashCode(preview);
+        return result;
+    }
 }
