@@ -72,6 +72,12 @@ public class TrusteesReports {
     private String text;
 
     /**
+     * вид питомца
+     */
+    @Column(name = "type_of_pet")
+    private String typeOfPet;
+
+    /**
      * отчет просмотрен
      */
     private boolean viewed;

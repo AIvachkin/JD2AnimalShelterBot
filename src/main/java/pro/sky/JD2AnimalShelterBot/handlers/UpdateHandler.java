@@ -3,10 +3,14 @@ package pro.sky.JD2AnimalShelterBot.handlers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import pro.sky.JD2AnimalShelterBot.service.*;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeCat;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
+
+import java.io.IOException;
 
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
@@ -30,6 +34,8 @@ public class UpdateHandler implements InputMessageHandler {
     private final TakeCat takeCat;
     private final CommunicationWithVolunteer communicationWithVolunteer;
 
+    private final TrusteesReportsService trusteesReportsService;
+
     private final ExecuteMessage executeMessage;
     private final UserService userService;
     private final UserContext userContext;
@@ -39,20 +45,22 @@ public class UpdateHandler implements InputMessageHandler {
     /**
      * Конструктор - создание нового объекта с определенным значением конфигурации
      *
-     * @param startCommand   - объект обработчика команды /start
-     * @param shelterInfo    - объект "информация о приюте"
-     * @param takeDog        - объект "информация об усыновлении собаки"
-     * @param takeCat        - объект "информация об усыновлении кошки"
-     * @param executeMessage - объект для работы с классом по отправке ответов пользователю
-     * @param userService    - объект для работы с методами класса UserService
-     * @param userContext    - объект для определения контекста пользователя для корректного выбора меню
-     * @param yMap
+     * @param startCommand           - объект обработчика команды /start
+     * @param shelterInfo            - объект "информация о приюте"
+     * @param takeDog                - объект "информация об усыновлении собаки"
+     * @param takeCat                - объект "информация об усыновлении кошки"
+     * @param trusteesReportsService
+     * @param executeMessage         - объект для работы с классом по отправке ответов пользователю
+     * @param yMap                   - объект - карта для отображения местонахождения приюта
+     * @param userService            - объект для работы с методами класса UserService
+     * @param userContext            - объект для определения контекста пользователя для корректного выбора меню
      */
     public UpdateHandler(@Lazy StartCommand startCommand,
                          @Lazy ShelterInfo shelterInfo,
                          @Lazy TakeDog takeDog,
                          @Lazy TakeCat takeCat,
                          @Lazy CommunicationWithVolunteer communicationWithVolunteer,
+                         @Lazy TrusteesReportsService trusteesReportsService,
                          @Lazy ExecuteMessage executeMessage,
                          @Lazy YMap yMap,
                          UserService userService,
@@ -63,6 +71,7 @@ public class UpdateHandler implements InputMessageHandler {
         this.takeDog = takeDog;
         this.takeCat = takeCat;
         this.communicationWithVolunteer = communicationWithVolunteer;
+        this.trusteesReportsService = trusteesReportsService;
         this.executeMessage = executeMessage;
         this.userService = userService;
         this.userContext = userContext;
@@ -73,7 +82,7 @@ public class UpdateHandler implements InputMessageHandler {
      * метод, определяющий, что должен делать бот, когда ему поступает тот или иной запрос
      */
     @Override
-    public void handle(Update update) {
+    public void handle(Update update) throws IOException {
 
         //Если нажата inline кнопка
         if (update.hasCallbackQuery()) {
@@ -86,7 +95,7 @@ public class UpdateHandler implements InputMessageHandler {
 
         //Если пользователь прислал контакты
         if (update.hasMessage() && update.getMessage().getContact() != null) {
-            if (userContext.getUserContext(chatId).contains("dog")){
+            if (userContext.getUserContext(chatId).contains("dog")) {
                 userService.setDodUserPhone(update.getMessage());
             } else if (userContext.getUserContext(chatId).contains("cat")) {
                 userService.setCatUserPhone(update.getMessage());
@@ -95,25 +104,35 @@ public class UpdateHandler implements InputMessageHandler {
             return;
         }
 
-        // Если не выбраны кошки или собаки
+        // Если не выбраны кошки или собаки и если нет контекста, указывающего на отправку отчета
         if (userContext.getUserContext(chatId) == null || (!userContext.getUserContext(chatId).contains("dog")
-                && !userContext.getUserContext(chatId).contains("cat"))) {
+                && !userContext.getUserContext(chatId).contains("cat")
+                && !userContext.getUserContext(chatId).contains("dogUserReport")
+                && !userContext.getUserContext(chatId).contains("catUserReport"))) {
             startCommand.choosingTypeOfPet(chatId);
             return;
         }
 
         // Если пользователь пишет сообщение волонтеру
         if (userContext.getUserContext(chatId).contains("messageToVolunteer")) {
+
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }
 
+
         switch (messageText) {
             case START_COMAND:
+
                 startCommand.startCallBack(chatId, update);
                 break;
 
-            case CHOOSE_SHELTER:
+            case CHOOSE_SHELTER, EXIT_THE_REPORT_FORM:
+                SendMessage message = new SendMessage();
+                message.setChatId(String.valueOf(chatId));
+                message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());
+                message.setText("Возврат в начальное меню");
+                executeMessage.executeMessage(message);
                 startCommand.choosingTypeOfPet(chatId);
                 break;
 
@@ -140,7 +159,7 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
             case SAFETY_PRECAUTIONS_LABEL:
-                    executeMessage.prepareAndSendMessage(chatId, SAFETY_PRECAUTIONS, startCommand.createMenuStartCommand());
+                executeMessage.prepareAndSendMessage(chatId, SAFETY_PRECAUTIONS, startCommand.createMenuStartCommand());
                 break;
 
 
@@ -245,7 +264,6 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
             case CONTACT_DATA_COMMAND_LABEL:
-//                executeMessage.prepareAndSendMessage(chatId, CONTACT_DATA, shelterInfo.createMenuShelterInfo());
                 userService.requestContactDetails(chatId);
                 break;
 
@@ -254,7 +272,23 @@ public class UpdateHandler implements InputMessageHandler {
                 break;
 
 
+            case SEND_REPORT_COMMAND_LABEL:
+                trusteesReportsService.trusteesButtonHandler(update);
+
+                break;
+
+            case SEND_FORM:
+                executeMessage.prepareAndSendMessage(chatId, FORM_FOR_REPORT, trusteesReportsService.createMenuForSendReport());
+                break;
+
+
             default:
+                if (userContext.getUserContext(chatId).contains("dogUserReport")) {
+                    System.out.println("отчет получен");
+                    return;
+                }
+
+
                 System.out.println("Неизвестная команда: " + messageText);
                 break;
         }

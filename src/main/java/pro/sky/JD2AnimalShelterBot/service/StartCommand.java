@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Класс обрабатывает комманду /start
+ * Класс обрабатывает команду /start
  * Бот приветствует нового пользователя, рассказывает о себе
  */
 @Service
@@ -20,7 +20,7 @@ import java.util.List;
 public class StartCommand {
 
     /**
-     * Поле взамодействия с ботом
+     * Поле взаимодействия с ботом
      */
     private final TelegramBot telegramBot;
     private final UserService userService;

@@ -12,4 +12,6 @@ import pro.sky.JD2AnimalShelterBot.model.DogUser;
 public interface DogUserRepository extends CrudRepository<DogUser, Long> {
     @Query(value = "SELECT phone_number from dog_user_data_table where chat_id = ?1", nativeQuery = true)
     String getUserPhoneById(long chatId);
+
+    DogUser findDogUsersByChatId(long chatId);
 }

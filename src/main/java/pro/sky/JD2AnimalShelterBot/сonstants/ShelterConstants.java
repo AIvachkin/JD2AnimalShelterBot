@@ -12,6 +12,19 @@ public class ShelterConstants {
             Если нужного вопроса нет в меню, позовите волонтера, который поможет Вам.
                         
             """;
+
+    /**
+     * Константа - сообщение пользователю, отправляющему отчет о питомце
+     */
+    public static final String TRUSTEES_REPORT_INFO = """
+            Напоминаем, ежедневный отчет должен содержать следующую информацию:
+            Одно сообщение:
+            - Фото животного
+            Второе сообщение (в текстовом виде):
+            - Рацион животного, общее самочувствие и привыкание к новому месту,
+            изменение в поведении: отказ от старых привычек, приобретение новых.
+            """;
+
     /**
      * Константа - информация о приюте для собак
      */
@@ -148,6 +161,15 @@ public class ShelterConstants {
     public static final String SCHEDULE_ADDRESS_COMMAND_LABEL = "\uD83E\uDDED Адрес и расписание приюта";
 
     public static final String SAFETY_RULES_COMMAND_LABEL = "\uD83D\uDCC3 Правила поведения в приюте";
+
+    public static final String SEND_FORM = "Получить форму ежедневного отчета";
+
+    public static final String FORM_FOR_REPORT = "Вот такая вот форма))";
+
+    public static final String SEND_REPORT = "Отправить ежедневный отчет";
+
+    public static final String EXIT_THE_REPORT_FORM = "Отменить отправку отчета";
+
 
 
 

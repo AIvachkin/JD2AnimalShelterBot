@@ -91,3 +91,5 @@ ALTER TABLE trustees_reports ADD photo_file_size BIGINT;
 ALTER TABLE trustees_reports ADD media_type VARCHAR;
 ALTER TABLE trustees_reports ADD preview BYTEA;
 
+-- changeset andrew: 3
+ALTER TABLE trustees_reports ADD type_of_pet VARCHAR;
