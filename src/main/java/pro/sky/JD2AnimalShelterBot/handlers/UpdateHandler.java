@@ -14,6 +14,8 @@ import java.io.IOException;
 
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
+import static pro.sky.JD2AnimalShelterBot.service.YMap.catShelterCoordinate;
+import static pro.sky.JD2AnimalShelterBot.service.YMap.dogShelterCoordinate;
 import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.*;
 import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
 import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
@@ -247,10 +249,11 @@ public class UpdateHandler implements InputMessageHandler {
             case SCHEDULE_ADDRESS_COMMAND_LABEL:
                 if (userContext.getUserContext(chatId).contains("dog")) {
                     executeMessage.prepareAndSendMessage(chatId, DOG_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
-                    yMap.yMapInit(chatId);
+                    yMap.yMapInit(chatId, dogShelterCoordinate);
                     break;
                 } else {
                     executeMessage.prepareAndSendMessage(chatId, CAT_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                    yMap.yMapInit(chatId, catShelterCoordinate);
                 }
                 break;
 

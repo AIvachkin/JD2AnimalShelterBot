@@ -3,6 +3,7 @@ package pro.sky.JD2AnimalShelterBot.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -37,6 +38,7 @@ public class ExecuteMessage {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
+        message.setParseMode(ParseMode.HTML);
         if (keyboardMarkup != null) {
             message.setReplyMarkup(keyboardMarkup);
         }

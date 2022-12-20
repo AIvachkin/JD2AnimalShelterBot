@@ -111,13 +111,10 @@ public class TrusteesReportsService {
         row1.add(SEND_FORM);
         keyboardRows.add(row1);
 
-        KeyboardRow row2 = new KeyboardRow();
-        row2.add(SEND_REPORT);
-        keyboardRows.add(row2);
 
-        KeyboardRow row3 = new KeyboardRow();
-        row3.add(EXIT_THE_REPORT_FORM);
-        keyboardRows.add(row3);
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(EXIT_THE_REPORT_FORM);
+        keyboardRows.add(row2);
 
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры

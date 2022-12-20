@@ -25,23 +25,26 @@ public class YMap {
         this.telegramBot = telegramBot;
     }
 
+    public static Coordinate dogShelterCoordinate = new Coordinate("37.598981", "55.498720");
+    public static Coordinate catShelterCoordinate = new Coordinate("71.434687", "51.169102");
+
     /**
      * Метод отправки карты Яндекс в чат
      */
-    public void yMapInit(long chartId) {
+    public void yMapInit(long chatId, Coordinate coordinate) {
         yandexMap.setMapType(YandexMap.MapType.MAP);
-        yandexMap.setCenter(new Coordinate("37.598981", "55.498720"));
+        yandexMap.setCenter(coordinate);
         yandexMap.setViewport(new Coordinate("0.005", "0.005"));
         yandexMap.setScale(7);
         yandexMap.setSize(new Size(650, 450));
         yandexMap.setLanguage(YandexMap.Language.RUSSIAN);
 
-        yandexMap.addMarker(new Marker(new Coordinate("37.598981", "55.498720"), Style.FLAG));
+        yandexMap.addMarker(new Marker(coordinate, Style.FLAG));
 
         YandexApiUrlBuilder yandexApiUrlBuilder = new YandexApiUrlBuilder();
 
         SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setChatId(chartId);
+        sendPhoto.setChatId(chatId);
         sendPhoto.setPhoto(new InputFile(yandexApiUrlBuilder.build(yandexMap)));
         try {
             telegramBot.execute(sendPhoto);
@@ -49,4 +52,5 @@ public class YMap {
             e.printStackTrace();
         }
     }
+
 }
