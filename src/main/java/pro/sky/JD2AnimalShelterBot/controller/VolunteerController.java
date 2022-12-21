@@ -15,6 +15,7 @@ import pro.sky.JD2AnimalShelterBot.service.TrusteesReportsService;
 import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 import pro.sky.JD2AnimalShelterBot.service.UserService;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -235,6 +236,105 @@ public class VolunteerController {
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @Operation(
+            summary = "Продление испытательрного срока на 14 или 30 дней",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Испытательный срок продлен",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Pet.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404, 400",
+                            description = "Не найдено по ИД животное (неправильно указано количество дней для продления)"
+                    )
+            }, tags = "Volunteer"
+    )
+    @GetMapping("/extension")
+    public ResponseEntity extensionOfProbationPeriod(@Parameter(description = "id питомца", required = true, example = "3")
+                                                     @RequestParam Long petId,
+                                                     @Parameter(description = "количество дней для продления", required = true, example = "14")
+                                                     @RequestParam Integer extensionDays) {
+        if(extensionDays != 14 && extensionDays != 30){
+            return ResponseEntity.badRequest().build();
+        }
+        try {
+            var probationPeriod = petService.extensionOfProbationPeriod(petId, extensionDays);
+            return ResponseEntity.ok(probationPeriod);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @Operation(
+            summary = "Закрепление животного за попечителем по результатам испытательрного срока.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Животное закреплено за попечителем.",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Pet.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404 (400)",
+                            description = "Не найдено по ИД животное или попечитель (не найдена информация о прохождении попечителем испытательрного срока)."
+                    )
+            }, tags = "Volunteer"
+    )
+    @GetMapping("/fixing")
+    public ResponseEntity<Pet> securingAnimalToCaregiver( @Parameter(description = "id питомца", required = true, example = "3")
+                                                     @RequestParam Long petId,
+                                                     @Parameter(description = "id попечителя", required = true, example = "1372481155")
+                                                     @RequestParam Long chatId) {
+        try {
+            var pet = petService.securingAnimalToCaregiver(petId, chatId);
+            return ResponseEntity.ok(pet);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @Operation(
+            summary = "Отправка пользователю сообщение о непрохождении испытательного срока и внесение соответсвующих изменений в БД",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Сообщение отправлено. Изменения в БД внесены.",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Pet.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404 (400)",
+                            description = "Не найдено по ИД животное или попечитель (животное не было закреплено за указанным пользователем на испытательный срок)."
+                    )
+            }, tags = "Volunteer"
+    )
+    @GetMapping("/probationfailed")
+    public ResponseEntity probationFailed( @Parameter(description = "id питомца", required = true, example = "3")
+                                                          @RequestParam Long petId,
+                                                          @Parameter(description = "id попечителя", required = true, example = "1372481155")
+                                                          @RequestParam Long chatId) {
+        try {
+            petService.probationFailed(petId, chatId);
+            return ResponseEntity.ok().build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (BadRequestException e) {
             return ResponseEntity.badRequest().build();
         }
     }

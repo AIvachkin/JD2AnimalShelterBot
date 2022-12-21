@@ -8,12 +8,17 @@ import pro.sky.JD2AnimalShelterBot.model.Pet;
 import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.PetRepository;
 import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
+import pro.sky.JD2AnimalShelterBot.service.ExecuteMessage;
+
 import java.time.LocalDate;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Objects;
 
 import static java.time.LocalDate.now;
+import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.PROBATION_PERIOD_FAILED;
+import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.SUCCESSFUL_COMPLETION_OF_THE_PROBATION_PERIOD;
 
 /**
  Класс для работы с БД домашних питомцев
@@ -24,10 +29,12 @@ public class PetService {
     private final PetRepository petRepository;
     private final DogUserRepository dogUserRepository;
     private final CatUserRepository catUserRepository;
-    public PetService(PetRepository petRepository, DogUserRepository dogUserRepository, CatUserRepository catUserRepository) {
+    private final ExecuteMessage executeMessage;
+    public PetService(PetRepository petRepository, DogUserRepository dogUserRepository, CatUserRepository catUserRepository, ExecuteMessage executeMessage) {
         this.petRepository = petRepository;
         this.dogUserRepository = dogUserRepository;
         this.catUserRepository = catUserRepository;
+        this.executeMessage = executeMessage;
     }
     /**
      * Метод получения домашнего питомца
@@ -110,6 +117,92 @@ public class PetService {
         pet.setDogUser(null);
         pet.setCatUser(null);
         pet.setProbationPeriodUpTo(null);
+        pet.setFixed(false);
         petRepository.save(pet);
+    }
+
+    /**
+     * Метод для продления испытательного срока и отправки пользователю соответствующего сообщения.
+     * @param petId ИД питомца
+     * @param extensionDays количество дней на которые необходимо продлить испытатетльрный срок
+     * @return возвращает новую дату окончания испытательного срока.
+     */
+    public LocalDate extensionOfProbationPeriod(Long petId, Integer extensionDays) {
+        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);
+        String typeOfPet = pet.getTypeOfPet();
+        Long chatId = null;
+        if(typeOfPet.equals("dog")){
+            var dogUser = pet.getDogUser();
+            if(dogUser == null){
+                throw new BadRequestException();
+            } else {
+                chatId = dogUser.getChatId();
+            }
+        }
+        if(typeOfPet.equals("cat")){
+            var catUser = pet.getCatUser();
+            if(catUser == null){
+                throw new BadRequestException();
+            } else {
+                chatId = catUser.getChatId();
+            }
+        }
+        pet.setProbationPeriodUpTo(pet.getProbationPeriodUpTo().plusDays(extensionDays));
+        petRepository.save(pet);
+
+        String replyText = "Сообщение от волонтера приюта: \n" +
+                "Вам продлен испытательный срок на " + extensionDays + " дней до " + pet.getProbationPeriodUpTo() +
+                " в связи с нарушениями правил приюта. По всем вопросам Вы можете получить консультацию у волонтера приюта.";
+        executeMessage.prepareAndSendMessage(chatId, replyText, null);
+
+        return pet.getProbationPeriodUpTo();
+    }
+
+    /**
+     * Метод для закрепления животного за попечителем по результатам испытательрного срока
+     * и отправки пользователю соответствующего сообщения.
+     * @param petId ИД животного
+     * @param chatId ИД попечителя
+     * @return возвращает объект питомца с внесенными изменениями.
+     */
+    public Pet securingAnimalToCaregiver(Long petId, Long chatId) {
+        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);
+        CatUser catUser = catUserRepository.findById(chatId).orElse(null);
+        DogUser dogUser = dogUserRepository.findById(chatId).orElse(null);
+        String typeOfPet = pet.getTypeOfPet();
+        if(typeOfPet.equals("dog")){
+            if(dogUser == null || !Objects.equals(pet.getDogUser(), dogUser)) {
+                throw new BadRequestException();
+            }
+        }
+        if(typeOfPet.equals("cat")){
+            if(catUser == null || !Objects.equals(pet.getCatUser(), catUser)) {
+                throw new BadRequestException();
+            }
+        }
+        pet.setFixed(true);
+        petRepository.save(pet);
+
+        String replyText = "Сообщение от волонтера приюта: \n" + SUCCESSFUL_COMPLETION_OF_THE_PROBATION_PERIOD;
+        executeMessage.prepareAndSendMessage(chatId, replyText, null);
+
+        return pet;
+    }
+
+    /**
+     * Метод отправляет пользователю сообщение о провале испытательного срока и вносит необходимые изменения в БД
+     * @param petId ИД животного
+     * @param chatId ИД пользователя
+     */
+    public void probationFailed(Long petId, Long chatId) {
+        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);
+        if(dogUserRepository.findById(chatId).isEmpty() && catUserRepository.findById(chatId).isEmpty()){
+            throw new BadRequestException();
+        }
+        this.detachPetFromCaregiver(petId);
+
+        String replyText = "Сообщение от волонтера приюта: \n" + PROBATION_PERIOD_FAILED;
+        executeMessage.prepareAndSendMessage(chatId, replyText, null);
+
     }
 }

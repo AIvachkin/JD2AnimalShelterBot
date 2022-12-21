@@ -45,7 +45,7 @@ public class CatUser {
     /**
      * Переменная - питомец, которого приютил пользователь
      */
-    @OneToMany(mappedBy = "dogUser")
+    @OneToMany(mappedBy = "catUser")
     private List<Pet> pets;
 
 }
