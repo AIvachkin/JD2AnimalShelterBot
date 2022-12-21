@@ -84,3 +84,12 @@ ALTER TABLE pet ALTER COLUMN probation_period_up_to SET DEFAULT null;
 ALTER TABLE pet ALTER COLUMN fixed SET DEFAULT false;
 
 
+
+-- changeset andrew: 2
+ALTER TABLE trustees_reports RENAME COLUMN photo TO photo_file_path;
+ALTER TABLE trustees_reports ADD photo_file_size BIGINT;
+ALTER TABLE trustees_reports ADD media_type VARCHAR;
+ALTER TABLE trustees_reports ADD preview BYTEA;
+
+-- changeset andrew: 3
+ALTER TABLE trustees_reports ADD type_of_pet VARCHAR;

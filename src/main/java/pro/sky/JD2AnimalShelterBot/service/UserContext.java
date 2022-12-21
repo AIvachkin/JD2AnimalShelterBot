@@ -48,4 +48,11 @@ public class UserContext {
         Set<String> contextSet = this.getUserContext(chatId);
         contextSet.remove(pet);
     }
+
+    @Override
+    public String toString() {
+        return "UserContext{" +
+                "userContext=" + userContext +
+                '}';
+    }
 }
