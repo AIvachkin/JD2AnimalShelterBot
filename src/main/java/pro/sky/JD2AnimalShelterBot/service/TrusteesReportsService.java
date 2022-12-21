@@ -1,16 +1,25 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
+import com.pengrad.telegrambot.request.GetFile;
+import com.pengrad.telegrambot.response.GetFileResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import pro.sky.JD2AnimalShelterBot.model.CatUser;
+import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
 import pro.sky.JD2AnimalShelterBot.model.TrusteesReports;
+import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
+import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.PetRepository;
 import pro.sky.JD2AnimalShelterBot.repository.TrusteesReportsRepository;
 
@@ -32,6 +41,8 @@ import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
 @Service
 @Slf4j
 public class TrusteesReportsService {
+    private final CatUserRepository catUserRepository;
+    private final DogUserRepository dogUserRepository;
 
     /**
      * Путь на сервере, по которому хранятся фото животных из отчетов пользователей
@@ -45,12 +56,20 @@ public class TrusteesReportsService {
 
     private final UserContext userContext;
 
+    private final TelegramBot bot;
+
+
     public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository,
-                                  PetRepository petRepository, ExecuteMessage executeMessage, UserContext userContext) {
+                                  PetRepository petRepository, ExecuteMessage executeMessage, UserContext userContext,
+                                  DogUserRepository dogUserRepository,
+                                  CatUserRepository catUserRepository, TelegramBot bot) {
         this.trusteesReportsRepository = trusteesReportsRepository;
         this.petRepository = petRepository;
         this.executeMessage = executeMessage;
         this.userContext = userContext;
+        this.dogUserRepository = dogUserRepository;
+        this.catUserRepository = catUserRepository;
+        this.bot = bot;
     }
 
     /**
@@ -69,13 +88,15 @@ public class TrusteesReportsService {
     }
 
     /**
-     * Метод возвращает пользователю сообщение после нажатия на кнопку "Отправить отчет" и устанавливает контекст
+     * Метод возвращает пользователю сообщение (новые кнопки) после нажатия на кнопку "Отправить отчет"
+     * и устанавливает контекст
      *
      * @param update объект входящего сообщения пользователя из Телеграм
      */
     public void trusteesButtonHandler(Update update) {
 
-        String messageText = update.getMessage().getText();
+
+//        String messageText = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
 
 
@@ -83,6 +104,7 @@ public class TrusteesReportsService {
             userContext.deleteUserContext(chatId, "dog");
             userContext.setUserContext(chatId, "dogUserReport");
         } else if (userContext.getUserContext(chatId).contains("cat")) {
+            userContext.deleteUserContext(chatId, "cat");
             userContext.setUserContext(chatId, "catUserReport");
         }
 
@@ -127,29 +149,62 @@ public class TrusteesReportsService {
     }
 
 
-
     /**
      * Метод для загрузки в БД полного отчета пользователя (фото + текст)
      */
-    public void uploadReport(long petId, Update update) throws IOException {
+    public void uploadReport(Update update, UserContext context) throws IOException {
 
-//        Pet pet = petRepository.findById(petId).orElseThrow();
+        System.out.println(context);
+
+        Pet pet = new Pet();
+        String typeOfPet = null;
 
         long chatId = update.getMessage().getChatId();
+
+
+        Message message = update.getMessage();
+
+
+        String fileId = message.getPhoto().get(0).getFileId();
+
+        if (fileId.isEmpty()){
+//            Пришлите фото животного
+        } else {
+//            пока обрабатываем только одно фото
+            GetFileResponse fileResponse = bot.execute(new GetFile(fileId));
+            String path = bot.getFullFilePath(fileResponse.file());
+
+        }
+
+        if (context.equals ("dogUserReport")) {
+            DogUser dogUser = dogUserRepository.findDogUsersByChatId(chatId);
+            pet = petRepository.findPetByDogUser(dogUser);
+            typeOfPet = "dog";
+
+        } else if (context.equals("catUserReport")) {
+            CatUser catUser = catUserRepository.findCatUserByChatId(chatId);
+            pet = petRepository.findPetByCatUser(catUser);
+            typeOfPet = "cat";
+        }
+
+
         MultipartFile file = (MultipartFile) update.getMessage().getPhoto();
 
         TrusteesReports trusteesReports = new TrusteesReports();
         trusteesReports.setChatId(chatId);
-//        trusteesReports.setPet(pet);
+        trusteesReports.setPet(pet);
         trusteesReports.setDateTime(LocalDateTime.now());
+        trusteesReports.setTypeOfPet(typeOfPet);
+        trusteesReports.setViewed(false);
 
         uploadPhoto(chatId, file, trusteesReports);
 
 
         trusteesReportsRepository.save(trusteesReports);
 
-
     }
+
+
 
     /**
      * Метод для загрузки в БД фото животного из отчета пользователя

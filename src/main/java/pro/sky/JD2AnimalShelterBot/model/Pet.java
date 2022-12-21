@@ -53,7 +53,7 @@ public class Pet {
     @ManyToOne
     @Nullable
     @JoinColumn(name = "cat_user_id")
-    private CatUser CatUser;
+    private CatUser catUser;
 
     /**
      * испытательный срок до

@@ -286,8 +286,10 @@ public class UpdateHandler implements InputMessageHandler {
 
 
             default:
-                if (userContext.getUserContext(chatId).contains("dogUserReport")) {
+                if (userContext.getUserContext(chatId).contains("dogUserReport") ||
+                        userContext.getUserContext(chatId).contains("catUserReport")) {
                     System.out.println("отчет получен");
+//                    trusteesReportsService.uploadReport(update, userContext);
                     return;
                 }
 
