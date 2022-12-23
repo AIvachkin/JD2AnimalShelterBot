@@ -183,7 +183,7 @@ public class TrusteesReportsService {
 
         //Формируем имя файла
         long chatId = update.getMessage().getChatId();
-        var filePath = "./src/photos/" + chatId + "_" + LocalDateTime.now().hashCode() + ".jpeg";
+        var filePath = "./src/photos/" + chatId + "_" + LocalDateTime.now().hashCode() + ".jpg";
 
         //Сохраняем файл на диск
         telegramBot.downloadFile(path, new java.io.File(filePath));
@@ -191,10 +191,11 @@ public class TrusteesReportsService {
         //Coхраняем в базу
         //Удаляем  контекст
         //Шлем пользователю сообщение, что отчет получен
+        executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), "все получилось", null);
 
         //-----------------------------------------------------------------------------------//
 
-        executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), "все получилось", null);
+
 
 
         if (update.hasMessage() || update.getMessage().hasPhoto()) {
