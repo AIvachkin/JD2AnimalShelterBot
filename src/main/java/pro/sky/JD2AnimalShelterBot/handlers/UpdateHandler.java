@@ -63,7 +63,7 @@ public class UpdateHandler implements InputMessageHandler {
                          TakeDog takeDog,
                          TakeCat takeCat,
                          CommunicationWithVolunteer communicationWithVolunteer,
-                         TrusteesReportsService trusteesReportsService,
+                         @Lazy TrusteesReportsService trusteesReportsService,
                          ExecuteMessage executeMessage,
                          @Lazy YMap yMap,
                          UserService userService,
