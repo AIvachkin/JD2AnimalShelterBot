@@ -94,7 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         try {
             updateHandler.handle(update);
-        } catch (IOException e) {
+        } catch (IOException | TelegramApiException e) {
             throw new RuntimeException(e);
         }
     }

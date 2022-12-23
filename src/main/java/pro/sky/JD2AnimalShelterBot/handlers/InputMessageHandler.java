@@ -1,6 +1,7 @@
 package pro.sky.JD2AnimalShelterBot.handlers;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 
@@ -9,6 +10,6 @@ import java.io.IOException;
  */
 public interface InputMessageHandler {
 
-    void handle (Update update) throws IOException;
+    void handle (Update update) throws IOException, TelegramApiException;
 
 }

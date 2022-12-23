@@ -3,14 +3,22 @@ package pro.sky.JD2AnimalShelterBot.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.File;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pro.sky.JD2AnimalShelterBot.model.CatUser;
+import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
 import pro.sky.JD2AnimalShelterBot.model.TrusteesReports;
+import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
+import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.PetRepository;
 import pro.sky.JD2AnimalShelterBot.repository.TrusteesReportsRepository;
 
@@ -21,17 +29,16 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
 import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
 
 @Service
 @Slf4j
 public class TrusteesReportsService {
+    private final CatUserRepository catUserRepository;
+    private final DogUserRepository dogUserRepository;
 
     private static final String WORNING_TEXT = """
             Предупреждение:
@@ -51,12 +58,20 @@ public class TrusteesReportsService {
 
     private final UserContext userContext;
 
+    private final TelegramBot bot;
+
+
     public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository,
-                                  PetRepository petRepository, ExecuteMessage executeMessage, UserContext userContext) {
+                                  PetRepository petRepository, ExecuteMessage executeMessage, UserContext userContext,
+                                  DogUserRepository dogUserRepository,
+                                  CatUserRepository catUserRepository, TelegramBot bot) {
         this.trusteesReportsRepository = trusteesReportsRepository;
         this.petRepository = petRepository;
         this.executeMessage = executeMessage;
         this.userContext = userContext;
+        this.dogUserRepository = dogUserRepository;
+        this.catUserRepository = catUserRepository;
+        this.bot = bot;
     }
 
     /**
@@ -87,20 +102,23 @@ public class TrusteesReportsService {
     }
 
     /**
-     * Метод возвращает пользователю сообщение после нажатия на кнопку "Отправить отчет" и устанавливает контекст
+     * Метод возвращает пользователю сообщение (новые кнопки) после нажатия на кнопку "Отправить отчет"
+     * и устанавливает контекст
      *
      * @param update объект входящего сообщения пользователя из Телеграм
      */
     public void trusteesButtonHandler(Update update) {
 
-        String messageText = update.getMessage().getText();
+
+//        String messageText = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
 
-
+//присвоение нового контекста - отправка отчета
         if (userContext.getUserContext(chatId).contains("dog")) {
             userContext.deleteUserContext(chatId, "dog");
             userContext.setUserContext(chatId, "dogUserReport");
         } else if (userContext.getUserContext(chatId).contains("cat")) {
+            userContext.deleteUserContext(chatId, "cat");
             userContext.setUserContext(chatId, "catUserReport");
         }
 
@@ -145,52 +163,98 @@ public class TrusteesReportsService {
     }
 
 
-
     /**
      * Метод для загрузки в БД полного отчета пользователя (фото + текст)
      */
-    public void uploadReport(long petId, Update update) throws IOException {
+    public void uploadReport(Update update, UserContext context) throws TelegramApiException {
 
-//        Pet pet = petRepository.findById(petId).orElseThrow();
 
-        long chatId = update.getMessage().getChatId();
-        MultipartFile file = (MultipartFile) update.getMessage().getPhoto();
+        if (update.hasMessage() || update.getMessage().hasPhoto()) {
 
-        TrusteesReports trusteesReports = new TrusteesReports();
-        trusteesReports.setChatId(chatId);
+            Pet pet = new Pet();
+            String typeOfPet = null;
+            long chatId = update.getMessage().getChatId();
+            Message message = update.getMessage();
+
+            System.out.println(message);
+
+            // устанавливаем тип питомца в зависимости от контекста пользователя
+            if (context.equals("dogUserReport")) {
+                DogUser dogUser = dogUserRepository.findDogUsersByChatId(chatId);
+                pet = petRepository.findPetByDogUser(dogUser);
+                typeOfPet = "dog";
+
+            } else if (context.equals("catUserReport")) {
+                CatUser catUser = catUserRepository.findCatUserByChatId(chatId);
+                pet = petRepository.findPetByCatUser(catUser);
+                typeOfPet = "cat";
+            }
+
+
+            if (message.hasPhoto()) {
+
+//            Рассматриваем массив фото
+//            List<PhotoSize> photos = update.getMessage().getPhoto();
+//
+//            String fileId = photos.stream()
+//                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
+//                    .findFirst()
+//                    .orElse(null).getFileId();
+
+
+//            рассматриваем одно фото
+                String fileId = message.getPhoto().get(0).getFileId();
+
+
+                File file = bot.execute(
+                        GetFile.builder()
+                                .fileId(fileId)
+                                .build());
+                String filePath = bot.downloadFile(file).getPath();
+
+
+
+            }
+
+
+//
+//        TrusteesReports trusteesReports = new TrusteesReports();
+//        trusteesReports.setChatId(chatId);
 //        trusteesReports.setPet(pet);
-        trusteesReports.setDateTime(LocalDateTime.now());
+//        trusteesReports.setDateTime(LocalDateTime.now());
+//        trusteesReports.setTypeOfPet(typeOfPet);
+//        trusteesReports.setViewed(false);
 
-        uploadPhoto(chatId, file, trusteesReports);
+//        uploadPhoto(chatId, file, trusteesReports);
 
 
-        trusteesReportsRepository.save(trusteesReports);
+//        trusteesReportsRepository.save(trusteesReports);
 
-
+        }
     }
 
     /**
      * Метод для загрузки в БД фото животного из отчета пользователя
      */
-    public void uploadPhoto(long chatId, MultipartFile file, TrusteesReports trusteesReports) throws IOException {
+    public void uploadPhoto(long chatId, File file, TrusteesReports trusteesReports) throws IOException {
 
-        Path filePath = Path.of(photoPetDir, chatId + "_" + file.getOriginalFilename() + "."
-                + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
-        Files.createDirectories(filePath.getParent());
-
-        try (InputStream is = file.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
-        ) {
-            bis.transferTo(bos);
-        }
-
-
-        trusteesReports.setPhotoFilePath(filePath.toString());
-        trusteesReports.setPhotoFileSize(file.getSize());
-        trusteesReports.setMediaType(file.getContentType());
-        trusteesReports.setPreview(generatePreviewForDB(filePath));
+//        Path filePath = Path.of(photoPetDir, chatId + "_" + file.getFileUniqueId() + "."
+//                + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
+//        Files.createDirectories(filePath.getParent());
+//
+//        try (InputStream is = file.п;
+//             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+//             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+//             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+//        ) {
+//            bis.transferTo(bos);
+//        }
+//
+//
+//        trusteesReports.setPhotoFilePath(filePath.toString());
+//        trusteesReports.setPhotoFileSize(file.getSize());
+//        trusteesReports.setMediaType(file.getContentType());
+//        trusteesReports.setPreview(generatePreviewForDB(filePath));
 
 
     }

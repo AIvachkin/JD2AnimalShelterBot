@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.service.*;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeCat;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
@@ -84,7 +85,7 @@ public class UpdateHandler implements InputMessageHandler {
      * метод, определяющий, что должен делать бот, когда ему поступает тот или иной запрос
      */
     @Override
-    public void handle(Update update) throws IOException {
+    public void handle(Update update) throws IOException, TelegramApiException {
 
         //Если нажата inline кнопка
         if (update.hasCallbackQuery()) {
@@ -122,179 +123,192 @@ public class UpdateHandler implements InputMessageHandler {
             return;
         }
 
-
-        switch (messageText) {
-            case START_COMAND:
-
-                startCommand.startCallBack(chatId, update);
-                break;
-
-            case CHOOSE_SHELTER, EXIT_THE_REPORT_FORM:
-                SendMessage message = new SendMessage();
-                message.setChatId(String.valueOf(chatId));
-                message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());
-                message.setText("Возврат в начальное меню");
-                executeMessage.executeMessage(message);
-                startCommand.choosingTypeOfPet(chatId);
-                break;
-
-            case INFORMATION_COMMAND_LABEL:
-                shelterInfo.shelterInfoCommandReceived(chatId);
-                break;
-
-            case TAKE_PET_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    takeDog.takePetCommandReceived(chatId);
-                    break;
-                } else {
-                    takeCat.takePetCommandReceived(chatId);
-                }
-                break;
-
-            case CAR_PASS_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, DOG_CAR_PASS, startCommand.createMenuStartCommand());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, CAT_CAR_PASS, startCommand.createMenuStartCommand());
-                }
-                break;
-
-            case SAFETY_PRECAUTIONS_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, SAFETY_PRECAUTIONS, startCommand.createMenuStartCommand());
-                break;
-
-
-            case DATING_RULES_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, DOG_DATING_RULES, takeDog.createMenuTakePet());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, CAT_DATING_RULES, takeCat.createMenuTakePet());
-                }
-                break;
-
-            case DOCUMENTS_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, DOG_DOCUMENTS, takeDog.createMenuTakePet());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, CAT_DOCUMENTS, takeCat.createMenuTakePet());
-                }
-                break;
-
-            case SHIPPING_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, DOG_SHIPPING, takeDog.createMenuTakePet());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, CAT_SHIPPING, takeCat.createMenuTakePet());
-                }
-                break;
-
-            case RECOMM_FOR_PUPPY_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY, takeDog.createMenuTakePet());
-                break;
-
-            case RECOMM_FOR_DOG_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_1, takeDog.createMenuTakePet());
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_2, takeDog.createMenuTakePet());
-                break;
-
-            case RECOMM_FOR_PET_INVALID_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_INVALID, takeDog.createMenuTakePet());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_CAT_INVALID, takeCat.createMenuTakePet());
-                }
-                break;
-
-            case CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, CYNOLOGIST_INITIAL_ADVICE, takeDog.createMenuTakePet());
-                break;
-
-            case RECOMMENDED_CYNOLOGIST_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, RECOMMENDED_CYNOLOGIST, takeDog.createMenuTakePet());
-                break;
-
-            case REASONS_FOR_REFUSAL_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeDog.createMenuTakePet());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeCat.createMenuTakePet());
-                }
-                break;
-
-            case RECOMM_FOR_CAT_COMMAND_LABEL:
-                executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_CAT, takeCat.createMenuTakePet());
-                break;
-
-
-            case CALL_VOLUNTEER_COMMAND_LABEL:
-                communicationWithVolunteer.volunteerButtonHandler(update);
-                break;
-
-
-            case SHELTER_INFO_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, DOG_SHELTER_INFO, shelterInfo.createMenuShelterInfo());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, CAT_SHELTER_INFO, shelterInfo.createMenuShelterInfo());
-                }
-                break;
-
-            case SCHEDULE_ADDRESS_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, DOG_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
-                    yMap.yMapInit(chatId, dogShelterCoordinate);
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, CAT_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
-                    yMap.yMapInit(chatId, catShelterCoordinate);
-                }
-                break;
-
-            case SAFETY_RULES_COMMAND_LABEL:
-                if (userContext.getUserContext(chatId).contains("dog")) {
-                    executeMessage.prepareAndSendMessage(chatId, DOG_SAFETY_RULES, shelterInfo.createMenuShelterInfo());
-                    break;
-                } else {
-                    executeMessage.prepareAndSendMessage(chatId, CAT_SAFETY_RULES, shelterInfo.createMenuShelterInfo());
-                }
-                break;
-
-            case CONTACT_DATA_COMMAND_LABEL:
-                userService.requestContactDetails(chatId);
-                break;
-
-            case MAIN_MENU_LABEL:
-                startCommand.returnToMainMenu(chatId);
-                break;
-
-
-            case SEND_REPORT_COMMAND_LABEL:
-                trusteesReportsService.trusteesButtonHandler(update);
-
-                break;
-
-            case SEND_FORM:
-                executeMessage.prepareAndSendMessage(chatId, FORM_FOR_REPORT, trusteesReportsService.createMenuForSendReport());
-                break;
-
-
-            default:
-                if (userContext.getUserContext(chatId).contains("dogUserReport")) {
-                    System.out.println("отчет получен");
-                    return;
-                }
-
-
-                System.out.println("Неизвестная команда: " + messageText);
-                break;
+//        если приходит фото от пользователя и у него установлен контекст отправки отчета
+        if (update.getMessage().hasPhoto() && (userContext.getUserContext(chatId).contains("dogUserReport") ||
+                userContext.getUserContext(chatId).contains("catUserReport"))) {
+            trusteesReportsService.uploadReport(update, userContext);
+            return;
         }
+
+        if (messageText != null) {
+            switch (messageText) {
+                case START_COMAND:
+
+                    startCommand.startCallBack(chatId, update);
+                    break;
+
+                case CHOOSE_SHELTER, EXIT_THE_REPORT_FORM:
+                    SendMessage message = new SendMessage();
+                    message.setChatId(String.valueOf(chatId));
+                    message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());
+                    message.setText("Возврат в начальное меню");
+                    executeMessage.executeMessage(message);
+                    startCommand.choosingTypeOfPet(chatId);
+                    break;
+
+                case INFORMATION_COMMAND_LABEL:
+                    shelterInfo.shelterInfoCommandReceived(chatId);
+                    break;
+
+                case TAKE_PET_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        takeDog.takePetCommandReceived(chatId);
+                        break;
+                    } else {
+                        takeCat.takePetCommandReceived(chatId);
+                    }
+                    break;
+
+                case CAR_PASS_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, DOG_CAR_PASS, startCommand.createMenuStartCommand());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, CAT_CAR_PASS, startCommand.createMenuStartCommand());
+                    }
+                    break;
+
+                case SAFETY_PRECAUTIONS_LABEL:
+                    executeMessage.prepareAndSendMessage(chatId, SAFETY_PRECAUTIONS, startCommand.createMenuStartCommand());
+                    break;
+
+
+                case DATING_RULES_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, DOG_DATING_RULES, takeDog.createMenuTakePet());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, CAT_DATING_RULES, takeCat.createMenuTakePet());
+                    }
+                    break;
+
+                case DOCUMENTS_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, DOG_DOCUMENTS, takeDog.createMenuTakePet());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, CAT_DOCUMENTS, takeCat.createMenuTakePet());
+                    }
+                    break;
+
+                case SHIPPING_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, DOG_SHIPPING, takeDog.createMenuTakePet());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, CAT_SHIPPING, takeCat.createMenuTakePet());
+                    }
+                    break;
+
+                case RECOMM_FOR_PUPPY_COMMAND_LABEL:
+                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_PUPPY, takeDog.createMenuTakePet());
+                    break;
+
+                case RECOMM_FOR_DOG_COMMAND_LABEL:
+                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_1, takeDog.createMenuTakePet());
+                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_2, takeDog.createMenuTakePet());
+                    break;
+
+                case RECOMM_FOR_PET_INVALID_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_DOG_INVALID, takeDog.createMenuTakePet());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_CAT_INVALID, takeCat.createMenuTakePet());
+                    }
+                    break;
+
+                case CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL:
+                    executeMessage.prepareAndSendMessage(chatId, CYNOLOGIST_INITIAL_ADVICE, takeDog.createMenuTakePet());
+                    break;
+
+                case RECOMMENDED_CYNOLOGIST_COMMAND_LABEL:
+                    executeMessage.prepareAndSendMessage(chatId, RECOMMENDED_CYNOLOGIST, takeDog.createMenuTakePet());
+                    break;
+
+                case REASONS_FOR_REFUSAL_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeDog.createMenuTakePet());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, REASONS_FOR_REFUSAL, takeCat.createMenuTakePet());
+                    }
+                    break;
+
+                case RECOMM_FOR_CAT_COMMAND_LABEL:
+                    executeMessage.prepareAndSendMessage(chatId, RECOMM_FOR_CAT, takeCat.createMenuTakePet());
+                    break;
+
+
+                case CALL_VOLUNTEER_COMMAND_LABEL:
+                    communicationWithVolunteer.volunteerButtonHandler(update);
+                    break;
+
+
+                case SHELTER_INFO_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, DOG_SHELTER_INFO, shelterInfo.createMenuShelterInfo());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, CAT_SHELTER_INFO, shelterInfo.createMenuShelterInfo());
+                    }
+                    break;
+
+                case SCHEDULE_ADDRESS_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, DOG_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                        yMap.yMapInit(chatId, dogShelterCoordinate);
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, CAT_SCHEDULE_ADDRESS, shelterInfo.createMenuShelterInfo());
+                        yMap.yMapInit(chatId, catShelterCoordinate);
+                    }
+                    break;
+
+                case SAFETY_RULES_COMMAND_LABEL:
+                    if (userContext.getUserContext(chatId).contains("dog")) {
+                        executeMessage.prepareAndSendMessage(chatId, DOG_SAFETY_RULES, shelterInfo.createMenuShelterInfo());
+                        break;
+                    } else {
+                        executeMessage.prepareAndSendMessage(chatId, CAT_SAFETY_RULES, shelterInfo.createMenuShelterInfo());
+                    }
+                    break;
+
+                case CONTACT_DATA_COMMAND_LABEL:
+                    userService.requestContactDetails(chatId);
+                    break;
+
+                case MAIN_MENU_LABEL:
+                    startCommand.returnToMainMenu(chatId);
+                    break;
+
+
+                case SEND_REPORT_COMMAND_LABEL:
+                    trusteesReportsService.trusteesButtonHandler(update);
+
+                    break;
+
+                case SEND_FORM:
+                    executeMessage.prepareAndSendMessage(chatId, FORM_FOR_REPORT, trusteesReportsService.createMenuForSendReport());
+                    break;
+
+
+                default:
+                    if (userContext.getUserContext(chatId).contains("dogUserReport") ||
+                            userContext.getUserContext(chatId).contains("catUserReport")) {
+                        System.out.println("default");
+                        trusteesReportsService.uploadReport(update, userContext);
+                        return;
+                    }
+
+
+                    System.out.println("Неизвестная команда: " + messageText);
+                    break;
+            }
+        }
+
+
+
     }
 
     /**
@@ -316,3 +330,4 @@ public class UpdateHandler implements InputMessageHandler {
         startCommand.startCallBack(chatId, update);
     }
 }
+
