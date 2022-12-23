@@ -107,27 +107,24 @@ public class UpdateHandler implements InputMessageHandler {
             return;
         }
 
-        // Если не выбраны кошки или собаки и если нет контекста, указывающего на отправку отчета
+        // Если не выбраны кошки или собаки
         if (userContext.getUserContext(chatId) == null || (!userContext.getUserContext(chatId).contains("dog")
-                && !userContext.getUserContext(chatId).contains("cat")
-                && !userContext.getUserContext(chatId).contains("dogUserReport")
-                && !userContext.getUserContext(chatId).contains("catUserReport"))) {
-            startCommand.choosingTypeOfPet(chatId);
-            return;
+            && !userContext.getUserContext(chatId).contains("cat"))) {
+                startCommand.choosingTypeOfPet(chatId);
+                return;
         }
 
         // Если пользователь пишет сообщение волонтеру
         if (userContext.getUserContext(chatId).contains("messageToVolunteer")) {
-
             communicationWithVolunteer.volunteerTextHandler(update);
             return;
         }
 
-//        если приходит фото от пользователя и у него установлен контекст отправки отчета
-        if (update.getMessage().hasPhoto() && (userContext.getUserContext(chatId).contains("dogUserReport") ||
-                userContext.getUserContext(chatId).contains("catUserReport"))) {
-            trusteesReportsService.uploadReport(update, userContext);
-            return;
+        // если пользователь отправляет отчет
+        if (userContext.getUserContext(chatId).contains("dogUserReport") ||
+            userContext.getUserContext(chatId).contains("catUserReport")) {
+                trusteesReportsService.uploadReport(update, userContext);
+                return;
         }
 
         if (messageText != null) {

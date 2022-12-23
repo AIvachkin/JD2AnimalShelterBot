@@ -1,6 +1,7 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,9 @@ import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
 public class TrusteesReportsService {
     private final CatUserRepository catUserRepository;
     private final DogUserRepository dogUserRepository;
+
+    @Autowired
+    private final TelegramBot telegramBot;
 
     private static final String WORNING_TEXT = """
             Предупреждение:
@@ -58,20 +63,17 @@ public class TrusteesReportsService {
 
     private final UserContext userContext;
 
-    private final TelegramBot bot;
-
-
     public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository,
                                   PetRepository petRepository, ExecuteMessage executeMessage, UserContext userContext,
                                   DogUserRepository dogUserRepository,
-                                  CatUserRepository catUserRepository, TelegramBot bot) {
+                                  CatUserRepository catUserRepository, TelegramBot telegramBot) {
         this.trusteesReportsRepository = trusteesReportsRepository;
         this.petRepository = petRepository;
         this.executeMessage = executeMessage;
         this.userContext = userContext;
         this.dogUserRepository = dogUserRepository;
         this.catUserRepository = catUserRepository;
-        this.bot = bot;
+        this.telegramBot = telegramBot;
     }
 
     /**
@@ -115,14 +117,10 @@ public class TrusteesReportsService {
 
 //присвоение нового контекста - отправка отчета
         if (userContext.getUserContext(chatId).contains("dog")) {
-            userContext.deleteUserContext(chatId, "dog");
             userContext.setUserContext(chatId, "dogUserReport");
         } else if (userContext.getUserContext(chatId).contains("cat")) {
-            userContext.deleteUserContext(chatId, "cat");
             userContext.setUserContext(chatId, "catUserReport");
         }
-
-        System.out.println(userContext);
 
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
@@ -147,7 +145,6 @@ public class TrusteesReportsService {
         row1.add(SEND_FORM);
         keyboardRows.add(row1);
 
-
         KeyboardRow row2 = new KeyboardRow();
         row2.add(EXIT_THE_REPORT_FORM);
         keyboardRows.add(row2);
@@ -168,12 +165,42 @@ public class TrusteesReportsService {
      */
     public void uploadReport(Update update, UserContext context) throws TelegramApiException {
 
+        //если пользователь не прикрепил фото к отчету
+        if(!update.getMessage().hasPhoto()){
+            executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_PHOTO_IN_THE_REPORT, null);
+            return;
+        }
+
+        //если пользователь не прикрепил текст к отчету
+        if(update.getMessage().getCaption() == null){
+            executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_TEXT_IN_THE_REPORT, null);
+            return;
+        }
+
+        //Получаем путь к файлу на сервере Telegram
+        var photos = update.getMessage().getPhoto();
+        var path = telegramBot.execute(new GetFile(photos.get(photos.size() - 1).getFileId())).getFilePath();
+
+        //Формируем имя файла
+        long chatId = update.getMessage().getChatId();
+        var filePath = "./src/photos/" + chatId + "_" + LocalDateTime.now().hashCode() + ".jpeg";
+
+        //Сохраняем файл на диск
+        telegramBot.downloadFile(path, new java.io.File(filePath));
+
+        //Coхраняем в базу
+        //Удаляем  контекст
+        //Шлем пользователю сообщение, что отчет получен
+
+        //-----------------------------------------------------------------------------------//
+
+        executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), "все получилось", null);
+
 
         if (update.hasMessage() || update.getMessage().hasPhoto()) {
 
             Pet pet = new Pet();
             String typeOfPet = null;
-            long chatId = update.getMessage().getChatId();
             Message message = update.getMessage();
 
             System.out.println(message);
@@ -206,11 +233,11 @@ public class TrusteesReportsService {
                 String fileId = message.getPhoto().get(0).getFileId();
 
 
-                File file = bot.execute(
-                        GetFile.builder()
-                                .fileId(fileId)
-                                .build());
-                String filePath = bot.downloadFile(file).getPath();
+//                File file = bot.execute(
+//                        GetFile.builder()
+//                                .fileId(fileId)
+//                                .build());
+//                String filePath = bot.downloadFile(file).getPath();
 
 
 
