@@ -19,23 +19,17 @@ import java.util.List;
 @Slf4j
 public class StartCommand {
 
-    /**
-     * Поле взаимодействия с ботом
-     */
-    private final TelegramBot telegramBot;
     private final UserService userService;
     private final UserContext userContext;
     private final ExecuteMessage executeMessage;
     /**
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
      *
-     * @param telegramBot    - объект взаимодействия с ботом
      * @param userService    - объект для взаимодействия с командами сервиса
      * @param userContext    - объект для взаимодействия с контекстом юзера
      * @param executeMessage - объект для взаимодействия с методами класса, отвечающего за отправку ответа пользователям
      */
-    public StartCommand(TelegramBot telegramBot, UserService userService, UserContext userContext, ExecuteMessage executeMessage) {
-        this.telegramBot = telegramBot;
+    public StartCommand(UserService userService, UserContext userContext, ExecuteMessage executeMessage) {
         this.userService = userService;
         this.userContext = userContext;
         this.executeMessage = executeMessage;

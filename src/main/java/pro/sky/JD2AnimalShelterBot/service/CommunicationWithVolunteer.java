@@ -15,9 +15,9 @@ public class CommunicationWithVolunteer {
      * Иинъекция класса контекста пользователя
      */
     private final UserContext userContext;
-    private final TelegramBot telegramBot;
     private final CorrespondenceService correspondenceService;
     private final UserService userService;
+    private final ExecuteMessage executeMessage;
 
     /**
      * Сообщение для пользователя, запросившего связь с волонтером
@@ -28,11 +28,11 @@ public class CommunicationWithVolunteer {
             Волонтер свяжется с Вами в ближайшее время. 👇✍️
             """;
 
-    public CommunicationWithVolunteer(UserContext userContext, TelegramBot telegramBot, CorrespondenceService correspondenceService, UserService userService) {
+    public CommunicationWithVolunteer(UserContext userContext, CorrespondenceService correspondenceService, UserService userService, ExecuteMessage executeMessage) {
         this.userContext = userContext;
-        this.telegramBot = telegramBot;
         this.correspondenceService = correspondenceService;
         this.userService = userService;
+        this.executeMessage = executeMessage;
     }
 
     /**
@@ -53,21 +53,9 @@ public class CommunicationWithVolunteer {
         message.setChatId(String.valueOf(chatId));
         message.setText(CALL_VOLUNTEER_MESSAGE);
         message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());//Убираем клавиатуру
-        executeMessage(message);
+        executeMessage.executeMessage(message);
         log.info("A call volunteer message has been sent to the user " + update.getMessage().getChat().getFirstName() + ", Id: " + chatId);
 
-    }
-
-    /**
-     * Метод проверки отправки сообщения на ошибки
-     * @param message  сообщение
-     */
-    public void executeMessage(SendMessage message){
-        try{
-            telegramBot.execute(message);
-        } catch (TelegramApiException e){
-            log.error("Error occurred: " + e.getMessage());
-        }
     }
 
     /**

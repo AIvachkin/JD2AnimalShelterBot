@@ -22,11 +22,9 @@ import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.MENU_COMM
 @Service
 public class TakeCat implements TakePet{
 
-    public final TelegramBot bot;
     private final ExecuteMessage executeMessage;
 
-    public TakeCat(TelegramBot bot, ExecuteMessage executeMessage) {
-        this.bot = bot;
+    public TakeCat(ExecuteMessage executeMessage) {
         this.executeMessage = executeMessage;
     }
 

@@ -57,13 +57,13 @@ public class UpdateHandler implements InputMessageHandler {
      * @param userService            - объект для работы с методами класса UserService
      * @param userContext            - объект для определения контекста пользователя для корректного выбора меню
      */
-    public UpdateHandler(@Lazy StartCommand startCommand,
-                         @Lazy ShelterInfo shelterInfo,
-                         @Lazy TakeDog takeDog,
-                         @Lazy TakeCat takeCat,
-                         @Lazy CommunicationWithVolunteer communicationWithVolunteer,
-                         @Lazy TrusteesReportsService trusteesReportsService,
-                         @Lazy ExecuteMessage executeMessage,
+    public UpdateHandler(StartCommand startCommand,
+                         ShelterInfo shelterInfo,
+                         TakeDog takeDog,
+                         TakeCat takeCat,
+                         CommunicationWithVolunteer communicationWithVolunteer,
+                         TrusteesReportsService trusteesReportsService,
+                         ExecuteMessage executeMessage,
                          @Lazy YMap yMap,
                          UserService userService,
                          UserContext userContext) {
