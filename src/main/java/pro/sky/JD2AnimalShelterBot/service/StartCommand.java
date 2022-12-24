@@ -8,6 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import pro.sky.JD2AnimalShelterBot.handlers.Commands;
+import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
+
 import java.util.ArrayList;
 import java.util.List;
 

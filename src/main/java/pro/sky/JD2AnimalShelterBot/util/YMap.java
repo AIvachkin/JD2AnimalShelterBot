@@ -1,4 +1,4 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.util;
 
 import io.github.mvpotter.model.Coordinate;
 import io.github.mvpotter.model.Size;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pro.sky.JD2AnimalShelterBot.service.TelegramBot;
 
 /**
  * Класс отправки карты

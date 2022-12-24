@@ -1,4 +1,4 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.handlers;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

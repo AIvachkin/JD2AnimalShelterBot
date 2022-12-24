@@ -1,11 +1,15 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.service.volunteer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import pro.sky.JD2AnimalShelterBot.handlers.Commands;
 import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.repository.CorrespondenceRepository;
+import pro.sky.JD2AnimalShelterBot.service.ExecuteMessage;
+import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;

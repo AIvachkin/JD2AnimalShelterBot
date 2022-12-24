@@ -22,6 +22,7 @@ import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.PetRepository;
 import pro.sky.JD2AnimalShelterBot.repository.TrusteesReportsRepository;
+import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.NotFoundException;
@@ -37,6 +38,9 @@ import java.util.List;
 
 import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
 
+/**
+ * Класс обрабатывает отчеты пользователей и сохраняет их в БД
+ */
 @Service
 @Slf4j
 public class TrusteesReportsService {
@@ -48,7 +52,7 @@ public class TrusteesReportsService {
 
     private static final String WORNING_TEXT = """
             Предупреждение:
-            Дорогой усыновитель, мы заметили, что ты заполняешь отчет не так подробно, как необходимо. 
+            Дорогой усыновитель, мы заметили, что ты заполняешь отчет не так подробно, как необходимо.
             Пожалуйста, подойди ответственнее к этому занятию. 
             В противном случае волонтеры приюта будут обязаны самолично проверять условия содержания животного.
             """;

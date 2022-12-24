@@ -10,13 +10,17 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.service.*;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeCat;
 import pro.sky.JD2AnimalShelterBot.service.pet.TakeDog;
+import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
+import pro.sky.JD2AnimalShelterBot.service.volunteer.CommunicationWithVolunteer;
+import pro.sky.JD2AnimalShelterBot.util.YMap;
 
 import java.io.IOException;
 
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
-import static pro.sky.JD2AnimalShelterBot.service.YMap.catShelterCoordinate;
-import static pro.sky.JD2AnimalShelterBot.service.YMap.dogShelterCoordinate;
+import static pro.sky.JD2AnimalShelterBot.util.YMap.catShelterCoordinate;
+import static pro.sky.JD2AnimalShelterBot.util.YMap.dogShelterCoordinate;
 import static pro.sky.JD2AnimalShelterBot.constants.CatConstants.*;
 import static pro.sky.JD2AnimalShelterBot.constants.DogConstants.*;
 import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.*;

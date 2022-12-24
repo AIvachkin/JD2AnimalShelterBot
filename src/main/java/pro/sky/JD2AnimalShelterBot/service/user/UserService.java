@@ -1,4 +1,4 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,20 +11,19 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import pro.sky.JD2AnimalShelterBot.model.CatUser;
-import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
+import pro.sky.JD2AnimalShelterBot.service.ExecuteMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Service
-@Slf4j
 /**
  * Класс реализует логику по взаимодействию с объектами User
  */
+@Service
+@Slf4j
 public class UserService {
 
     /**
@@ -35,8 +34,10 @@ public class UserService {
 
     private final ExecuteMessage executeMessage;
 
-    private static final String WELCOME_MESSAGE = "Чтобы связаться с волонтером, пожалуйста, отправьте нам свои контакты." +
-            "\n\nДля этого нажмите кнопку внизу и подтвердите передучу контактов.";
+    private static final String WELCOME_MESSAGE = """
+            Чтобы связаться с волонтером, пожалуйста, отправьте нам свои контакты.
+
+            Для этого нажмите кнопку внизу и подтвердите передачу контактов.""";
 
     private static final String SHARE_PHONE_NUMBER = "\uD83D\uDC49 Поделиться контактами \uD83D\uDC48";
 

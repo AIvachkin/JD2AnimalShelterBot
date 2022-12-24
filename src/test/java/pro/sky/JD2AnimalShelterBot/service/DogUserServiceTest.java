@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 
 
 import java.util.Optional;

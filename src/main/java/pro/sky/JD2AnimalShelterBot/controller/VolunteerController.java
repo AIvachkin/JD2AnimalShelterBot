@@ -10,10 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.JD2AnimalShelterBot.model.*;
-import pro.sky.JD2AnimalShelterBot.service.CorrespondenceService;
+import pro.sky.JD2AnimalShelterBot.service.volunteer.CorrespondenceService;
 import pro.sky.JD2AnimalShelterBot.service.TrusteesReportsService;
 import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
-import pro.sky.JD2AnimalShelterBot.service.UserService;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;

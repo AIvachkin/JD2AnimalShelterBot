@@ -1,11 +1,12 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
 import org.junit.jupiter.api.Test;
+import pro.sky.JD2AnimalShelterBot.handlers.Commands;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pro.sky.JD2AnimalShelterBot.service.Commands.CALL_VOLUNTEER_COMAND;
+import static pro.sky.JD2AnimalShelterBot.handlers.Commands.CALL_VOLUNTEER_COMAND;
 
 class CommandsTest {
 
