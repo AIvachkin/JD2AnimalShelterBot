@@ -93,3 +93,6 @@ ALTER TABLE trustees_reports ADD preview BYTEA;
 
 -- changeset andrew: 3
 ALTER TABLE trustees_reports ADD type_of_pet VARCHAR;
+
+-- changeset andrew: 4
+ALTER  TABLE  trustees_reports  DROP  COLUMN  media_type;

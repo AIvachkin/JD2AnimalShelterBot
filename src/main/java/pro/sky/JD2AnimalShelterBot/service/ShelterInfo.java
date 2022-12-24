@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.GREETING_INFO;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.GREETING_INFO;
 
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о приюте

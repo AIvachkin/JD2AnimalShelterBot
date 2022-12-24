@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
 
 @ExtendWith(MockitoExtension.class)
 class ShelterInfoTest {

@@ -54,11 +54,6 @@ public class TrusteesReports {
     private long photoFileSize;
 
     /**
-     * тип файла - фото животного
-     */
-    private String mediaType;
-
-    /**
      * превью фото животного, хранящегося в БД
      */
     private byte [] preview;
@@ -87,12 +82,12 @@ public class TrusteesReports {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TrusteesReports that = (TrusteesReports) o;
-        return photoFileSize == that.photoFileSize && Objects.equals(id, that.id) && Objects.equals(chatId, that.chatId) && Objects.equals(pet, that.pet) && Objects.equals(dateTime, that.dateTime) && Objects.equals(photoFilePath, that.photoFilePath) && Objects.equals(mediaType, that.mediaType) && Arrays.equals(preview, that.preview) && Objects.equals(text, that.text);
+        return photoFileSize == that.photoFileSize && Objects.equals(id, that.id) && Objects.equals(chatId, that.chatId) && Objects.equals(pet, that.pet) && Objects.equals(dateTime, that.dateTime) && Objects.equals(photoFilePath, that.photoFilePath)  && Arrays.equals(preview, that.preview) && Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, chatId, pet, dateTime, photoFilePath, photoFileSize, mediaType, text);
+        int result = Objects.hash(id, chatId, pet, dateTime, photoFilePath, photoFileSize, text);
         result = 31 * result + Arrays.hashCode(preview);
         return result;
     }

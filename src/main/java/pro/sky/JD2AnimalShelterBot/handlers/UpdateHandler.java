@@ -17,10 +17,10 @@ import static pro.sky.JD2AnimalShelterBot.service.StartCommand.CAT_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.StartCommand.DOG_BUTTON;
 import static pro.sky.JD2AnimalShelterBot.service.YMap.catShelterCoordinate;
 import static pro.sky.JD2AnimalShelterBot.service.YMap.dogShelterCoordinate;
-import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.CatConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.DogConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
 
 /**
  * Класс для обработки входящих сообщений пользователя.
@@ -52,7 +52,7 @@ public class UpdateHandler implements InputMessageHandler {
      * @param shelterInfo            - объект "информация о приюте"
      * @param takeDog                - объект "информация об усыновлении собаки"
      * @param takeCat                - объект "информация об усыновлении кошки"
-     * @param trusteesReportsService
+     * @param trusteesReportsService - объект для обращения к методу класса TrusteesReportsService
      * @param executeMessage         - объект для работы с классом по отправке ответов пользователю
      * @param yMap                   - объект - карта для отображения местонахождения приюта
      * @param userService            - объект для работы с методами класса UserService
@@ -109,9 +109,9 @@ public class UpdateHandler implements InputMessageHandler {
 
         // Если не выбраны кошки или собаки
         if (userContext.getUserContext(chatId) == null || (!userContext.getUserContext(chatId).contains("dog")
-            && !userContext.getUserContext(chatId).contains("cat"))) {
-                startCommand.choosingTypeOfPet(chatId);
-                return;
+                && !userContext.getUserContext(chatId).contains("cat"))) {
+            startCommand.choosingTypeOfPet(chatId);
+            return;
         }
 
         // Если пользователь пишет сообщение волонтеру
@@ -120,11 +120,13 @@ public class UpdateHandler implements InputMessageHandler {
             return;
         }
 
-        // если пользователь отправляет отчет
-        if (userContext.getUserContext(chatId).contains("dogUserReport") ||
-            userContext.getUserContext(chatId).contains("catUserReport")) {
-                trusteesReportsService.uploadReport(update, userContext);
+        // если пользователь отправляет отчет, содержащий фото
+        if (update.getMessage().hasPhoto()) {
+            if (userContext.getUserContext(chatId).contains("dogUserReport") ||
+                    userContext.getUserContext(chatId).contains("catUserReport")) {
+                trusteesReportsService.uploadReport(update);
                 return;
+            }
         }
 
         if (messageText != null) {
@@ -135,12 +137,7 @@ public class UpdateHandler implements InputMessageHandler {
                     break;
 
                 case CHOOSE_SHELTER, EXIT_THE_REPORT_FORM:
-                    SendMessage message = new SendMessage();
-                    message.setChatId(String.valueOf(chatId));
-                    message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());
-                    message.setText("Возврат в начальное меню");
-                    executeMessage.executeMessage(message);
-                    startCommand.choosingTypeOfPet(chatId);
+                    returnToStartMenu(update);
                     break;
 
                 case INFORMATION_COMMAND_LABEL:
@@ -294,7 +291,7 @@ public class UpdateHandler implements InputMessageHandler {
                     if (userContext.getUserContext(chatId).contains("dogUserReport") ||
                             userContext.getUserContext(chatId).contains("catUserReport")) {
                         System.out.println("default");
-                        trusteesReportsService.uploadReport(update, userContext);
+                        trusteesReportsService.uploadReport(update);
                         return;
                     }
 
@@ -303,9 +300,6 @@ public class UpdateHandler implements InputMessageHandler {
                     break;
             }
         }
-
-
-
     }
 
     /**
@@ -314,7 +308,6 @@ public class UpdateHandler implements InputMessageHandler {
     private void processingOfButtons(Update update) {
 
         String callBackData = update.getCallbackQuery().getData();
-        long messageId = update.getCallbackQuery().getMessage().getMessageId();
         long chatId = update.getCallbackQuery().getMessage().getChatId();
         if (callBackData.equals(DOG_BUTTON)) {
             userContext.setUserContext(chatId, "dog");
@@ -326,5 +319,19 @@ public class UpdateHandler implements InputMessageHandler {
         }
         startCommand.startCallBack(chatId, update);
     }
+
+    /**
+     * Метод - возврат в начальное меню
+     */
+    public void returnToStartMenu(Update update){
+        SendMessage message = new SendMessage();
+        long chatId = update.getMessage().getChatId();
+        message.setChatId(String.valueOf(chatId));
+        message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());
+        message.setText("Возврат в начальное меню");
+        executeMessage.executeMessage(message);
+        startCommand.choosingTypeOfPet(chatId);
+    }
+
 }
 

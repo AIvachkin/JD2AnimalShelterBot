@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
-import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.CALL_VOLUNTEER_COMMAND_LABEL;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.MAIN_MENU_LABEL;
+import static pro.sky.JD2AnimalShelterBot.constants.DogConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.CALL_VOLUNTEER_COMMAND_LABEL;
+import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.MAIN_MENU_LABEL;
 
 
 @ExtendWith(MockitoExtension.class)

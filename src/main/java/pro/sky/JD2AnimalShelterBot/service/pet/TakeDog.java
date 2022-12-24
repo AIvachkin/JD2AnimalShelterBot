@@ -7,12 +7,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import pro.sky.JD2AnimalShelterBot.service.Commands;
 import pro.sky.JD2AnimalShelterBot.service.ExecuteMessage;
-import pro.sky.JD2AnimalShelterBot.service.TelegramBot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.MENU_COMMAND_SELECTION;
+import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.MENU_COMMAND_SELECTION;
 
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о подготовке

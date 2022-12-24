@@ -7,10 +7,10 @@ import pro.sky.JD2AnimalShelterBot.util.StringUtil;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.CatConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.DogConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.*;
 
 
 @Getter

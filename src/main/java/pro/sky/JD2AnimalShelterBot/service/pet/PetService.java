@@ -16,9 +16,8 @@ import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Objects;
 
-import static java.time.LocalDate.now;
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.PROBATION_PERIOD_FAILED;
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.SUCCESSFUL_COMPLETION_OF_THE_PROBATION_PERIOD;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.PROBATION_PERIOD_FAILED;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.SUCCESSFUL_COMPLETION_OF_THE_PROBATION_PERIOD;
 
 /**
  Класс для работы с БД домашних питомцев

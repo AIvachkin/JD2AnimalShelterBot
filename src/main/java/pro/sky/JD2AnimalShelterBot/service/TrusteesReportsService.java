@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import pro.sky.JD2AnimalShelterBot.handlers.UpdateHandler;
 import pro.sky.JD2AnimalShelterBot.model.CatUser;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.model.Pet;
@@ -30,11 +30,12 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
 
 @Service
 @Slf4j
@@ -63,10 +64,12 @@ public class TrusteesReportsService {
 
     private final UserContext userContext;
 
+    private final UpdateHandler updateHandler;
+
     public TrusteesReportsService(TrusteesReportsRepository trusteesReportsRepository,
                                   PetRepository petRepository, ExecuteMessage executeMessage, UserContext userContext,
                                   DogUserRepository dogUserRepository,
-                                  CatUserRepository catUserRepository, TelegramBot telegramBot) {
+                                  CatUserRepository catUserRepository, TelegramBot telegramBot, UpdateHandler updateHandler) {
         this.trusteesReportsRepository = trusteesReportsRepository;
         this.petRepository = petRepository;
         this.executeMessage = executeMessage;
@@ -74,6 +77,7 @@ public class TrusteesReportsService {
         this.dogUserRepository = dogUserRepository;
         this.catUserRepository = catUserRepository;
         this.telegramBot = telegramBot;
+        this.updateHandler = updateHandler;
     }
 
     /**
@@ -94,8 +98,10 @@ public class TrusteesReportsService {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);
         Long userId = null;
         if(pet.getTypeOfPet().equals("dog")){
+            assert pet.getDogUser() != null;
             userId = pet.getDogUser().getChatId();
         } else if(pet.getTypeOfPet().equals("cat")){
+            assert pet.getCatUser() != null;
             userId = pet.getCatUser().getChatId();
         }
         if(userId != null){
@@ -112,10 +118,9 @@ public class TrusteesReportsService {
     public void trusteesButtonHandler(Update update) {
 
 
-//        String messageText = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
 
-//присвоение нового контекста - отправка отчета
+        //присвоение нового контекста - отправка отчета
         if (userContext.getUserContext(chatId).contains("dog")) {
             userContext.setUserContext(chatId, "dogUserReport");
         } else if (userContext.getUserContext(chatId).contains("cat")) {
@@ -155,31 +160,31 @@ public class TrusteesReportsService {
         log.info("Keyboard TrusteesReportInfo has been added to bot");
 
         return keyboardMarkup;
-
-
     }
+
 
 
     /**
      * Метод для загрузки в БД полного отчета пользователя (фото + текст)
      */
-    public void uploadReport(Update update, UserContext context) throws TelegramApiException {
+    public void uploadReport(Update update) throws TelegramApiException, IOException {
 
         //если пользователь не прикрепил фото к отчету
         if(!update.getMessage().hasPhoto()){
-            executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_PHOTO_IN_THE_REPORT, null);
+            executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_PHOTO_IN_THE_REPORT, createMenuForSendReport());
             return;
         }
 
         //если пользователь не прикрепил текст к отчету
         if(update.getMessage().getCaption() == null){
-            executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_TEXT_IN_THE_REPORT, null);
+            executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_TEXT_IN_THE_REPORT, createMenuForSendReport());
             return;
         }
 
         //Получаем путь к файлу на сервере Telegram
         var photos = update.getMessage().getPhoto();
         var path = telegramBot.execute(new GetFile(photos.get(photos.size() - 1).getFileId())).getFilePath();
+        var fileSize = photos.get(0).getFileSize();
 
         //Формируем имя файла
         long chatId = update.getMessage().getChatId();
@@ -188,103 +193,56 @@ public class TrusteesReportsService {
         //Сохраняем файл на диск
         telegramBot.downloadFile(path, new java.io.File(filePath));
 
-        //Coхраняем в базу
-        //Удаляем  контекст
-        //Шлем пользователю сообщение, что отчет получен
-        executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), "все получилось", null);
-
-        //-----------------------------------------------------------------------------------//
-
-
-
-
-        if (update.hasMessage() || update.getMessage().hasPhoto()) {
+        //Сохраняем отчет в базу
+        if (update.hasMessage() && update.getMessage().hasPhoto()) {
 
             Pet pet = new Pet();
+            Long petId = null;
             String typeOfPet = null;
             Message message = update.getMessage();
 
             System.out.println(message);
 
-            // устанавливаем тип питомца в зависимости от контекста пользователя
-            if (context.equals("dogUserReport")) {
+            // устанавливаем тип питомца в зависимости от контекста пользователя и затем удаляем контекст
+            if (userContext.getUserContext(chatId).contains("dogUserReport")) {
                 DogUser dogUser = dogUserRepository.findDogUsersByChatId(chatId);
                 pet = petRepository.findPetByDogUser(dogUser);
+                petId = pet.getId();
                 typeOfPet = "dog";
+                userContext.deleteUserContext(chatId, "dogUserReport");
 
-            } else if (context.equals("catUserReport")) {
+            } else if (userContext.getUserContext(chatId).contains("catUserReport")) {
                 CatUser catUser = catUserRepository.findCatUserByChatId(chatId);
                 pet = petRepository.findPetByCatUser(catUser);
+                petId = pet.getId();
                 typeOfPet = "cat";
+                userContext.deleteUserContext(chatId, "catUserReport");
             }
 
+        TrusteesReports trusteesReports = new TrusteesReports();
+        trusteesReports.setChatId(chatId);
+        trusteesReports.setPet(pet);
+        trusteesReports.setId(petId);
+        trusteesReports.setDateTime(LocalDateTime.now());
+        trusteesReports.setTypeOfPet(typeOfPet);
+        trusteesReports.setViewed(false);
+        trusteesReports.setPhotoFilePath(path);
+        trusteesReports.setPhotoFileSize(fileSize);
 
-            if (message.hasPhoto()) {
+        Path pathFromPreview = Paths.get(filePath);
+        trusteesReports.setPreview(generatePreviewForDB(pathFromPreview));
 
-//            Рассматриваем массив фото
-//            List<PhotoSize> photos = update.getMessage().getPhoto();
-//
-//            String fileId = photos.stream()
-//                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
-//                    .findFirst()
-//                    .orElse(null).getFileId();
+        String textOfReport = update.getMessage().getCaption();
+        trusteesReports.setText(textOfReport);
 
-
-//            рассматриваем одно фото
-                String fileId = message.getPhoto().get(0).getFileId();
-
-
-//                File file = bot.execute(
-//                        GetFile.builder()
-//                                .fileId(fileId)
-//                                .build());
-//                String filePath = bot.downloadFile(file).getPath();
+        trusteesReportsRepository.save(trusteesReports);
 
 
-
-            }
-
-
-//
-//        TrusteesReports trusteesReports = new TrusteesReports();
-//        trusteesReports.setChatId(chatId);
-//        trusteesReports.setPet(pet);
-//        trusteesReports.setDateTime(LocalDateTime.now());
-//        trusteesReports.setTypeOfPet(typeOfPet);
-//        trusteesReports.setViewed(false);
-
-//        uploadPhoto(chatId, file, trusteesReports);
-
-
-//        trusteesReportsRepository.save(trusteesReports);
+        //Отправляем пользователю сообщение, что отчет получен, и возвращаемся в начальное меню
+        executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), REPORT_ACCEPTED, null);
+        updateHandler.returnToStartMenu(update);
 
         }
-    }
-
-    /**
-     * Метод для загрузки в БД фото животного из отчета пользователя
-     */
-    public void uploadPhoto(long chatId, File file, TrusteesReports trusteesReports) throws IOException {
-
-//        Path filePath = Path.of(photoPetDir, chatId + "_" + file.getFileUniqueId() + "."
-//                + getExtension(Objects.requireNonNull(file.getOriginalFilename())));
-//        Files.createDirectories(filePath.getParent());
-//
-//        try (InputStream is = file.п;
-//             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-//             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-//             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
-//        ) {
-//            bis.transferTo(bos);
-//        }
-//
-//
-//        trusteesReports.setPhotoFilePath(filePath.toString());
-//        trusteesReports.setPhotoFileSize(file.getSize());
-//        trusteesReports.setMediaType(file.getContentType());
-//        trusteesReports.setPreview(generatePreviewForDB(filePath));
-
-
     }
 
 
@@ -317,12 +275,4 @@ public class TrusteesReportsService {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
-    /**
-     * Метод для загрузки текстовой информации о животном в БД из отчета пользователя
-     */
-    public void uploadText(String report, TrusteesReports trusteesReports) {
-
-        trusteesReports.setText(report);
-
-    }
 }

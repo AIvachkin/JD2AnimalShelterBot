@@ -1,4 +1,4 @@
-package pro.sky.JD2AnimalShelterBot.сonstants;
+package pro.sky.JD2AnimalShelterBot.constants;
 
 
 /**
