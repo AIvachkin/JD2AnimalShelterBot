@@ -35,6 +35,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
 
@@ -53,7 +54,7 @@ public class TrusteesReportsService {
     private static final String WORNING_TEXT = """
             Предупреждение:
             Дорогой усыновитель, мы заметили, что ты заполняешь отчет не так подробно, как необходимо.
-            Пожалуйста, подойди ответственнее к этому занятию. 
+            Пожалуйста, подойди ответственнее к этому занятию.
             В противном случае волонтеры приюта будут обязаны самолично проверять условия содержания животного.
             """;
     /**
@@ -95,20 +96,60 @@ public class TrusteesReportsService {
     }
 
     /**
+     * Метод возвращает список всех непрочитанных отчетов
+     *
+     * @param viewed - индикатор: просмотрен отчет или нет
+     * @return List of TrusteesReports
+     */
+    public List<TrusteesReports> getAllUnwatchedReports(boolean viewed) {
+        return trusteesReportsRepository.findAllByViewed(viewed);
+    }
+
+
+    /**
+     * Метод находит непрочитанный отчет и ставит метку о прочтении
+     *
+     * @param id - идентификатор отчета
+     * @return TrusteesReports
+     */
+    public Optional<TrusteesReports> getUnwatchedReportAndMakeRead(Long id) {
+        Optional<TrusteesReports> optionalTrusteesReports = trusteesReportsRepository.findById(id);
+        TrusteesReports trusteesReports = optionalTrusteesReports.orElse(new TrusteesReports());
+        trusteesReports.setViewed(true);
+        trusteesReportsRepository.save(trusteesReports);
+        return trusteesReportsRepository.findById(id);
+    }
+
+    /**
+     * Метод для открепления животного от попечителя в базе
+     *
+     * @param petId ИД животного
+     */
+    public void detachPetFromCaregiver(Long petId) {
+        Pet pet = petRepository.findById(petId).orElseThrow();
+        pet.setDogUser(null);
+        pet.setCatUser(null);
+        pet.setProbationPeriodUpTo(null);
+        pet.setFixed(false);
+        petRepository.save(pet);
+    }
+
+    /**
      * Метод отправляет пользователю предупреждение
+     *
      * @param petId ИД животного
      */
     public void sendWarning(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);
         Long userId = null;
-        if(pet.getTypeOfPet().equals("dog")){
+        if (pet.getTypeOfPet().equals("dog")) {
             assert pet.getDogUser() != null;
             userId = pet.getDogUser().getChatId();
-        } else if(pet.getTypeOfPet().equals("cat")){
+        } else if (pet.getTypeOfPet().equals("cat")) {
             assert pet.getCatUser() != null;
             userId = pet.getCatUser().getChatId();
         }
-        if(userId != null){
+        if (userId != null) {
             executeMessage.prepareAndSendMessage(userId, WORNING_TEXT, null);
         }
     }
@@ -167,20 +208,19 @@ public class TrusteesReportsService {
     }
 
 
-
     /**
      * Метод для загрузки в БД полного отчета пользователя (фото + текст)
      */
     public void uploadReport(Update update) throws TelegramApiException, IOException {
 
         //если пользователь не прикрепил фото к отчету
-        if(!update.getMessage().hasPhoto()){
+        if (!update.getMessage().hasPhoto()) {
             executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_PHOTO_IN_THE_REPORT, createMenuForSendReport());
             return;
         }
 
         //если пользователь не прикрепил текст к отчету
-        if(update.getMessage().getCaption() == null){
+        if (update.getMessage().getCaption() == null) {
             executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), NO_TEXT_IN_THE_REPORT, createMenuForSendReport());
             return;
         }
@@ -223,28 +263,28 @@ public class TrusteesReportsService {
                 userContext.deleteUserContext(chatId, "catUserReport");
             }
 
-        TrusteesReports trusteesReports = new TrusteesReports();
-        trusteesReports.setChatId(chatId);
-        trusteesReports.setPet(pet);
-        trusteesReports.setId(petId);
-        trusteesReports.setDateTime(LocalDateTime.now());
-        trusteesReports.setTypeOfPet(typeOfPet);
-        trusteesReports.setViewed(false);
-        trusteesReports.setPhotoFilePath(path);
-        trusteesReports.setPhotoFileSize(fileSize);
+            TrusteesReports trusteesReports = new TrusteesReports();
+            trusteesReports.setChatId(chatId);
+            trusteesReports.setPet(pet);
+            trusteesReports.setId(petId);
+            trusteesReports.setDateTime(LocalDateTime.now());
+            trusteesReports.setTypeOfPet(typeOfPet);
+            trusteesReports.setViewed(false);
+            trusteesReports.setPhotoFilePath(path);
+            trusteesReports.setPhotoFileSize(fileSize);
 
-        Path pathFromPreview = Paths.get(filePath);
-        trusteesReports.setPreview(generatePreviewForDB(pathFromPreview));
+            Path pathFromPreview = Paths.get(filePath);
+            trusteesReports.setPreview(generatePreviewForDB(pathFromPreview));
 
-        String textOfReport = update.getMessage().getCaption();
-        trusteesReports.setText(textOfReport);
+            String textOfReport = update.getMessage().getCaption();
+            trusteesReports.setText(textOfReport);
 
-        trusteesReportsRepository.save(trusteesReports);
+            trusteesReportsRepository.save(trusteesReports);
 
 
-        //Отправляем пользователю сообщение, что отчет получен, и возвращаемся в начальное меню
-        executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), REPORT_ACCEPTED, null);
-        updateHandler.returnToStartMenu(update);
+            //Отправляем пользователю сообщение, что отчет получен, и возвращаемся в начальное меню
+            executeMessage.prepareAndSendMessage(update.getMessage().getChatId(), REPORT_ACCEPTED, null);
+            updateHandler.returnToStartMenu(update);
 
         }
     }
@@ -278,5 +318,6 @@ public class TrusteesReportsService {
     private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
+
 
 }

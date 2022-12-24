@@ -19,6 +19,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Контроллер для работы с запросами волонтера
@@ -140,7 +141,7 @@ public class VolunteerController {
     )
     @PostMapping("/messages/{chatId}")
     public ResponseEntity<List<Correspondence>> getAllCorrespondenceWithUser(@Parameter(description = "id чата пользователя", required = true, example = "1237864")
-                                                       @PathVariable long chatId) {
+                                                                             @PathVariable long chatId) {
         try {
             List<Correspondence> correspondences = correspondenceService.getAllCorrespondenceWithUser(chatId);
             return ResponseEntity.ok(correspondences);
@@ -165,8 +166,8 @@ public class VolunteerController {
     )
     @GetMapping("/dogusers")
     public ResponseEntity<List<DogUser>> getAllDogUsers() {
-            List<DogUser> allDogUsers = userService.getAllDogUsers();
-            return ResponseEntity.ok(allDogUsers);
+        List<DogUser> allDogUsers = userService.getAllDogUsers();
+        return ResponseEntity.ok(allDogUsers);
     }
 
     @Operation(
@@ -204,8 +205,8 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @GetMapping("/petreports")
-    public ResponseEntity <List<TrusteesReports>> getAllPetReports(@Parameter(description = "id питомца", required = true,
-                                                            example = "3") @RequestParam Long petId) {
+    public ResponseEntity<List<TrusteesReports>> getAllPetReports(@Parameter(description = "id питомца", required = true,
+            example = "3") @RequestParam Long petId) {
         List<TrusteesReports> allPetReports = trusteesReportsService.getAllPetReports(petId);
         return ResponseEntity.ok(allPetReports);
     }
@@ -229,7 +230,7 @@ public class VolunteerController {
     )
     @GetMapping("/sendworning")
     public ResponseEntity sendWarning(@Parameter(description = "id питомца", required = true, example = "3")
-                                                 @RequestParam Long petId) {
+                                      @RequestParam Long petId) {
         try {
             trusteesReportsService.sendWarning(petId);
             return ResponseEntity.ok().build();
@@ -241,7 +242,7 @@ public class VolunteerController {
     }
 
     @Operation(
-            summary = "Продление испытательрного срока на 14 или 30 дней",
+            summary = "Продление испытательного срока на 14 или 30 дней",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -262,7 +263,7 @@ public class VolunteerController {
                                                      @RequestParam Long petId,
                                                      @Parameter(description = "количество дней для продления", required = true, example = "14")
                                                      @RequestParam Integer extensionDays) {
-        if(extensionDays != 14 && extensionDays != 30){
+        if (extensionDays != 14 && extensionDays != 30) {
             return ResponseEntity.badRequest().build();
         }
         try {
@@ -276,7 +277,7 @@ public class VolunteerController {
     }
 
     @Operation(
-            summary = "Закрепление животного за попечителем по результатам испытательрного срока.",
+            summary = "Закрепление животного за попечителем по результатам испытательного срока.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -293,10 +294,10 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @GetMapping("/fixing")
-    public ResponseEntity<Pet> securingAnimalToCaregiver( @Parameter(description = "id питомца", required = true, example = "3")
-                                                     @RequestParam Long petId,
-                                                     @Parameter(description = "id попечителя", required = true, example = "1372481155")
-                                                     @RequestParam Long chatId) {
+    public ResponseEntity<Pet> securingAnimalToCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
+                                                         @RequestParam Long petId,
+                                                         @Parameter(description = "id попечителя", required = true, example = "1372481155")
+                                                         @RequestParam Long chatId) {
         try {
             var pet = petService.securingAnimalToCaregiver(petId, chatId);
             return ResponseEntity.ok(pet);
@@ -308,7 +309,7 @@ public class VolunteerController {
     }
 
     @Operation(
-            summary = "Отправка пользователю сообщение о непрохождении испытательного срока и внесение соответсвующих изменений в БД",
+            summary = "Отправка пользователю сообщение о непрохождении испытательного срока и внесение соответствующих изменений в БД",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -325,10 +326,10 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @GetMapping("/probationfailed")
-    public ResponseEntity probationFailed( @Parameter(description = "id питомца", required = true, example = "3")
-                                                          @RequestParam Long petId,
-                                                          @Parameter(description = "id попечителя", required = true, example = "1372481155")
-                                                          @RequestParam Long chatId) {
+    public ResponseEntity probationFailed(@Parameter(description = "id питомца", required = true, example = "3")
+                                          @RequestParam Long petId,
+                                          @Parameter(description = "id попечителя", required = true, example = "1372481155")
+                                          @RequestParam Long chatId) {
         try {
             petService.probationFailed(petId, chatId);
             return ResponseEntity.ok().build();
@@ -337,6 +338,48 @@ public class VolunteerController {
         } catch (BadRequestException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+
+    @Operation(
+            summary = "Просмотреть непрочитанные отчеты",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Получен список непрочитанных отчетов",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = TrusteesReports.class))
+                            )
+
+                    )
+            }, tags = "Volunteer"
+    )
+    @GetMapping("/unwatchedreports")
+    public ResponseEntity<List<TrusteesReports>> getAllUnwatchedReports() {
+        List<TrusteesReports> allUnwatchedReports = trusteesReportsService.getAllUnwatchedReports(false);
+        return ResponseEntity.ok(allUnwatchedReports);
+    }
+
+
+    @Operation(
+            summary = "Пометить отчет как прочитанный",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Отчет найден и помечен как прочитанный",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = TrusteesReports.class))
+                            )
+
+                    )
+            }, tags = "Volunteer"
+    )
+    @GetMapping("/makereadreport")
+    public ResponseEntity<Optional<TrusteesReports>> makeReadReport(Long id) {
+        Optional<TrusteesReports> readReport = trusteesReportsService.getUnwatchedReportAndMakeRead(id);
+        return ResponseEntity.ok(readReport);
     }
 
 }

@@ -65,7 +65,7 @@ class VolunteerControllerTest {
         ResponseEntity responseEntity200 = out.replyToMessages(2222L, "Some Text");
         assertThat(responseEntity200.getStatusCodeValue()).isEqualTo(200);
 
-        doThrow(new NotFoundException("Сообщение с таким ид не найдено")).when(correspondenceService).replyToMessages(3333l, "Some Text");
+        doThrow(new NotFoundException("Сообщение с таким ид не найдено")).when(correspondenceService).replyToMessages(3333L, "Some Text");
         ResponseEntity responseEntity404 = out.replyToMessages(3333L, "Some Text");
         assertThat(responseEntity404.getStatusCodeValue()).isEqualTo(404);
     }
@@ -119,15 +119,15 @@ class VolunteerControllerTest {
         assertEquals(expected, actual);
     }
 
-//    @Test
-//    void getAllPetReports() {
-//        TrusteesReports trusteesReports1 = new TrusteesReports(1L, 1234321L, null, LocalDateTime.now(), "/path", 444L, "image/jpeg", "text1", "cat", false);
-//        TrusteesReports trusteesReports2 = new TrusteesReports(2L, 1234321L, null, LocalDateTime.now(), "/path", 333L, "image/jpeg",  "text2", "cat", false);
-//        when(trusteesReportsService.getAllPetReports(anyLong())).thenReturn(List.of(trusteesReports1, trusteesReports2));
-//        ResponseEntity<List<TrusteesReports>> actual = out.getAllPetReports(3L);
-//        ResponseEntity<List<TrusteesReports>> expected = ResponseEntity.ok(List.of(trusteesReports1, trusteesReports2));
-//        assertEquals(expected, actual);
-//    }
+    @Test
+    void getAllPetReports() {
+        TrusteesReports trusteesReports1 = new TrusteesReports(1L, 1234321L, null, LocalDateTime.now(), "/path", 444L, null, "text1", "cat", false);
+        TrusteesReports trusteesReports2 = new TrusteesReports(2L, 1234321L, null, LocalDateTime.now(), "/path", 333L, null,  "text2", "cat", false);
+        when(trusteesReportsService.getAllPetReports(anyLong())).thenReturn(List.of(trusteesReports1, trusteesReports2));
+        ResponseEntity<List<TrusteesReports>> actual = out.getAllPetReports(3L);
+        ResponseEntity<List<TrusteesReports>> expected = ResponseEntity.ok(List.of(trusteesReports1, trusteesReports2));
+        assertEquals(expected, actual);
+    }
 
     @Test
     void sendWarning() {
