@@ -309,7 +309,7 @@ public class UpdateHandler implements InputMessageHandler {
     /**
      * Метод, задающий контекст пользователю - cat или dog - в зависимости от выбора приюта
      */
-    private void processingOfButtons(Update update) {
+    public void processingOfButtons(Update update) {
 
         String callBackData = update.getCallbackQuery().getData();
         long chatId = update.getCallbackQuery().getMessage().getChatId();
