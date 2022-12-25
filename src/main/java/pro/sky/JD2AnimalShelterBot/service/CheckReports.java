@@ -20,10 +20,14 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class CheckReports {
     private final UserService userService;
     private final TrusteesReportsService trusteesReportsService;
+    private  final BadUserService badUserService;
 
-    public CheckReports(UserService userService, TrusteesReportsService trusteesReportsService) {
+    public CheckReports(UserService userService,
+                        TrusteesReportsService trusteesReportsService,
+                        BadUserService badUserService) {
         this.userService = userService;
         this.trusteesReportsService = trusteesReportsService;
+        this.badUserService = badUserService;
     }
 
     @Scheduled(cron = "0 0 21 * * *")

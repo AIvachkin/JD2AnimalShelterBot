@@ -96,3 +96,11 @@ ALTER TABLE trustees_reports ADD type_of_pet VARCHAR;
 
 -- changeset andrew: 4
 ALTER  TABLE  trustees_reports  DROP  COLUMN  media_type;
+-- changeset denis:2
+CREATE TABLE bad_user_data_table (
+    id BIGSERIAL,
+    dog_user_id BIGINT,
+    cat_user_id BIGINT
+);
+ALTER TABLE cat_user_data_table ADD bad_user_id BIGINT;
+ALTER TABLE dog_user_data_table ADD bad_user_id BIGINT;

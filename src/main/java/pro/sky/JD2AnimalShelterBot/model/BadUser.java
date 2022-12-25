@@ -25,7 +25,7 @@ public class BadUser {
      * Переменная - идентификатор должника по отчетам. Primary key
      */
     @Id
-    private long badUserId;
+    private long Id;
 
     /**
      * Должник приюта для собак
@@ -42,8 +42,5 @@ public class BadUser {
     @Nullable
     @JoinColumn(name = "cat_user_id")
     private CatUser catUser;
-
-
-
 
 }
