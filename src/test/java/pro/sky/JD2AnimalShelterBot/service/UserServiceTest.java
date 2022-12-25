@@ -15,6 +15,7 @@ import pro.sky.JD2AnimalShelterBot.model.CatUser;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.repository.CatUserRepository;
 import pro.sky.JD2AnimalShelterBot.repository.DogUserRepository;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,8 +124,10 @@ class UserServiceTest {
         doAnswer(invocation -> null).when(executeMessage).executeMessage(any());
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(1L);
-        sendMessage.setText("Чтобы связаться с волонтером, пожалуйста, отправьте нам свои контакты." +
-                "\n\nДля этого нажмите кнопку внизу и подтвердите передучу контактов.");
+        sendMessage.setText("""
+                Чтобы связаться с волонтером, пожалуйста, отправьте нам свои контакты.
+
+                Для этого нажмите кнопку внизу и подтвердите передачу контактов.""");
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
