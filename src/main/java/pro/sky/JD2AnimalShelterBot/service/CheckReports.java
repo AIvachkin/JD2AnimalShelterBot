@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.JD2AnimalShelterBot.model.CatUser;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
