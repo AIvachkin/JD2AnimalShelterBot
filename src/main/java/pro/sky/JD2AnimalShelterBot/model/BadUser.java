@@ -1,12 +1,8 @@
 package pro.sky.JD2AnimalShelterBot.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
