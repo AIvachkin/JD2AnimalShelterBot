@@ -43,16 +43,13 @@ public class UserContext {
     }
 
 
-
-    public void deleteUserContext(long chatId, String pet) {
+    /**
+     * Метод удяляет значение из контекста юзера
+     * @param chatId ИД пользователя
+     * @param context контекст, который необходимо удалить
+     */
+    public void deleteUserContext(long chatId, String context) {
         Set<String> contextSet = this.getUserContext(chatId);
-        contextSet.remove(pet);
-    }
-
-    @Override
-    public String toString() {
-        return "UserContext{" +
-                "userContext=" + userContext +
-                '}';
+        contextSet.remove(context);
     }
 }

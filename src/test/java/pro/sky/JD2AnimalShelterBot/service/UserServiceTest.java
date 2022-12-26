@@ -45,8 +45,8 @@ class UserServiceTest {
 
     @BeforeEach
     void initUser() {
-        dogUser = new DogUser(123454321L, "Maksim", "Petrov", null, null);
-        catUser = new CatUser(123454321L, "Maksim", "Petrov", null, null);
+        dogUser = new DogUser(123454321L, "Maksim", "Petrov", null, null, null);
+        catUser = new CatUser(123454321L, "Maksim", "Petrov", null, null, null);
     }
 
     @Test
