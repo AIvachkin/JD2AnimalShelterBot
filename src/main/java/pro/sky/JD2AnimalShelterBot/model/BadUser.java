@@ -21,7 +21,9 @@ public class BadUser {
      * Переменная - идентификатор должника по отчетам. Primary key
      */
     @Id
-    private long Id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "bad_user_id")
+    private Long Id;
 
     /**
      * Должник приюта для собак

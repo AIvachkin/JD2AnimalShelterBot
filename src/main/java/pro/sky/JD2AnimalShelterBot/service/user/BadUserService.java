@@ -1,4 +1,4 @@
-package pro.sky.JD2AnimalShelterBot.service;
+package pro.sky.JD2AnimalShelterBot.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -56,11 +56,12 @@ public class BadUserService {
     }
     /**
      * Метод удаления должника из БД
+     *
      * @param badUserId id должника в БД
      */
     public void delete(Long badUserId) throws NotFoundException {
         log.info("Was invoked method for delete badUser by id");
-        if (getById(badUserId) != null) {
+        if (getById(badUserId)!= null) {
             badUserRepository.deleteById(badUserId);
         } else {
             throw new NotFoundException();
@@ -76,7 +77,7 @@ public class BadUserService {
     }
 
     /**
-     * Метод для получения всех должникав из базы
+     * Метод для получения всех должника из базы
      * @return - возвращает список всех должников
      */
     public List<BadUser> getAllBadUsers() {

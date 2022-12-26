@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.JD2AnimalShelterBot.model.*;
+import pro.sky.JD2AnimalShelterBot.service.user.BadUserService;
 import pro.sky.JD2AnimalShelterBot.service.volunteer.CorrespondenceService;
 import pro.sky.JD2AnimalShelterBot.service.TrusteesReportsService;
 import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
@@ -33,11 +34,14 @@ public class VolunteerController {
     private final CorrespondenceService correspondenceService;
     private final TrusteesReportsService trusteesReportsService;
 
-    public VolunteerController(PetService petService, UserService userService, CorrespondenceService correspondenceService, TrusteesReportsService trusteesReportsService) {
+    private final BadUserService badUserService;
+
+    public VolunteerController(PetService petService, UserService userService, CorrespondenceService correspondenceService, TrusteesReportsService trusteesReportsService, BadUserService badUserService) {
         this.petService = petService;
         this.userService = userService;
         this.correspondenceService = correspondenceService;
         this.trusteesReportsService = trusteesReportsService;
+        this.badUserService = badUserService;
     }
 
     @Operation(
@@ -380,6 +384,35 @@ public class VolunteerController {
     public ResponseEntity<Optional<TrusteesReports>> makeReadReport(Long id) {
         Optional<TrusteesReports> readReport = trusteesReportsService.getUnwatchedReportAndMakeRead(id);
         return ResponseEntity.ok(readReport);
+    }
+
+    @Operation(
+            summary = "Удаление пользователя из списка должников",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Должник найден и удален из списка нарушителей",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = BadUser.class))
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Должник по id не найден"
+
+                    )
+            }, tags = "Volunteer"
+    )
+    @DeleteMapping("/delete/{badUserId}")
+    public ResponseEntity deleteBadUser(@Parameter(description = "id штрафника", required = true, example = "3")
+                                        @PathVariable Long badUserId) {
+        try {
+            badUserService.delete(badUserId);
+            return ResponseEntity.ok().build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

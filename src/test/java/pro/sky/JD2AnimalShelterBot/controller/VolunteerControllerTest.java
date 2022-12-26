@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import pro.sky.JD2AnimalShelterBot.model.*;
+import pro.sky.JD2AnimalShelterBot.service.user.BadUserService;
 import pro.sky.JD2AnimalShelterBot.service.volunteer.CorrespondenceService;
 import pro.sky.JD2AnimalShelterBot.service.TrusteesReportsService;
 import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
@@ -37,6 +38,9 @@ class VolunteerControllerTest {
     private UserService userService;
 
     @Mock
+    private BadUserService badUserService;
+
+    @Mock
     private CorrespondenceService correspondenceService;
 
     @Mock
@@ -44,7 +48,7 @@ class VolunteerControllerTest {
 
     @BeforeEach
     public void initOut() {
-        out = new VolunteerController(petService, userService, correspondenceService, trusteesReportsService);
+        out = new VolunteerController(petService, userService, correspondenceService, trusteesReportsService, badUserService);
     }
 
     @Test

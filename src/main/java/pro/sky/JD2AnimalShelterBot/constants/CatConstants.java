@@ -101,6 +101,10 @@ public class CatConstants {
             Он обязательно оценит!
             """;
 
+
+    /**
+     * Константа - дом для кошки - задает название кнопки в соответствующем меню
+     */
     public static final String RECOMM_FOR_CAT_COMMAND_LABEL = "\uD83D\uDC31  Дом для кошки";
 
     /**

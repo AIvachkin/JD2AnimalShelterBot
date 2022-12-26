@@ -422,21 +422,48 @@ public class DogConstants {
 
             """;
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String DATING_RULES_COMMAND_LABEL = "\uD83D\uDC36 \uD83D\uDC31  Правила знакомства с питомцем";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String DOCUMENTS_COMMAND_LABEL = "\uD83D\uDCDC  Список необходимых документов";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String SHIPPING_COMMAND_LABEL = "\uD83D\uDEFB  Транспортировка питомца";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String RECOMM_FOR_PUPPY_COMMAND_LABEL = "\uD83C\uDFE1  Дом для щенка";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String RECOMM_FOR_DOG_COMMAND_LABEL = "\uD83C\uDFE1  Дом для взрослой собаки";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String RECOMM_FOR_PET_INVALID_COMMAND_LABEL = "\uD83C\uDFE1  Дом для питомца-инвалида";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String CYNOLOGIST_INITIAL_ADVICE_COMMAND_LABEL = "\uD83D\uDCC3  Советы кинолога";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String RECOMMENDED_CYNOLOGIST_COMMAND_LABEL = "\uD83C\uDFC5  Лучшие кинологи";
 
+    /**
+     * Константа - наименование кнопки в меню для приюта для собак
+     */
     public static final String REASONS_FOR_REFUSAL_COMMAND_LABEL = "\uD83D\uDEC7  Почему Вам могут отказать?";
 }
