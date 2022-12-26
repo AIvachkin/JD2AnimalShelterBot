@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
 import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 import pro.sky.JD2AnimalShelterBot.service.volunteer.CommunicationWithVolunteer;
+import pro.sky.JD2AnimalShelterBot.service.volunteer.CorrespondenceService;
 
 import java.util.Set;
 
@@ -31,11 +32,14 @@ class CommunicationWithVolunteerTest {
     @Mock
     ExecuteMessage executeMessage;
 
+    @Mock
+    CorrespondenceService correspondenceService;
+
     @InjectMocks
     CommunicationWithVolunteer out;
 
     @Test
-    void volunteerButtonHandler() {
+    void volunteerButtonHandlerIfNoPhone() {
 
         Update update = new Update();
         Message message = new Message();
@@ -43,10 +47,22 @@ class CommunicationWithVolunteerTest {
         chat.setId(123454321L);
         message.setChat(chat);
         update.setMessage(message);
-
         when(userService.getDogUserPhone(123454321L)).thenReturn(null);
         when(userContext.getUserContext(123454321L)).thenReturn(Set.of("dog"));
+        out.volunteerButtonHandler(update);
+        verify(userService).requestContactDetails(123454321L);
+    }
 
+    @Test
+    void volunteerButtonHandlerIfYesPhone() {
+        Update update = new Update();
+        Message message = new Message();
+        Chat chat = new Chat();
+        chat.setId(123454321L);
+        message.setChat(chat);
+        update.setMessage(message);
+        when(userService.getDogUserPhone(123454321L)).thenReturn("+7999999999");
+        when(userContext.getUserContext(123454321L)).thenReturn(Set.of("dog"));
         SendMessage messageOut = new SendMessage();
         messageOut.setChatId(String.valueOf(123454321L));
         messageOut.setText("""
@@ -55,38 +71,21 @@ class CommunicationWithVolunteerTest {
             Волонтер свяжется с Вами в ближайшее время. 👇✍️
             """);
         messageOut.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());
-
         out.volunteerButtonHandler(update);
-
-        verify(userService).requestContactDetails(123454321L);
-
-//        SendMessage messageOut = new SendMessage();
-//        messageOut.setChatId(String.valueOf(123454321L));
-//        messageOut.setText("""
-//
-//            Напишите, пожалуйста, ниже Ваш вопрос или сообщение волонтеру.
-//            Волонтер свяжется с Вами в ближайшее время. 👇✍️
-//            """);
-//        messageOut.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());
-//
-//        when(userService.getDogUserPhone(123454321L)).thenReturn("+79999999999");
-//        out.volunteerButtonHandler(update);
-//
-//        verify(executeMessage).executeMessage(messageOut);
-
-
-//
-//        userContext.setUserContext(chatId, "messageToVolunteer");
-//        SendMessage message = new SendMessage();
-//        message.setChatId(String.valueOf(chatId));
-//        message.setText(CALL_VOLUNTEER_MESSAGE);
-//        message.setReplyMarkup(ReplyKeyboardRemove.builder().removeKeyboard(true).build());//Убираем клавиатуру
-//        executeMessage.executeMessage(message);
-//        log.info("A call volunteer message has been sent to the user " + update.getMessage().getChat().getFirstName() + ", Id: " + chatId);
-
+        verify(executeMessage).executeMessage(messageOut);
     }
 
     @Test
     void volunteerTextHandler() {
+        Update update = new Update();
+        Message message = new Message();
+        Chat chat = new Chat();
+        chat.setId(123454321L);
+        message.setChat(chat);
+        message.setText("Сообщение волонтеру 1");
+        update.setMessage(message);
+        out.volunteerTextHandler(update);
+        verify(userContext).deleteUserContext(123454321L, "messageToVolunteer");
+        verify(correspondenceService).sendMessageToVolunteer(123454321L, "Сообщение волонтеру 1");
     }
 }
