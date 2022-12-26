@@ -29,8 +29,8 @@ class PetServiceTest {
     @Mock
     private DogUserRepository userRepository;
 
-    private Pet pet = new Pet(1L, "name", 1, null, null, LocalDate.MAX, false, "dog");
-    private DogUser user = new DogUser(1L, "firstname", "lastname", "phoneNumber", null);
+    private final Pet pet = new Pet(1L, "name", 1, null, null, LocalDate.MAX, false, "dog");
+    private final DogUser user = new DogUser(1L, "firstname", "lastname", "phoneNumber", null, null);
 
     @Test
     void getByIdTest() {

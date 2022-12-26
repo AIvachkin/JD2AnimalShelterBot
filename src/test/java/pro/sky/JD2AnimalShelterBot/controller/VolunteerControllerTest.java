@@ -43,7 +43,7 @@ class VolunteerControllerTest {
     private TrusteesReportsService trusteesReportsService;
 
     @BeforeEach
-    public void initOut(){
+    public void initOut() {
         out = new VolunteerController(petService, userService, correspondenceService, trusteesReportsService);
     }
 
@@ -101,8 +101,8 @@ class VolunteerControllerTest {
 
     @Test
     void getAllDogUsers() {
-        DogUser dogUser1 = new DogUser(123456, "Василий", "Теркин", "+79999999999", null);
-        DogUser dogUser2 = new DogUser(123457, "Павел", "Корчагин", "+79999999998", null);
+        DogUser dogUser1 = new DogUser(123456, "Василий", "Теркин", "+79999999999", null, null);
+        DogUser dogUser2 = new DogUser(123457, "Павел", "Корчагин", "+79999999998", null, null);
         when(userService.getAllDogUsers()).thenReturn(List.of(dogUser1, dogUser2));
         ResponseEntity<List<DogUser>> actual = out.getAllDogUsers();
         ResponseEntity<List<DogUser>> expected = ResponseEntity.ok(List.of(dogUser1, dogUser2));
@@ -111,8 +111,8 @@ class VolunteerControllerTest {
 
     @Test
     void getAllCatUsers() {
-        CatUser catUser1 = new CatUser(123458, "Михаил", "Лермонтов", "+79999999996", null);
-        CatUser catUser2 = new CatUser(123459, "Максим", "Горький", "+79999999997", null);
+        CatUser catUser1 = new CatUser(123458, "Михаил", "Лермонтов", "+79999999996", null, null);
+        CatUser catUser2 = new CatUser(123459, "Максим", "Горький", "+79999999997", null, null);
         when(userService.getAllCatUsers()).thenReturn(List.of(catUser1, catUser2));
         ResponseEntity<List<CatUser>> actual = out.getAllCatUsers();
         ResponseEntity<List<CatUser>> expected = ResponseEntity.ok(List.of(catUser1, catUser2));
@@ -122,7 +122,7 @@ class VolunteerControllerTest {
     @Test
     void getAllPetReports() {
         TrusteesReports trusteesReports1 = new TrusteesReports(1L, 1234321L, null, LocalDateTime.now(), "/path", 444L, null, "text1", "cat", false);
-        TrusteesReports trusteesReports2 = new TrusteesReports(2L, 1234321L, null, LocalDateTime.now(), "/path", 333L, null,  "text2", "cat", false);
+        TrusteesReports trusteesReports2 = new TrusteesReports(2L, 1234321L, null, LocalDateTime.now(), "/path", 333L, null, "text2", "cat", false);
         when(trusteesReportsService.getAllPetReports(anyLong())).thenReturn(List.of(trusteesReports1, trusteesReports2));
         ResponseEntity<List<TrusteesReports>> actual = out.getAllPetReports(3L);
         ResponseEntity<List<TrusteesReports>> expected = ResponseEntity.ok(List.of(trusteesReports1, trusteesReports2));
@@ -172,7 +172,7 @@ class VolunteerControllerTest {
 
     @Test
     void securingAnimalToCaregiver() {
-        DogUser dogUser = new DogUser(123456, "Василий", "Теркин", "+79999999999", null);
+        DogUser dogUser = new DogUser(123456, "Василий", "Теркин", "+79999999999", null, null);
         Pet pet = new Pet(1L, "name", 1, dogUser, null, LocalDate.MAX, true, "dog");
         when(petService.securingAnimalToCaregiver(1L, 1234321L)).thenReturn(pet);
         ResponseEntity actual = out.securingAnimalToCaregiver(1L, 1234321L);
