@@ -55,8 +55,6 @@ public class ShelterInfo {
 
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
-//Отправка приветственного сообщения и добавление клавиатуры
-//        executeMessage.prepareAndSendMessage(chatId,GREETING_INFO,keyboardMarkup);
 
         log.info("Keyboard ShelterInfo has been added to bot");
 

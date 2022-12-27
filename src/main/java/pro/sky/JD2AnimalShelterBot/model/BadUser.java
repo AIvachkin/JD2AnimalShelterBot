@@ -28,8 +28,7 @@ public class BadUser {
     /**
      * Должник приюта для собак
      */
-//    @OneToOne(mappedBy="badUser")
-    @ManyToOne
+    @OneToOne
     @Nullable
     @JoinColumn(name = "dog_user_id")
     private DogUser dogUser;
@@ -37,8 +36,7 @@ public class BadUser {
     /**
      * Должник приюта для кошек
      */
-//    @OneToOne(mappedBy="badUser")
-    @ManyToOne
+    @OneToOne
     @Nullable
     @JoinColumn(name = "cat_user_id")
     private CatUser catUser;

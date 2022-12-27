@@ -12,7 +12,9 @@ import static pro.sky.JD2AnimalShelterBot.constants.DogConstants.*;
 import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
 import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.*;
 
-
+/**
+ * Класс - перечисления для команд хэндлера
+ * */
 @Getter
 @RequiredArgsConstructor
 public enum Commands {

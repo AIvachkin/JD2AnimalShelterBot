@@ -30,14 +30,15 @@ public class CorrespondenceService {
      */
     private final CorrespondenceRepository correspondenceRepository;
 
-    /**
-     * Поле - для инжекции UserService
-     */
+
     private final UserService userService;
 
     private final ExecuteMessage executeMessage;
     private final UserContext userContext;
 
+    /**
+     * Константа - отбивка о получении сообщения пользователя для волонтера
+     */
     private static final String TEXT_TO_SEND = """
 
             Ваше сообщение отправлено волонтеру приюта.

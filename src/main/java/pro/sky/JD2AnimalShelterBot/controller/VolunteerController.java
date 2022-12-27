@@ -380,7 +380,8 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @GetMapping("/makereadreport")
-    public ResponseEntity<Optional<TrusteesReports>> makeReadReport(Long id) {
+    public ResponseEntity<Optional<TrusteesReports>> makeReadReport(@Parameter(description = "id отчета", required = true, example = "3")
+                                                                    Long id) {
         Optional<TrusteesReports> readReport = trusteesReportsService.getUnwatchedReportAndMakeRead(id);
         return ResponseEntity.ok(readReport);
     }

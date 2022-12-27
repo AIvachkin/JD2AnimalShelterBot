@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+/**
+ * Класс - проверка своевременности предоставления отчетов
+ */
 @Service
 @Slf4j
 @EnableScheduling
@@ -32,6 +35,10 @@ public class CheckReports {
         this.badUserService = badUserService;
     }
 
+    /**
+     * Метод, запрашивающий данные по отчетам из БД один раз в день и определяющий необходимость внесения
+     * пользователя в список должников
+     */
     @Scheduled(cron = "0 0 21 * * *")
     public void check() {
         List<DogUser> dogUserList = userService.getAllDogUsers();

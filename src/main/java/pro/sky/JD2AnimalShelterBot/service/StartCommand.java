@@ -40,12 +40,12 @@ public class StartCommand {
     }
 
     /**
-     * Приветствие
+     * Константа - приветствие
      */
     private static final String GREETING = "\uD83D\uDE00 Привет ";
 
     /**
-     * Приветственное сообщение
+     * Константа - приветственное сообщение
      */
     private static final String WELCOME_MESSAGE = """
 
@@ -54,13 +54,22 @@ public class StartCommand {
             Выбери пункт меню ниже
             """;
 
+    /**
+     * Константа - сообщение о необходимости выбрать тип приюта
+     */
     private static final String SHOOSING_PET_MESSAGE = """
            Пожалуйста, выберите приют:
            
            """;
 
+    /**
+     * Константа - надпись на кнопке для выбора приюта
+     */
     public static final String DOG_BUTTON = "Приют для собак";
 
+    /**
+     * Константа - надпись на кнопке для выбора приюта
+     */
     public static final String CAT_BUTTON = "Приют для кошек";
 
     /**

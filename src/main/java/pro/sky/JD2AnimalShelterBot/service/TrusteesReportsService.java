@@ -51,7 +51,10 @@ public class TrusteesReportsService {
     @Autowired
     private final TelegramBot telegramBot;
 
-    private static final String WORNING_TEXT = """
+    /**
+     * Константа - предупреждение пользователя о необходимости присылать более подробный отчет
+     */
+    private static final String WARNING_TEXT = """
             Предупреждение:
             Дорогой усыновитель, мы заметили, что ты заполняешь отчет не так подробно, как необходимо.
             Пожалуйста, подойди ответственнее к этому занятию.
@@ -150,7 +153,7 @@ public class TrusteesReportsService {
             userId = pet.getCatUser().getChatId();
         }
         if (userId != null) {
-            executeMessage.prepareAndSendMessage(userId, WORNING_TEXT, null);
+            executeMessage.prepareAndSendMessage(userId, WARNING_TEXT, null);
         }
     }
 

@@ -9,13 +9,14 @@ import pro.sky.JD2AnimalShelterBot.service.ExecuteMessage;
 import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
 import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 
+/**
+ * Класс - взаимодействие волонтера с пользователем
+ */
 @Slf4j
 @Service
 public class CommunicationWithVolunteer {
 
-    /**
-     * Иинъекция класса контекста пользователя
-     */
+
     private final UserContext userContext;
     private final CorrespondenceService correspondenceService;
     private final UserService userService;

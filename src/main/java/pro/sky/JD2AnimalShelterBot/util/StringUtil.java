@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 
-
+/**
+ * Класс - утилиты для работы с командами
+ * */
 public class StringUtil {
 
     public static String trim(String s) {

@@ -26,19 +26,23 @@ import java.util.List;
 @Slf4j
 public class UserService {
 
-    /**
-     * Поле - для инжекции в класс репозитория для возможности взаимодействия с БД
-     */
+
     private final DogUserRepository dogUserRepository;
     private final CatUserRepository catUserRepository;
 
     private final ExecuteMessage executeMessage;
 
+    /**
+     * Константа - приветственное сообщение
+     */
     private static final String WELCOME_MESSAGE = """
             Чтобы связаться с волонтером, пожалуйста, отправьте нам свои контакты.
 
             Для этого нажмите кнопку внизу и подтвердите передачу контактов.""";
 
+    /**
+     * Константа - сообщение на кнопке для отправки пользователем своих контактных данных
+     */
     private static final String SHARE_PHONE_NUMBER = "\uD83D\uDC49 Поделиться контактами \uD83D\uDC48";
 
     /**
@@ -110,13 +114,16 @@ public class UserService {
     }
 
     /**
-     * Метод получает из базы тедефон пользователя приюта кошек по ИД
+     * Метод получает из базы телефон пользователя приюта кошек по ИД
      * @param chatId ИД пользователя
      */
     public String getCatUserPhone(long chatId) {
         return catUserRepository.getUserPhoneById(chatId);
     }
 
+    /**
+     * Метод для формирования запроса на получение контактных данных пользователя
+     */
     public void requestContactDetails(Long chatId) {
 
         SendMessage sendMessage = new SendMessage();
