@@ -1,6 +1,7 @@
 package pro.sky.JD2AnimalShelterBot.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @EnableScheduling
 @Transactional
 public class CheckReports {
+    @Value("${START_CHECK_REPORT_DAY_VALUE}")
+    private static int START_CHECK;
+    @Value("${CHECK_REPORT_DAY_VALUE}")
+    private static int CHECK;
     private final UserService userService;
     private final TrusteesReportsService trusteesReportsService;
     private  final BadUserService badUserService;
@@ -45,16 +50,16 @@ public class CheckReports {
         List<DogUser> dogUserList = userService.getAllDogUsers();
         List<CatUser> catUserList = userService.getAllCatUsers();
         dogUserList.stream().
-                filter(d -> d.getPets() != null).
+                filter(d -> !d.getPets().isEmpty()).
                 map(d -> d.getPets()).
                 forEach(pl -> pl.stream().
                         forEach(p -> {
-                                    if ((trusteesReportsService.getAllPetReports(p.getId()) == null &
-                                            p.getProbationPeriodUpTo().isBefore(LocalDate.now().plusDays(28))
+                                    if ((trusteesReportsService.getAllPetReports(p.getId()).isEmpty() &
+                                            p.getProbationPeriodUpTo().isBefore(LocalDate.now().plusDays(START_CHECK))
                                         ) ||
                                             trusteesReportsService.getAllPetReports(p.getId()).stream().
                                                     filter(t -> t.getDateTime().truncatedTo(DAYS).
-                                                            isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(2))).
+                                                            isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(CHECK))).
                                                     collect(Collectors.toList()).isEmpty()) {
                                         badUserService.createBadUser(p.getDogUser());
                                     }
@@ -62,16 +67,16 @@ public class CheckReports {
                         )
                 );
         catUserList.stream().
-                filter(c -> c.getPets() != null).
+                filter(c -> !c.getPets().isEmpty()).
                 map(c -> c.getPets()).
                 forEach(pl -> pl.stream().
                         forEach(p -> {
-                                    if ((trusteesReportsService.getAllPetReports(p.getId()) == null &
-                                            p.getProbationPeriodUpTo().isBefore(LocalDate.now().plusDays(28))
+                                    if ((trusteesReportsService.getAllPetReports(p.getId()).isEmpty() &
+                                            p.getProbationPeriodUpTo().isBefore(LocalDate.now().plusDays(START_CHECK))
                                     ) ||
                                             trusteesReportsService.getAllPetReports(p.getId()).stream().
                                                     filter(t -> t.getDateTime().truncatedTo(DAYS).
-                                                            isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(2))).
+                                                            isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(CHECK))).
                                                     collect(Collectors.toList()).isEmpty()) {
                                         badUserService.createBadUser(p.getCatUser());
                                     }
