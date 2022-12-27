@@ -38,21 +38,21 @@ public class BadUserService {
      * Метод добавления должника в БД
      * @param dogUser должник
      */
-    public void createBadUser(DogUser dogUser) {
+    public BadUser createBadUser(DogUser dogUser) {
         log.info("Was invoked method for create dog badUser");
         BadUser badUser = new BadUser();
         badUser.setDogUser(dogUser);
-        badUserRepository.save(badUser);
+        return badUserRepository.save(badUser);
     }
     /**
      * Метод добавления должника в БД
      * @param catUser должник
      */
-    public void createBadUser(CatUser catUser) {
+    public BadUser createBadUser(CatUser catUser) {
         log.info("Was invoked method for create cat badUser");
         BadUser badUser = new BadUser();
         badUser.setCatUser(catUser);
-        badUserRepository.save(badUser);
+        return badUserRepository.save(badUser);
     }
     /**
      * Метод удаления должника из БД
