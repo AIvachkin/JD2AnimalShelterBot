@@ -4,11 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pro.sky.JD2AnimalShelterBot.model.CatUser;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.service.user.BadUserService;
 import pro.sky.JD2AnimalShelterBot.service.user.UserService;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,11 +22,11 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Service
 @Slf4j
 @EnableScheduling
+@Transactional
 public class CheckReports {
     private final UserService userService;
     private final TrusteesReportsService trusteesReportsService;
     private  final BadUserService badUserService;
-
     public CheckReports(UserService userService,
                         TrusteesReportsService trusteesReportsService,
                         BadUserService badUserService) {
@@ -41,6 +41,7 @@ public class CheckReports {
      */
     @Scheduled(cron = "0 0 21 * * *")
     public void check() {
+        log.info("Was invoked method for check badUsers");
         List<DogUser> dogUserList = userService.getAllDogUsers();
         List<CatUser> catUserList = userService.getAllCatUsers();
         dogUserList.stream().
