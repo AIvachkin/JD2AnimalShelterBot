@@ -12,4 +12,5 @@ import pro.sky.JD2AnimalShelterBot.model.BadUser;
 public interface BadUserRepository extends CrudRepository<BadUser, Long> {
 
     void deleteById (Long id);
+
 }

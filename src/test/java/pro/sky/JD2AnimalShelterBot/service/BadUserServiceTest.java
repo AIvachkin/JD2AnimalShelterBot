@@ -9,6 +9,8 @@ import pro.sky.JD2AnimalShelterBot.model.BadUser;
 import pro.sky.JD2AnimalShelterBot.model.CatUser;
 import pro.sky.JD2AnimalShelterBot.model.DogUser;
 import pro.sky.JD2AnimalShelterBot.repository.BadUserRepository;
+import pro.sky.JD2AnimalShelterBot.service.user.BadUserService;
+
 import javax.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Optional;

@@ -416,7 +416,7 @@ public class VolunteerController {
 
 
     @Operation(
-            summary = "Просмортеть список имеющих долги по отчетам",
+            summary = "Просмотреть список имеющих долги по отчетам",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -435,6 +435,20 @@ public class VolunteerController {
         return ResponseEntity.ok(allBadUser);
     }
 
+    @Operation(
+            summary = "Добавление должника в таблицу штрафников",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Должник в список добавлен",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = BadUser.class))
+                            )
+
+                    )
+            }, tags = "Volunteer"
+    )
     @PostMapping("/adddebtor")
     public ResponseEntity addDebtor(@RequestBody DogUser dogUser) {
         badUserService.createBadUser(dogUser);
