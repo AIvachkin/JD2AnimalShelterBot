@@ -126,7 +126,7 @@ class VolunteerControllerTest {
     @Test
     void getAllPetReports() {
         TrusteesReports trusteesReports1 = new TrusteesReports(1L, 1234321L, null, LocalDateTime.now(), "/path", 444L, null, "text1", "cat", false);
-        TrusteesReports trusteesReports2 = new TrusteesReports(2L, 1234321L, null, LocalDateTime.now(), "/path", 333L, null, "text2", "cat", false);
+        TrusteesReports trusteesReports2 = new TrusteesReports(2L, 1234321L, null, LocalDateTime.now(), "/path", 333L, null,  "text2", "cat", false);
         when(trusteesReportsService.getAllPetReports(anyLong())).thenReturn(List.of(trusteesReports1, trusteesReports2));
         ResponseEntity<List<TrusteesReports>> actual = out.getAllPetReports(3L);
         ResponseEntity<List<TrusteesReports>> expected = ResponseEntity.ok(List.of(trusteesReports1, trusteesReports2));

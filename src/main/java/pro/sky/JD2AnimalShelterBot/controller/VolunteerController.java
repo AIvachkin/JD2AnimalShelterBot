@@ -33,7 +33,6 @@ public class VolunteerController {
     private final UserService userService;
     private final CorrespondenceService correspondenceService;
     private final TrusteesReportsService trusteesReportsService;
-
     private final BadUserService badUserService;
 
     public VolunteerController(PetService petService, UserService userService, CorrespondenceService correspondenceService, TrusteesReportsService trusteesReportsService, BadUserService badUserService) {
@@ -413,6 +412,34 @@ public class VolunteerController {
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    @Operation(
+            summary = "Просмортеть список имеющих долги по отчетам",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Список получен",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = BadUser.class))
+                            )
+
+                    )
+            }, tags = "Volunteer"
+    )
+    @GetMapping("/debtorsonreports")
+    public ResponseEntity<List<BadUser>> debtorsOnReports() {
+        List<BadUser> allBadUser = badUserService.getAllBadUsers();
+        return ResponseEntity.ok(allBadUser);
+    }
+
+    @PostMapping("/adddebtor")
+    public ResponseEntity addDebtor(@RequestBody DogUser dogUser) {
+        badUserService.createBadUser(dogUser);
+        return ResponseEntity.ok().build();
+
     }
 
 }
