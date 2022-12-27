@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.JD2AnimalShelterBot.model.*;
+import pro.sky.JD2AnimalShelterBot.service.BadUserService;
 import pro.sky.JD2AnimalShelterBot.service.volunteer.CorrespondenceService;
 import pro.sky.JD2AnimalShelterBot.service.TrusteesReportsService;
 import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
@@ -32,12 +33,14 @@ public class VolunteerController {
     private final UserService userService;
     private final CorrespondenceService correspondenceService;
     private final TrusteesReportsService trusteesReportsService;
+    private final BadUserService badUserService;
 
-    public VolunteerController(PetService petService, UserService userService, CorrespondenceService correspondenceService, TrusteesReportsService trusteesReportsService) {
+    public VolunteerController(PetService petService, UserService userService, CorrespondenceService correspondenceService, TrusteesReportsService trusteesReportsService, BadUserService badUserService) {
         this.petService = petService;
         this.userService = userService;
         this.correspondenceService = correspondenceService;
         this.trusteesReportsService = trusteesReportsService;
+        this.badUserService = badUserService;
     }
 
     @Operation(
@@ -380,6 +383,34 @@ public class VolunteerController {
     public ResponseEntity<Optional<TrusteesReports>> makeReadReport(Long id) {
         Optional<TrusteesReports> readReport = trusteesReportsService.getUnwatchedReportAndMakeRead(id);
         return ResponseEntity.ok(readReport);
+    }
+
+
+    @Operation(
+            summary = "Просмортеть список имеющих долги по отчетам",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Список получен",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = BadUser.class))
+                            )
+
+                    )
+            }, tags = "Volunteer"
+    )
+    @GetMapping("/debtorsonreports")
+    public ResponseEntity<List<BadUser>> debtorsOnReports() {
+        List<BadUser> allBadUser = badUserService.getAllBadUsers();
+        return ResponseEntity.ok(allBadUser);
+    }
+
+    @PostMapping("/adddebtor")
+    public ResponseEntity addDebtor(@RequestBody DogUser dogUser) {
+        badUserService.createBadUser(dogUser);
+        return ResponseEntity.ok().build();
+
     }
 
 }

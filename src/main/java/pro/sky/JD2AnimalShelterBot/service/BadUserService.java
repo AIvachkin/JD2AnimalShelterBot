@@ -80,6 +80,7 @@ public class BadUserService {
      * @return - возвращает список всех должников
      */
     public List<BadUser> getAllBadUsers() {
-        return (List<BadUser>) badUserRepository.findAll();
+        List<BadUser> badUserList = (List<BadUser>) badUserRepository.findAll();
+        return badUserList;
     }
 }
