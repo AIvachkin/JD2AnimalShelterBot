@@ -256,7 +256,11 @@ public class VolunteerController {
                             )
                     ),
                     @ApiResponse(
-                            responseCode = "404, 400",
+                            responseCode = "404",
+                            description = "Не найдено по ИД животное (неправильно указано количество дней для продления)"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
                             description = "Не найдено по ИД животное (неправильно указано количество дней для продления)"
                     )
             }, tags = "Volunteer"
@@ -291,7 +295,11 @@ public class VolunteerController {
                             )
                     ),
                     @ApiResponse(
-                            responseCode = "404 (400)",
+                            responseCode = "400",
+                            description = "Не найдено по ИД животное или попечитель (не найдена информация о прохождении попечителем испытательрного срока)."
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
                             description = "Не найдено по ИД животное или попечитель (не найдена информация о прохождении попечителем испытательрного срока)."
                     )
             }, tags = "Volunteer"
@@ -323,7 +331,11 @@ public class VolunteerController {
                             )
                     ),
                     @ApiResponse(
-                            responseCode = "404 (400)",
+                            responseCode = "400",
+                            description = "Не найдено по ИД животное или попечитель (животное не было закреплено за указанным пользователем на испытательный срок)."
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
                             description = "Не найдено по ИД животное или попечитель (животное не было закреплено за указанным пользователем на испытательный срок)."
                     )
             }, tags = "Volunteer"

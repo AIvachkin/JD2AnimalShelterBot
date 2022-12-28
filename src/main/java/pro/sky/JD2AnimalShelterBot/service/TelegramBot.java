@@ -18,7 +18,7 @@ import java.util.List;
 
 
 /**
- * Класс реализует взаимодействие с Телеграмом
+ * Класс реализует взаимодействие с Телеграм.
  * Расширяет класс TelegramLongPollingBot, позволяющий боту самостоятельно проверять,
  * пришло ли от пользователя что-то
  */
@@ -53,7 +53,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     /**
      * Метод, создающий текстовое меню
      *
-     * @throws TelegramApiException - ошибка в случае прихода неизвестной для бота команды
      */
     private void setupTextMenu() {
 

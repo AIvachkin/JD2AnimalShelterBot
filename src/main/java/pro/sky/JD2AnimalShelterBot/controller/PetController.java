@@ -157,7 +157,11 @@ public class PetController {
                             )
                     ),
                     @ApiResponse(
-                            responseCode = "404 (400)",
+                            responseCode = "404",
+                            description = "Если животное или пользователь не найдены (животное уже закреплено)"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
                             description = "Если животное или пользователь не найдены (животное уже закреплено)"
                     )
             }, tags = "Pets"
