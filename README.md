@@ -28,7 +28,7 @@
 
 * [javadoc к данному проекту](https://aivachkin.github.io/JD2AnimalShelterBot/)
 
-* [описание работы приложения](https://github.com/AIvachkin/JD2AnimalShelterBot.wiki.git)
+* [описание работы приложения](https://github.com/AIvachkin/JD2AnimalShelterBot/wiki)
 
 ---
 
