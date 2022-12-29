@@ -18,6 +18,7 @@ import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -84,7 +85,7 @@ public class VolunteerController {
             }, tags = "Correspondence"
     )
     @PostMapping("/messages/{messageId}/answer")
-    public ResponseEntity replyToMessages(@Parameter(description = "id сообщения пользователя", required = true, example = "12334455")
+    public ResponseEntity<?> replyToMessages(@Parameter(description = "id сообщения пользователя", required = true, example = "12334455")
                                           @PathVariable long messageId,
                                           @RequestBody String text) {
         try {
@@ -117,7 +118,7 @@ public class VolunteerController {
             }, tags = "Correspondence"
     )
     @PostMapping("/messages/{chatId}/send")
-    public ResponseEntity sendMessage(@Parameter(description = "id сообщения пользователя", required = true, example = "12334455")
+    public ResponseEntity<?> sendMessage(@Parameter(description = "id сообщения пользователя", required = true, example = "12334455")
                                       @PathVariable long chatId, @RequestBody String text) {
         try {
             correspondenceService.sendMessage(chatId, text);
@@ -232,7 +233,7 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @GetMapping("/sendworning")
-    public ResponseEntity sendWarning(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<?> sendWarning(@Parameter(description = "id питомца", required = true, example = "3")
                                       @RequestParam Long petId) {
         try {
             trusteesReportsService.sendWarning(petId);
@@ -266,9 +267,9 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @GetMapping("/extension")
-    public ResponseEntity extensionOfProbationPeriod(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<LocalDate> extensionOfProbationPeriod(@Parameter(description = "id питомца", required = true, example = "3")
                                                      @RequestParam Long petId,
-                                                     @Parameter(description = "количество дней для продления", required = true, example = "14")
+                                                                @Parameter(description = "количество дней для продления", required = true, example = "14")
                                                      @RequestParam Integer extensionDays) {
         if (extensionDays != 14 && extensionDays != 30) {
             return ResponseEntity.badRequest().build();
@@ -341,7 +342,7 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @GetMapping("/probationfailed")
-    public ResponseEntity probationFailed(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<?> probationFailed(@Parameter(description = "id питомца", required = true, example = "3")
                                           @RequestParam Long petId,
                                           @Parameter(description = "id попечителя", required = true, example = "1372481155")
                                           @RequestParam Long chatId) {
@@ -417,7 +418,7 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @DeleteMapping("/delete/{badUserId}")
-    public ResponseEntity deleteBadUser(@Parameter(description = "id штрафника", required = true, example = "3")
+    public ResponseEntity<?> deleteBadUser(@Parameter(description = "id штрафника", required = true, example = "3")
                                         @PathVariable Long badUserId) {
         try {
             badUserService.delete(badUserId);
@@ -463,7 +464,7 @@ public class VolunteerController {
             }, tags = "Volunteer"
     )
     @PostMapping("/adddebtor")
-    public ResponseEntity addDebtor(@RequestBody DogUser dogUser) {
+    public ResponseEntity<?> addDebtor(@RequestBody DogUser dogUser) {
         badUserService.createBadUser(dogUser);
         return ResponseEntity.ok().build();
 
