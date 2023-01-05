@@ -90,34 +90,48 @@ public class PetService {
      * Метод для закрепления животного за попечителем в базе
      * @param petId ИД животного
      * @param userId ИД попечителя
+     * @return pet измененный объект питомца
      */
-    public void assignPetToCaregiver(Long petId, Long userId) {
-        Pet pet = petRepository.findById(petId).orElseThrow();
-        if(pet.getDogUser() != null || pet.getCatUser() != null){
-            throw new SecurityException();
+    public Pet assignPetToCaregiver(Long petId, Long userId) {
+        Pet pet = petRepository.findById(petId).orElse(null);
+        if(pet != null){
+            if(pet.getDogUser() != null || pet.getCatUser() != null){
+                throw new SecurityException();
+            }
+            if(Objects.equals(pet.getTypeOfPet(), "dog")){
+                DogUser dogUser = dogUserRepository.findById(userId).orElse(null);
+                if (dogUser == null){
+                    return null;
+                }
+                pet.setDogUser(dogUser);
+            } else  if(Objects.equals(pet.getTypeOfPet(), "cat")){
+                CatUser catUser = catUserRepository.findById(userId).orElse(null);
+                if (catUser == null){
+                    return null;
+                }
+                pet.setCatUser(catUser);
+            }
+            pet.setProbationPeriodUpTo(LocalDate.now().plusDays(30));
+            petRepository.save(pet);
         }
-        if(Objects.equals(pet.getTypeOfPet(), "dog")){
-            DogUser dogUser = dogUserRepository.findById(userId).orElseThrow();
-            pet.setDogUser(dogUser);
-        } else  if(Objects.equals(pet.getTypeOfPet(), "cat")){
-            CatUser catUser = catUserRepository.findById(userId).orElseThrow();
-            pet.setCatUser(catUser);
-        }
-        pet.setProbationPeriodUpTo(LocalDate.now().plusDays(30));
-        petRepository.save(pet);
+       return pet;
     }
 
     /**
      * Метод для открепления животного от попечителя в базе
      * @param petId ИД животного
      */
-    public void detachPetFromCaregiver(Long petId) {
-        Pet pet = petRepository.findById(petId).orElseThrow();
+    public Pet detachPetFromCaregiver(Long petId) {
+        Pet pet = petRepository.findById(petId).orElse(null);
+        if(pet == null){
+            return null;
+        }
         pet.setDogUser(null);
         pet.setCatUser(null);
         pet.setProbationPeriodUpTo(null);
         pet.setFixed(false);
         petRepository.save(pet);
+        return pet;
     }
 
     /**
@@ -127,13 +141,16 @@ public class PetService {
      * @return возвращает новую дату окончания испытательного срока.
      */
     public LocalDate extensionOfProbationPeriod(Long petId, Integer extensionDays) {
-        Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);
+        Pet pet = petRepository.findById(petId).orElse(null);
+        if (pet == null || pet.getProbationPeriodUpTo() == null){
+            return null;
+        }
         String typeOfPet = pet.getTypeOfPet();
         Long chatId = null;
         if(typeOfPet.equals("dog")){
             var dogUser = pet.getDogUser();
             if(dogUser == null){
-                throw new BadRequestException();
+                return null;
             } else {
                 chatId = dogUser.getChatId();
             }
@@ -141,10 +158,13 @@ public class PetService {
         if(typeOfPet.equals("cat")){
             var catUser = pet.getCatUser();
             if(catUser == null){
-                throw new BadRequestException();
+                return null;
             } else {
                 chatId = catUser.getChatId();
             }
+        }
+        if(chatId == null){
+            return null;
         }
         pet.setProbationPeriodUpTo(pet.getProbationPeriodUpTo().plusDays(extensionDays));
         petRepository.save(pet);

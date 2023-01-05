@@ -258,7 +258,7 @@ public class VolunteerController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Не найдено по ИД животное (неправильно указано количество дней для продления)"
+                            description = "Не найдено по ИД животное"
                     ),
                     @ApiResponse(
                             responseCode = "400",
@@ -274,14 +274,11 @@ public class VolunteerController {
         if (extensionDays != 14 && extensionDays != 30) {
             return ResponseEntity.badRequest().build();
         }
-        try {
-            var probationPeriod = petService.extensionOfProbationPeriod(petId, extensionDays);
-            return ResponseEntity.ok(probationPeriod);
-        } catch (NotFoundException e) {
+        LocalDate probationPeriod = petService.extensionOfProbationPeriod(petId, extensionDays);
+        if(probationPeriod == null) {
             return ResponseEntity.notFound().build();
-        } catch (NullPointerException e) {
-            return ResponseEntity.badRequest().build();
         }
+        return ResponseEntity.ok(probationPeriod);
     }
 
     @Operation(

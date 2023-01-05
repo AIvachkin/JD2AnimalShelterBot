@@ -168,18 +168,15 @@ public class PetController {
             }, tags = "Pets"
     )
     @GetMapping("/assign")
-    public ResponseEntity<?> assignPetToCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<Pet> assignPetToCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
                                                @RequestParam Long petId,
                                                                       @Parameter(description = "id чата пользователя", required = true, example = "123456789")
                                                @RequestParam Long userId) {
-        try {
-            petService.assignPetToCaregiver(petId, userId);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
+        Pet pet = petService.assignPetToCaregiver(petId, userId);
+        if(pet == null) {
             return ResponseEntity.notFound().build();
-        } catch (SecurityException e) {
-            return ResponseEntity.badRequest().build();
         }
+        return ResponseEntity.ok(pet);
     }
 
     @Operation(
@@ -200,14 +197,12 @@ public class PetController {
             }, tags = "Pets"
     )
     @GetMapping("/detach")
-    public ResponseEntity<?> detachPetFromCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<Pet> detachPetFromCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
                                                  @RequestParam Long petId) {
-        try {
-            petService.detachPetFromCaregiver(petId);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
+        Pet pet = petService.detachPetFromCaregiver(petId);
+        if(pet == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(pet);
     }
-
 }
