@@ -2,10 +2,9 @@ package pro.sky.JD2AnimalShelterBot.model;
 
 
 import lombok.*;
+import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -45,7 +44,14 @@ public class CatUser {
     /**
      * Переменная - питомец, которого приютил пользователь
      */
-    @OneToMany(mappedBy = "dogUser")
+    @OneToMany(mappedBy = "catUser")
     private List<Pet> pets;
+
+    /**
+     * Переменная - должник по отчетам
+     */
+    @Nullable
+    @OneToOne(cascade= CascadeType.ALL)
+    private BadUser badUser;
 
 }

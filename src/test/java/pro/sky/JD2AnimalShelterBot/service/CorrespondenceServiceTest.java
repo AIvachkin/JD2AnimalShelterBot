@@ -8,6 +8,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pro.sky.JD2AnimalShelterBot.model.Correspondence;
 import pro.sky.JD2AnimalShelterBot.repository.CorrespondenceRepository;
+import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
+import pro.sky.JD2AnimalShelterBot.service.volunteer.CorrespondenceService;
 
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;

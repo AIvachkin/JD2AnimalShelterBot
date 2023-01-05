@@ -23,7 +23,7 @@ class PetControllerTest {
 
     @Mock
     private PetService petService;
-    private Pet pet = new Pet(1L, "name", 1, null, LocalDate.MAX, false, "dog");
+    private Pet pet = new Pet(1L, "name", 1, null, null, LocalDate.MAX, false, "dog");
 
     @BeforeEach
     public void initOut() {
@@ -32,9 +32,6 @@ class PetControllerTest {
 
     @Test
     void createPetTest() {
-//        Pet pet1 = new Pet();
-//        Pet pet2 = new Pet();
-//        User user = new User(1L, "firstname", "lastname", "phoneNumber", List.of(pet1, pet2));
         when(petService.createPet(pet)).thenReturn(pet);
         ResponseEntity actual = out.createPet(pet);
         ResponseEntity expected = ResponseEntity.ok(petService.createPet(pet));
@@ -107,61 +104,3 @@ class PetControllerTest {
 }
 
 
-//
-//
-//
-//
-//
-//
-//    @Test
-//    void getUnansweredMessagesTest() {
-//        Correspondence message1 = new Correspondence(12345L, 333L, LocalDateTime.now(), "Some text 1", false, "user");
-//        Correspondence message2 = new Correspondence(23456L, 444L, LocalDateTime.now(), "Some text 2", false, "user");
-//        when(correspondenceService.getUnansweredMessages())
-//                .thenReturn(List.of(message1, message2));
-//        List<Correspondence> actual = out.getUnansweredMessages();
-//        List<Correspondence> expected = List.of(message1, message2);
-//        assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void replyToMessagesTest() {
-//
-//        doNothing().when(correspondenceService).replyToMessages(2222L, "Some Text");
-//        ResponseEntity responseEntity200 = out.replyToMessages(2222L, "Some Text");
-//        assertThat(responseEntity200.getStatusCodeValue()).isEqualTo(200);
-//
-//        doThrow(new NotFoundException("Сообщение с таким ид не найдено")).when(correspondenceService).replyToMessages(3333l, "Some Text");
-//        ResponseEntity responseEntity404 = out.replyToMessages(3333L, "Some Text");
-//        assertThat(responseEntity404.getStatusCodeValue()).isEqualTo(404);
-//    }
-//
-//    @Test
-//    void sendMessageTest() {
-//
-//        doNothing().when(correspondenceService).sendMessage(4444L, "Some Text");
-//        ResponseEntity responseEntity200 = out.sendMessage(4444L, "Some Text");
-//        assertThat(responseEntity200.getStatusCodeValue()).isEqualTo(200);
-//
-//        doThrow(new NoSuchElementException()).when(correspondenceService).sendMessage(5555L, "Some Text");
-//        ResponseEntity responseEntity404 = out.sendMessage(5555L, "Some Text");
-//        assertThat(responseEntity404.getStatusCodeValue()).isEqualTo(404);
-//    }
-//
-//    @Test
-//    void getAllCorrespondenceWithUser() {
-//
-//        Correspondence message1 = new Correspondence(12345L, 4444L, LocalDateTime.now(), "Some text 1", false, "user");
-//        Correspondence message2 = new Correspondence(23456L, 4444L, LocalDateTime.now(), "Some text 2", false, "user");
-//        when(correspondenceService.getAllCorrespondenceWithUser(4444L))
-//                .thenReturn(List.of(message1, message2));
-//        ResponseEntity<List<Correspondence>> responseEntity200 = out.getAllCorrespondenceWithUser(4444L);
-//        assertThat(responseEntity200.getStatusCodeValue()).isEqualTo(200);
-//        assertThat(responseEntity200.getBody()).isEqualTo(List.of(message1, message2));
-//
-//        when(correspondenceService.getAllCorrespondenceWithUser(5555L))
-//                .thenThrow(NotFoundException.class);
-//        ResponseEntity responseEntity404 = out.getAllCorrespondenceWithUser(5555L);
-//        assertThat(responseEntity404.getStatusCodeValue()).isEqualTo(404);
-//    }
-//}

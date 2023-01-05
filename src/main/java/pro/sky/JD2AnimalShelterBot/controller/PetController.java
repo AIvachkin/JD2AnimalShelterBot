@@ -1,5 +1,6 @@
 package pro.sky.JD2AnimalShelterBot.controller;
 
+import com.sun.net.httpserver.Authenticator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -14,6 +15,7 @@ import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Контроллер для работы с сущностями животных
@@ -21,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pet")
 public class PetController {
+
 
     private final PetService petService;
 
@@ -40,7 +43,7 @@ public class PetController {
             ), tags = "Pets"
     )
     @PostMapping
-    public ResponseEntity createPet(@RequestBody Pet pet) {
+    public ResponseEntity<Pet> createPet(@RequestBody Pet pet) {
         Pet createdPet = petService.createPet(pet);
         return ResponseEntity.ok(createdPet);
     }
@@ -64,7 +67,7 @@ public class PetController {
             }, tags = "Pets"
     )
     @GetMapping("{petId}")
-    public ResponseEntity getPet(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<Pet> getPet(@Parameter(description = "id питомца", required = true, example = "3")
                                  @PathVariable Long petId) {
         Pet pet = petService.getById(petId);
         if (pet == null) {
@@ -85,7 +88,7 @@ public class PetController {
             ), tags = "Pets"
     )
     @PutMapping()
-    public ResponseEntity updatePet(@RequestBody Pet pet) {
+    public ResponseEntity<Pet> updatePet(@RequestBody Pet pet) {
         if (pet != null) {
             Pet updatePet = petService.updatePet(pet);
             return ResponseEntity.ok(updatePet);
@@ -112,7 +115,7 @@ public class PetController {
             }, tags = "Pets"
     )
     @DeleteMapping("/{petId}")
-    public ResponseEntity deletePet(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<?> deletePet(@Parameter(description = "id питомца", required = true, example = "3")
                                     @PathVariable Long petId) {
         try {
             petService.delete(petId);
@@ -156,17 +159,24 @@ public class PetController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Если животное не найдено"
+                            description = "Если животное или пользователь не найдены (животное уже закреплено)"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Если животное или пользователь не найдены (животное уже закреплено)"
                     )
             }, tags = "Pets"
     )
     @GetMapping("/assign")
-    public ResponseEntity assignPetToCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<Pet> assignPetToCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
                                                @RequestParam Long petId,
-                                               @Parameter(description = "id чата пользователя", required = true, example = "123456789")
-                                               @RequestParam Long chatId) {
-        petService.assignPetToCaregiver(petId, chatId);
-        return ResponseEntity.ok().build();
+                                                                      @Parameter(description = "id чата пользователя", required = true, example = "123456789")
+                                               @RequestParam Long userId) {
+        Pet pet = petService.assignPetToCaregiver(petId, userId);
+        if(pet == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pet);
     }
 
     @Operation(
@@ -182,15 +192,17 @@ public class PetController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Если животное не найдено по id"
+                            description = "Если животное не найдено"
                     )
             }, tags = "Pets"
     )
     @GetMapping("/detach")
-    public ResponseEntity detachPetFromCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
+    public ResponseEntity<Pet> detachPetFromCaregiver(@Parameter(description = "id питомца", required = true, example = "3")
                                                  @RequestParam Long petId) {
-        petService.detachPetFromCaregiver(petId);
-        return ResponseEntity.ok().build();
+        Pet pet = petService.detachPetFromCaregiver(petId);
+        if(pet == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pet);
     }
-
 }

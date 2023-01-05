@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
-import static pro.sky.JD2AnimalShelterBot.сonstants.CatConstants.RECOMM_FOR_CAT_COMMAND_LABEL;
-import static pro.sky.JD2AnimalShelterBot.сonstants.DogConstants.*;
-import static pro.sky.JD2AnimalShelterBot.сonstants.MainMenuConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.CatConstants.RECOMM_FOR_CAT_COMMAND_LABEL;
+import static pro.sky.JD2AnimalShelterBot.constants.DogConstants.*;
+import static pro.sky.JD2AnimalShelterBot.constants.MainMenuConstants.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TakeCatTest {

@@ -5,11 +5,12 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import pro.sky.JD2AnimalShelterBot.handlers.Commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static pro.sky.JD2AnimalShelterBot.сonstants.ShelterConstants.GREETING_INFO;
+import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.GREETING_INFO;
 
 /**
  * Класс обрабатывает запросы пользователей, желающих получить информацию о приюте
@@ -54,8 +55,6 @@ public class ShelterInfo {
 
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);//Формирование клавиатуры
-//Отправка приветственного сообщения и добавление клавиатуры
-//        executeMessage.prepareAndSendMessage(chatId,GREETING_INFO,keyboardMarkup);
 
         log.info("Keyboard ShelterInfo has been added to bot");
 

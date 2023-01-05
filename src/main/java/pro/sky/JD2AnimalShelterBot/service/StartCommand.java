@@ -8,46 +8,44 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import pro.sky.JD2AnimalShelterBot.handlers.Commands;
+import pro.sky.JD2AnimalShelterBot.service.user.UserContext;
+import pro.sky.JD2AnimalShelterBot.service.user.UserService;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Класс обрабатывает комманду /start
+ * Класс обрабатывает команду /start
  * Бот приветствует нового пользователя, рассказывает о себе
  */
 @Service
 @Slf4j
 public class StartCommand {
 
-    /**
-     * Поле взамодействия с ботом
-     */
-    private final TelegramBot telegramBot;
     private final UserService userService;
     private final UserContext userContext;
     private final ExecuteMessage executeMessage;
     /**
      * Конструктор - создание нового объекта класса StartCommand для определенного бота
      *
-     * @param telegramBot    - объект взаимодействия с ботом
      * @param userService    - объект для взаимодействия с командами сервиса
      * @param userContext    - объект для взаимодействия с контекстом юзера
      * @param executeMessage - объект для взаимодействия с методами класса, отвечающего за отправку ответа пользователям
      */
-    public StartCommand(TelegramBot telegramBot, UserService userService, UserContext userContext, ExecuteMessage executeMessage) {
-        this.telegramBot = telegramBot;
+    public StartCommand(UserService userService, UserContext userContext, ExecuteMessage executeMessage) {
         this.userService = userService;
         this.userContext = userContext;
         this.executeMessage = executeMessage;
     }
 
     /**
-     * Приветствие
+     * Константа - приветствие
      */
     private static final String GREETING = "\uD83D\uDE00 Привет ";
 
     /**
-     * Приветственное сообщение
+     * Константа - приветственное сообщение
      */
     private static final String WELCOME_MESSAGE = """
 
@@ -56,13 +54,22 @@ public class StartCommand {
             Выбери пункт меню ниже
             """;
 
+    /**
+     * Константа - сообщение о необходимости выбрать тип приюта
+     */
     private static final String SHOOSING_PET_MESSAGE = """
            Пожалуйста, выберите приют:
            
            """;
 
+    /**
+     * Константа - надпись на кнопке для выбора приюта
+     */
     public static final String DOG_BUTTON = "Приют для собак";
 
+    /**
+     * Константа - надпись на кнопке для выбора приюта
+     */
     public static final String CAT_BUTTON = "Приют для кошек";
 
     /**

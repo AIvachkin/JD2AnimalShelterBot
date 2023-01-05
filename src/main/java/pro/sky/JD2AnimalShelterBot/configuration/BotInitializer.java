@@ -10,17 +10,16 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import javax.annotation.PostConstruct;
 
-@Slf4j
-@Component
 /**
  * Класс, инициализирующий бота
  */
+@Slf4j
+@Component
 public class BotInitializer {
 
     /**
      * Поле типа TelegramBot для подключения нашего приложения к telegram
      */
-
     private final TelegramBot bot;
 
     public BotInitializer(TelegramBot bot) {

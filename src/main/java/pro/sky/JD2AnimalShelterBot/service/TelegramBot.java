@@ -2,7 +2,6 @@ package pro.sky.JD2AnimalShelterBot.service;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -13,16 +12,18 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.configuration.BotConfiguration;
 import pro.sky.JD2AnimalShelterBot.handlers.UpdateHandler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
-@Component
+
 /**
- * Класс реалиует взаимодействие с Телеграмом
+ * Класс реализует взаимодействие с Телеграм.
  * Расширяет класс TelegramLongPollingBot, позволяющий боту самостоятельно проверять,
  * пришло ли от пользователя что-то
  */
+@Slf4j
+@Component
 public class TelegramBot extends TelegramLongPollingBot {
 
     /**
@@ -52,7 +53,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     /**
      * Метод, создающий текстовое меню
      *
-     * @throws TelegramApiException - ошибка в случае прихода неизвестной для бота команды
      */
     private void setupTextMenu() {
 
@@ -91,6 +91,10 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        updateHandler.handle(update);
+        try {
+            updateHandler.handle(update);
+        } catch (IOException | TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
