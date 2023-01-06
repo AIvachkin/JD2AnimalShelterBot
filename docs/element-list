@@ -1,0 +1,12 @@
+pro.sky.JD2AnimalShelterBot
+pro.sky.JD2AnimalShelterBot.configuration
+pro.sky.JD2AnimalShelterBot.constants
+pro.sky.JD2AnimalShelterBot.controller
+pro.sky.JD2AnimalShelterBot.handlers
+pro.sky.JD2AnimalShelterBot.model
+pro.sky.JD2AnimalShelterBot.repository
+pro.sky.JD2AnimalShelterBot.service
+pro.sky.JD2AnimalShelterBot.service.pet
+pro.sky.JD2AnimalShelterBot.service.user
+pro.sky.JD2AnimalShelterBot.service.volunteer
+pro.sky.JD2AnimalShelterBot.util
