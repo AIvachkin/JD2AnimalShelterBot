@@ -66,7 +66,7 @@ public class CorrespondenceService {
     }
 
     /**
-     * Метод, запрашивающий из БД сообщение по ИД.
+     * Метод, запрашивающий из БД сообщение по id
      */
     public Correspondence getMessagesById(long messageId) {
         return correspondenceRepository.getCorrespondenceByMessageId(messageId);
@@ -74,7 +74,7 @@ public class CorrespondenceService {
 
     /**
      * Метод для ответа волонтера на сообщение пользователя
-     * @param messageId ИД сообщения, на которое дается ответ
+     * @param messageId id сообщения, на которое дается ответ
      * @param text текст ответного сообщения
      */
     public void replyToMessages(Long messageId, String text) throws NotFoundException  {
@@ -99,7 +99,7 @@ public class CorrespondenceService {
 
     /**
      * Метод для отправки сообщения пользователю
-     * @param chatId ИД пользователя
+     * @param chatId id пользователя
      * @param text текст сообщения
      */
     public void sendMessage(long chatId, String text) throws NoSuchElementException {
@@ -118,7 +118,7 @@ public class CorrespondenceService {
 
     /**
      * Метод для отправки сообщения от пользователя волонтеру
-     * @param chatId ИД пользователя
+     * @param chatId id пользователя
      * @param text текст сообщения
      */
     public void sendMessageToVolunteer(long chatId, String text) {
@@ -135,7 +135,7 @@ public class CorrespondenceService {
         }
         correspondenceRepository.save(reply);
 
-        //Добавление клавиатуры к собщению.
+        //Добавление клавиатуры к сообщению
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();

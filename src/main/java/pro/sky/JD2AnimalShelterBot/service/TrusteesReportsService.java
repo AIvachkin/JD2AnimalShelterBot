@@ -40,7 +40,7 @@ import java.util.Optional;
 import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.*;
 
 /**
- * Класс обрабатывает отчеты пользователей и сохраняет их в БД
+ * Класс для обработки отчетов пользователей и сохранения их в БД
  */
 @Service
 @Slf4j
@@ -91,8 +91,8 @@ public class TrusteesReportsService {
     /**
      * Метод возвращает список всех отчетов по конкретному животному
      *
-     * @param petId ИД животного
-     * @return List of TrusteesReports
+     * @param petId id животного
+     * @return список отчетов по животному
      */
     public List<TrusteesReports> getAllPetReports(Long petId) {
         return trusteesReportsRepository.findAllByPet(petId);
@@ -102,7 +102,7 @@ public class TrusteesReportsService {
      * Метод возвращает список всех непрочитанных отчетов
      *
      * @param viewed - индикатор: просмотрен отчет или нет
-     * @return List of TrusteesReports
+     * @return список непрочитанных отчетов
      */
     public List<TrusteesReports> getAllUnwatchedReports(boolean viewed) {
         return trusteesReportsRepository.findAllByViewed(viewed);
@@ -113,7 +113,7 @@ public class TrusteesReportsService {
      * Метод находит непрочитанный отчет и ставит метку о прочтении
      *
      * @param id - идентификатор отчета
-     * @return TrusteesReports
+     * @return непрочитанный отчет
      */
     public Optional<TrusteesReports> getUnwatchedReportAndMakeRead(Long id) {
         Optional<TrusteesReports> optionalTrusteesReports = trusteesReportsRepository.findById(id);
@@ -126,7 +126,7 @@ public class TrusteesReportsService {
     /**
      * Метод для открепления животного от попечителя в базе
      *
-     * @param petId ИД животного
+     * @param petId id животного
      */
     public void detachPetFromCaregiver(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow();
@@ -140,7 +140,7 @@ public class TrusteesReportsService {
     /**
      * Метод отправляет пользователю предупреждение
      *
-     * @param petId ИД животного
+     * @param petId id животного
      */
     public void sendWarning(Long petId) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);

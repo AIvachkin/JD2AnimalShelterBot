@@ -20,7 +20,7 @@ public class UserContext {
 
     /**
      * Метод для сохранения контекста пользователя
-     * @param chatId ИД пользователя
+     * @param chatId id пользователя
      * @param context состояние пользователя
      */
     public void setUserContext(Long chatId, String context) {
@@ -34,8 +34,8 @@ public class UserContext {
     }
 
     /**
-     * Метод для получения контекста пользователя по ИД
-     * @param chatId ИД пользователя
+     * Метод для получения контекста пользователя по id
+     * @param chatId id пользователя
      * @return возвращает контекст конкретного пользователя
      */
     public Set<String> getUserContext(Long chatId) {
@@ -44,8 +44,8 @@ public class UserContext {
 
 
     /**
-     * Метод удяляет значение из контекста юзера
-     * @param chatId ИД пользователя
+     * Метод удаляет значение из контекста юзера
+     * @param chatId id пользователя
      * @param context контекст, который необходимо удалить
      */
     public void deleteUserContext(long chatId, String context) {

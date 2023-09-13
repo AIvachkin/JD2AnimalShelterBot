@@ -86,9 +86,9 @@ public class UserService {
     }
 
     /**
-     * Метод для полученеия сущности пользователя приюта собак по ИД
+     * Метод для полученеия сущности пользователя приюта собак по id
      *
-     * @param chatId ИД пользователя
+     * @param chatId id пользователя
      * @return - возвращает пользователя из БД
      */
     public DogUser getDogUserById(long chatId) {
@@ -96,9 +96,9 @@ public class UserService {
     }
 
     /**
-     * Метод для полученеия сущности пользователя приюта кошек по ИД
+     * Метод для получения сущности пользователя приюта кошек по id
      *
-     * @param chatId ИД пользователя
+     * @param chatId id пользователя
      * @return - возвращает пользователя из БД
      */
     public CatUser getCatUserById(long chatId) {
@@ -106,16 +106,16 @@ public class UserService {
     }
 
     /**
-     * Метод получает из базы тедефон пользователя приюта собак по ИД
-     * @param chatId ИД пользователя
+     * Метод получает из базы телефон пользователя приюта собак по id
+     * @param chatId id пользователя
      */
     public String getDogUserPhone(long chatId) {
         return dogUserRepository.getUserPhoneById(chatId);
     }
 
     /**
-     * Метод получает из базы телефон пользователя приюта кошек по ИД
-     * @param chatId ИД пользователя
+     * Метод получает из базы телефон пользователя приюта кошек по id
+     * @param chatId id пользователя
      */
     public String getCatUserPhone(long chatId) {
         return catUserRepository.getUserPhoneById(chatId);
@@ -130,7 +130,7 @@ public class UserService {
         sendMessage.setChatId(chatId);
         sendMessage.setText(WELCOME_MESSAGE);
 
-        // Создаем клавиуатуру
+        // Создаем клавиатуру
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -172,7 +172,7 @@ public class UserService {
 
     /**
      * Метод возвращает список пользователей приюта для собак
-     * @return
+     *
      */
     public List<DogUser> getAllDogUsers() {
         return (List)dogUserRepository.findAll();
@@ -180,7 +180,7 @@ public class UserService {
 
     /**
      * Метод возвращает список пользователей приюта для кошек
-     * @return
+     *
      */
     public List<CatUser> getAllCatUsers() {
         return (List)catUserRepository.findAll();

@@ -13,7 +13,7 @@ import java.util.List;
 import static pro.sky.JD2AnimalShelterBot.constants.ShelterConstants.GREETING_INFO;
 
 /**
- * Класс обрабатывает запросы пользователей, желающих получить информацию о приюте
+ * Класс для обработки запросов пользователей, желающих получить информацию о приюте
  */
 @Slf4j
 @Service

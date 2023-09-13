@@ -71,7 +71,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     /**
      * метод, предоставляющий имя бота
      *
-     * @return возвращает имя бота
+     * @return имя бота
      */
     @Override
     public String getBotUsername() {

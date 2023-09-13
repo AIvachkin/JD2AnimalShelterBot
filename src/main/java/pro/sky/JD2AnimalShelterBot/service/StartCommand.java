@@ -102,7 +102,7 @@ public class StartCommand {
     public void startCommandReceived(long chatId, String firstName) {
         String textToSend = GREETING + firstName + "! " + WELCOME_MESSAGE;
 
-        //Добавление клавиатуры к собщению.
+        //Добавление клавиатуры к сообщению
 
         ReplyKeyboardMarkup keyboardMarkup = createMenuStartCommand();
 
