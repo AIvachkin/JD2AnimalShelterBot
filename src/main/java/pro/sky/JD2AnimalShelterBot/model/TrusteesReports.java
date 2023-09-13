@@ -27,12 +27,12 @@ public class TrusteesReports {
     private Long id;
 
     /**
-     * ИД пользователя
+     * id пользователя
      */
     private Long chatId;
 
     /**
-     * ИД животного
+     * id животного
      */
     @OneToOne
     @JoinColumn(name = "pet_id")
@@ -57,7 +57,6 @@ public class TrusteesReports {
      * превью фото животного, хранящегося в БД
      */
     private byte [] preview;
-
 
 
     /**

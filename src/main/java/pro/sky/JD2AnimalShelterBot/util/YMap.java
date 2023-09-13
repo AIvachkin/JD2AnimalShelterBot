@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.sky.JD2AnimalShelterBot.service.TelegramBot;
 
 /**
- * Класс отправки карты
+ * Класс для отправки карты (местоположение приюта)
  */
 @Component
 @Slf4j

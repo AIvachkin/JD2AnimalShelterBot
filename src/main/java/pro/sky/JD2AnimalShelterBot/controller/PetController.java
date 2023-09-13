@@ -1,6 +1,5 @@
 package pro.sky.JD2AnimalShelterBot.controller;
 
-import com.sun.net.httpserver.Authenticator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -15,7 +14,6 @@ import pro.sky.JD2AnimalShelterBot.service.pet.PetService;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * Контроллер для работы с сущностями животных

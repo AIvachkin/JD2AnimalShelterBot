@@ -13,7 +13,6 @@ import pro.sky.JD2AnimalShelterBot.service.user.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -50,34 +49,30 @@ public class CheckReports {
         List<DogUser> dogUserList = userService.getAllDogUsers();
         List<CatUser> catUserList = userService.getAllCatUsers();
         dogUserList.stream().
-                filter(d -> !d.getPets().isEmpty()).
-                map(d -> d.getPets()).
-                forEach(pl -> pl.stream().
+                map(DogUser::getPets).
+                filter(pets -> !pets.isEmpty()).
+                forEach(pl -> pl.
                         forEach(p -> {
                                     if ((trusteesReportsService.getAllPetReports(p.getId()).isEmpty() &
                                             p.getProbationPeriodUpTo().isBefore(LocalDate.now().plusDays(START_CHECK))
                                         ) ||
-                                            trusteesReportsService.getAllPetReports(p.getId()).stream().
-                                                    filter(t -> t.getDateTime().truncatedTo(DAYS).
-                                                            isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(CHECK))).
-                                                    collect(Collectors.toList()).isEmpty()) {
+                                            trusteesReportsService.getAllPetReports(p.getId()).stream().noneMatch(t -> t.getDateTime().truncatedTo(DAYS).
+                                                    isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(CHECK)))) {
                                         badUserService.createBadUser(p.getDogUser());
                                     }
                                 }
                         )
                 );
         catUserList.stream().
-                filter(c -> !c.getPets().isEmpty()).
-                map(c -> c.getPets()).
-                forEach(pl -> pl.stream().
+                map(CatUser::getPets).
+                filter(pets -> !pets.isEmpty()).
+                forEach(pl -> pl.
                         forEach(p -> {
                                     if ((trusteesReportsService.getAllPetReports(p.getId()).isEmpty() &
                                             p.getProbationPeriodUpTo().isBefore(LocalDate.now().plusDays(START_CHECK))
                                     ) ||
-                                            trusteesReportsService.getAllPetReports(p.getId()).stream().
-                                                    filter(t -> t.getDateTime().truncatedTo(DAYS).
-                                                            isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(CHECK))).
-                                                    collect(Collectors.toList()).isEmpty()) {
+                                            trusteesReportsService.getAllPetReports(p.getId()).stream().noneMatch(t -> t.getDateTime().truncatedTo(DAYS).
+                                                    isBefore(LocalDateTime.now().truncatedTo(DAYS).minusDays(CHECK)))) {
                                         badUserService.createBadUser(p.getCatUser());
                                     }
                                 }

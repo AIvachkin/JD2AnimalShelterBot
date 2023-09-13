@@ -36,7 +36,7 @@ public class PetService {
         this.executeMessage = executeMessage;
     }
     /**
-     * Метод получения домашнего питомца
+     * Метод для получения домашнего питомца
      * @param petId  id домашнего питомца в БД
      */
     public Pet getById(Long petId) {
@@ -50,7 +50,7 @@ public class PetService {
         return pet;
     }
     /**
-     * Метод добавления домашнего питомца в БД
+     * Метод для добавления домашнего питомца в БД
      * @param pet домашний питомец
      */
     public Pet createPet(Pet pet) {
@@ -58,7 +58,7 @@ public class PetService {
         return petRepository.save(pet);
     }
     /**
-     * Метод удаления домашнего питомца из БД
+     * Метод для удаления домашнего питомца из БД
      * @param petId id домашнего питомца в БД
      */
     public void delete(Long petId) throws NotFoundException {
@@ -71,7 +71,7 @@ public class PetService {
     }
 
     /**
-     * Метод редактирования домашнего питомца в БД
+     * Метод для редактирования домашнего питомца в БД
      * @param pet домашний питомец
      */
     public Pet updatePet(Pet pet) {
@@ -88,8 +88,8 @@ public class PetService {
 
     /**
      * Метод для закрепления животного за попечителем в базе
-     * @param petId ИД животного
-     * @param userId ИД попечителя
+     * @param petId id животного
+     * @param userId id попечителя
      * @return pet измененный объект питомца
      */
     public Pet assignPetToCaregiver(Long petId, Long userId) {
@@ -119,7 +119,7 @@ public class PetService {
 
     /**
      * Метод для открепления животного от попечителя в базе
-     * @param petId ИД животного
+     * @param petId id животного
      */
     public Pet detachPetFromCaregiver(Long petId) {
         Pet pet = petRepository.findById(petId).orElse(null);
@@ -136,8 +136,8 @@ public class PetService {
 
     /**
      * Метод для продления испытательного срока и отправки пользователю соответствующего сообщения.
-     * @param petId ИД питомца
-     * @param extensionDays количество дней на которые необходимо продлить испытатетльрный срок
+     * @param petId id питомца
+     * @param extensionDays количество дней на которые необходимо продлить испытательный срок
      * @return возвращает новую дату окончания испытательного срока.
      */
     public LocalDate extensionOfProbationPeriod(Long petId, Integer extensionDays) {
@@ -178,10 +178,10 @@ public class PetService {
     }
 
     /**
-     * Метод для закрепления животного за попечителем по результатам испытательрного срока
+     * Метод для закрепления животного за попечителем по результатам испытательного срока
      * и отправки пользователю соответствующего сообщения.
-     * @param petId ИД животного
-     * @param chatId ИД попечителя
+     * @param petId id животного
+     * @param chatId id попечителя
      * @return возвращает объект питомца с внесенными изменениями.
      */
     public Pet securingAnimalToCaregiver(Long petId, Long chatId) {
@@ -210,8 +210,8 @@ public class PetService {
 
     /**
      * Метод отправляет пользователю сообщение о провале испытательного срока и вносит необходимые изменения в БД
-     * @param petId ИД животного
-     * @param chatId ИД пользователя
+     * @param petId id животного
+     * @param chatId id пользователя
      */
     public void probationFailed(Long petId, Long chatId) {
         Pet pet = petRepository.findById(petId).orElseThrow(NotFoundException::new);

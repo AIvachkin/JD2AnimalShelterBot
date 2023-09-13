@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import pro.sky.JD2AnimalShelterBot.model.CatUser;
 
+
 /**
  * Интерфейс работы с БД пользователей
  */
@@ -15,4 +16,5 @@ public interface CatUserRepository extends CrudRepository<CatUser, Long> {
     String getUserPhoneById(long chatId);
 
     CatUser findCatUserByChatId(long chatId);
+
 }
